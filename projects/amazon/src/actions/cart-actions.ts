@@ -4,6 +4,7 @@ import db from "@/services/Prisma";
 import { getCurrentUser } from "./auth-actions";
 import { productData } from "@/data/data";
 import { title } from "process";
+import { CartItem } from "@prisma/client";
 
 type cartItem = {
   productId: number;
@@ -89,8 +90,8 @@ export async function getUserCart() {
       return { success: false, message: "Unauthorized" };
     }
     const { cart, user } = res;
-    const productIds = cart.items.map((item) => item.productId);
-
+    const items = cart.items as CartItem[];
+    const productIds = items.map((item) => item.productId);
     const products = await db.product.findMany({
       where: {
         productId: {
