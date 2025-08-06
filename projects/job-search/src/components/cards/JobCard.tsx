@@ -1,84 +1,93 @@
 import Image from "next/image";
-import { Job } from "@/data/data";
 import ViewDetails from "../UI/buttons/ViewDetails";
 import SaveButton from "../UI/buttons/SaveButton";
-import Link from "next/link";
+import { JobWithTime } from "@/lib/types";
+import { MapPin, Clock, DollarSign } from "lucide-react";
 
-export default function JobCard({ job }: { job: Job }) {
-  // Helper function to format salary
+export default function JobCard({ job }: { job: JobWithTime }) {
   const getSalaryDisplay = () => {
-    if (job.job_salary) return job.job_salary;
     if (job.job_min_salary && job.job_max_salary) {
-      const period = job.job_salary_period || "year";
-      return `$${job.job_min_salary.toLocaleString()} - $${job.job_max_salary.toLocaleString()} per ${period}`;
+      return `$${job.job_min_salary.toLocaleString()} - $${job.job_max_salary.toLocaleString()}/ ${job.job_salary_period}`;
     }
-    if (job.job_min_salary) {
-      const period = job.job_salary_period || "year";
-      return `$${job.job_min_salary.toLocaleString()}+ per ${period}`;
+
+    if (job.job_salary) {
+      return `$${job.job_salary.toLocaleString()} / ${job.job_salary_period}`;
     }
-    return "Competitive salary";
+
+    return "Competitive";
   };
 
   return (
-    <div className="flex flex-col bg-white/10 border border-white/10 rounded-2xl min-h-52 p-5">
-      <div className="flex justify-between items-center mb-3">
-        <div className="text-secondary flex-1 mr-4">
-          <h1 className="font-sans font-semibold text-2xl mb-1">
+    <div className="bg-card/20 backdrop-blur-lg border shadow shadow-primary/10 rounded-xl p-6 hover:bg-card/30 transition-all duration-200 group">
+      
+      <div className="flex justify-between items-start mb-4">
+        <div className="flex-1">
+          <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
             {job.job_title}
-          </h1>
-          <Link
-            href={job.employer_website || `/`}
-            className="hover:underline text-lg text-blue-400"
-          >
-            {job.employer_name}
-          </Link>
-          <div className="text-sm text-gray-400 mt-2 space-y-1">
-            <div> {job.job_location || "Remote"}</div>
-            <div> {job.job_employment_type || "Full-time"}</div>
-            <div> {getSalaryDisplay()}</div>
-            <div> Posted {job.job_posted_at || "Recently"}</div>
-            {job.job_is_remote && (
-              <div className="text-green-400"> Remote Available</div>
-            )}
+          </h3>
+          <div className="flex items-center gap-2 mb-3">
+            <Image
+              src={job.employer_logo || "/vercel.svg"}
+              alt={job.employer_name}
+              height={20}
+              width={20}
+              className="rounded"
+            />
+            <span className="text-muted-foreground text-sm">
+              {job.employer_name}
+            </span>
           </div>
         </div>
-        <Image
-          className="rounded-2xl flex-shrink-0 aspect-square"
-          src={job.employer_logo || "/vercel.svg"}
-          alt={job.employer_name}
-          width={80}
-          height={80}
-        />
+        <div className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium">
+          {"$ "}{getSalaryDisplay()}
+        </div>
       </div>
 
+      
+      <div className="flex flex-wrap gap-4 mb-4 text-sm text-muted-foreground">
+        <div className="flex items-center gap-1">
+          <MapPin className="w-4 h-4" />
+          {job.job_location || "Remote"}
+        </div>
+        <div className="flex items-center gap-1">
+          <Clock className="w-4 h-4" />
+          {job.job_employment_type || "Full-time"}
+        </div>
+        {job.job_is_remote && (
+          <span className="bg-green-500/10 text-green-600 px-2 py-1 rounded text-xs">
+            Remote
+          </span>
+        )}
+      </div>
+
+      
       {job.job_benefits && job.job_benefits.length > 0 && (
-        <div className="mb-3">
-          <div className="text-sm text-gray-300 mb-1">Benefits:</div>
-          <div className="flex flex-wrap gap-1">
-            {job.job_benefits.slice(0, 3).map((benefit) => (
+        <div className="mb-4">
+          <div className="flex flex-wrap gap-2">
+            {job.job_benefits.slice(0, 2).map((benefit, index) => (
               <span
-                key={benefit}
-                className="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded"
+                key={benefit+index}
+                className="bg-accent/20 text-accent-foreground px-2 py-1 rounded text-xs"
               >
                 {benefit}
               </span>
             ))}
-            {job.job_benefits.length > 3 && (
-              <span className="text-xs text-gray-400">
-                +{job.job_benefits.length - 3} more
+            {job.job_benefits.length > 2 && (
+              <span className="text-muted-foreground text-xs">
+                +{job.job_benefits.length - 2} more
               </span>
             )}
           </div>
         </div>
       )}
 
-      <div className="flex justify-between items-end mt-auto">
-        <div className="text-xs text-gray-500">
-          Published by {job.job_publisher || "Job Board"}
-        </div>
-        <div className="flex max-h-10 items-stretch gap-3">
+      <div className="flex justify-between items-center pt-4 border-t border-border/20">
+        <span className="text-xs text-muted-foreground">
+          {job.job_posted_at || "Recently posted"}
+        </span>
+        <div className="flex gap-2">
           <ViewDetails job_id={job.job_id} />
-          <SaveButton />
+          <SaveButton job_id={job.job_id} />
         </div>
       </div>
     </div>

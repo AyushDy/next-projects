@@ -1,8 +1,13 @@
-export default function LoginButton(){
+import Link from "next/link";
+import { LogIn } from "lucide-react";
+import Button from "@/components/UI/Button";
 
-    return(
-        <button className="px-5 mx-5 py-2 rounded-md opacity-40 cursor-pointer hover:opacity-100 transition-all duration-300 bg-white/10 border border-white-20">
-            Login
-        </button>
-    )
+export default function LoginButton() {
+  return (
+    <Link href="/auth" className="mr-5">
+      <Button variant="ghost" icon={LogIn} iconPosition="left">
+        Login
+      </Button>
+    </Link>
+  );
 }

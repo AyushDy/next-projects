@@ -5,14 +5,14 @@ import Header from "../components/headers/Header";
 import { Inter } from "next/font/google";
 import { Suspense } from "react";
 import Loading from "./loading";
-
+import AuthSavedContextProvider from "@/contexts/contexProviders/AuthSavedContextProvider";
+import { ThemeProvider } from "@/components/UI/reusable/ThemeProvider";
 
 const inter = Inter({
-  subsets: ['latin'],
-  weight : ['400', '600', '700'],
-  variable: '--font-inter',
-})
-
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+  variable: "--font-inter",
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,18 +31,31 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased relative`}
       >
-        <Header />
-        <Suspense fallback={<Loading />}>
-        {children}
-        </Suspense>
+        <div id="toast-root"></div>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <AuthSavedContextProvider>
+            <Header />
+            <Suspense fallback={<Loading />}>
+              {modal}
+              {children}
+            </Suspense>
+          </AuthSavedContextProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -1,118 +1,239 @@
-const job = {
-      "job_id": "BhyMFF0tH0UyF7TIAAAAAA==",
-      "job_title": "Front End Developer, Mid-Level",
-      "employer_name": "Jobright.ai",
-      "employer_logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRc11c46XEF7nUag98qauGWM3tBuQH8ELcz8Cbg&s=0",
-      "employer_website": "https://jobright.ai",
-      "job_publisher": "LinkedIn",
-      "job_employment_type": "Contractor",
-      "job_employment_types": [
-        "CONTRACTOR",
-        "CONTRACTOR"
-      ],
-      "job_apply_link": "https://www.linkedin.com/jobs/view/front-end-developer-mid-level-at-jobright-ai-4274385300?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
-      "job_apply_is_direct": false,
-      "apply_options": [
-        {
-          "publisher": "LinkedIn",
-          "apply_link": "https://www.linkedin.com/jobs/view/front-end-developer-mid-level-at-jobright-ai-4274385300?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
-          "is_direct": false
-        },
-        {
-          "publisher": "BeBee",
-          "apply_link": "https://us.bebee.com/job/b4f547f585de388e348aaed16ef1ff73?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
-          "is_direct": false
-        },
-        {
-          "publisher": "Jobs Trabajo.org",
-          "apply_link": "https://us.trabajo.org/job-3310-7309cb8087b653b98eba93e6301895c3?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
-          "is_direct": false
-        }
-      ],
-      "job_description": "Verified Job On Employer Career Site\n\nJob Summary:\n\nNorthern Trust is a company dedicated to delivering innovative experiences for clients through a multidisciplinary design and research team. They are seeking a Front End Engineer for their Design System team to build frontend experiences and elevate digital interactions through prototypes and components while collaborating closely with design and product teams.\n\nResponsibilities:\n\n• Develops reusable/configurable components in React and Typescript\n\n• Contributes back to our design system in the form of components, documentation, best practices, and supports.\n\n• Exhibits deep understanding of HTML, CSS, and JavaScript/Typescript to help support implementation team with best practices\n\n• Contributes to an open culture that enables development through direct but kind feedback, promotes diverse perspectives and fosters a sense of curiosity and optimism.\n\n• Manages expectations and deliver effective, efficient, and thoughtful technical solutions.\n\n• Collaborates and communicate professionally with designers, product owners and architects to understand technical needs and user requirements while effectively communicating the complexity, intent, and specifications of development tasks.\n\nQualifications:\n\nRequired:\n\n• A minimum of two years of front-end UI development experience, writing semantic HTML, CSS, ES6 JavaScript and Typescript\n\n• Strong knowledge on Typescript and React framework\n\n• Strong knowledge on CSS frameworks and CSS processors\n\n• Demonstrate deep understanding and advocacy on software engineering best practices\n\n• Proven experience on writing unit test and Test Driven Development\n\n• Experience with debugging and browser performance optimization\n\n• Experience using GIT and source control workflows with multiple contributors\n\n• Experience with Node, Webpack, and NPM libraries\n\n• Practical understanding of accessibility standards and WCAG 2.1 compliance\n\n• Attention to detail, having a sense of design and layout\n\n• Excellent verbal and written communication skills (the ability to effectively sell an idea)\n\n• Ability to manage time wisely given competing priorities, meet agreed upon deadlines, and be accountable for work\n\n• Experience in working with a cross-functional team or large-scale software development lifecycle, including waterfall and (more importantly) agile methodologies\n\n• Work portfolio (applications, code samples) that demonstrates systematic and creative development thinking as well as a deep understanding of UI development best practices\n\nPreferred:\n\n• Past experience working in a design system team\n\n• Experience with end-to-end testing\n\n• Experience with mobile device testing frameworks\n\nCompany:\n\nNorthern Trust is a global leader in delivering innovative investment management, asset and fund administration, fiduciary and banking. Founded in 1889, the company is headquartered in Chicago, Illinois, USA, with a team of 10001+ employees. The company is currently Public Company.",
-      "job_is_remote": false,
-      "job_posted_at": "21 hours ago",
-      "job_posted_at_timestamp": 1753902000,
-      "job_posted_at_datetime_utc": "2025-07-30T19:00:00.000Z",
-      "job_location": "Chicago, IL",
-      "job_city": "Chicago",
-      "job_state": "Illinois",
-      "job_country": "US",
-      "job_latitude": 41.88325,
-      "job_longitude": -87.6323879,
-      "job_benefits": null,
-      "job_google_link": "https://www.google.com/search?q=jobs&gl=us&hl=en&udm=8#vhid=vt%3D20/docid%3DBhyMFF0tH0UyF7TIAAAAAA%3D%3D&vssid=jobs-detail-viewer",
-      "job_salary": null,
-      "job_min_salary": null,
-      "job_max_salary": null,
-      "job_salary_period": null,
-      "job_highlights": {
-        "Qualifications": [
-          "A minimum of two years of front-end UI development experience, writing semantic HTML, CSS, ES6 JavaScript and Typescript",
-          "Strong knowledge on Typescript and React framework",
-          "Strong knowledge on CSS frameworks and CSS processors",
-          "Demonstrate deep understanding and advocacy on software engineering best practices",
-          "Proven experience on writing unit test and Test Driven Development",
-          "Experience with debugging and browser performance optimization",
-          "Experience using GIT and source control workflows with multiple contributors",
-          "Experience with Node, Webpack, and NPM libraries",
-          "Practical understanding of accessibility standards and WCAG 2.1 compliance",
-          "Attention to detail, having a sense of design and layout",
-          "Excellent verbal and written communication skills (the ability to effectively sell an idea)",
-          "Ability to manage time wisely given competing priorities, meet agreed upon deadlines, and be accountable for work",
-          "Experience in working with a cross-functional team or large-scale software development lifecycle, including waterfall and (more importantly) agile methodologies",
-          "Work portfolio (applications, code samples) that demonstrates systematic and creative development thinking as well as a deep understanding of UI development best practices"
-        ],
-        "Responsibilities": [
-          "Develops reusable/configurable components in React and Typescript",
-          "Contributes back to our design system in the form of components, documentation, best practices, and supports",
-          "Exhibits deep understanding of HTML, CSS, and JavaScript/Typescript to help support implementation team with best practices",
-          "Contributes to an open culture that enables development through direct but kind feedback, promotes diverse perspectives and fosters a sense of curiosity and optimism",
-          "Manages expectations and deliver effective, efficient, and thoughtful technical solutions",
-          "Collaborates and communicate professionally with designers, product owners and architects to understand technical needs and user requirements while effectively communicating the complexity, intent, and specifications of development tasks"
-        ]
-      },
-      "job_onet_soc": "15113400",
-      "job_onet_job_zone": "3"
-    }
-
-export type Job = {
-    job_id: string;
-    job_title: string;
-    employer_name: string;
-    employer_logo: string;
-    employer_website: string;
-    job_publisher: string;
-    job_employment_type: string;
-    job_employment_types: string[];
-    job_apply_link: string;
-    job_apply_is_direct: boolean;
-    apply_options: {
-        publisher: string;
-        apply_link: string;
-        is_direct: boolean;
-    }[];
-    job_description: string;
-    job_is_remote: boolean;
-    job_posted_at: string;
-    job_posted_at_timestamp: number;
-    job_posted_at_datetime_utc: string;
-    job_location: string;
-    job_city: string;
-    job_state: string;
-    job_country: string;
-    job_latitude: number;
-    job_longitude: number;
-    job_benefits: string[] | null;
-    job_google_link: string;
-    job_salary: string | null;
-    job_min_salary: number | null;
-    job_max_salary: number | null;
-    job_salary_period: string | null;
-    job_highlights: {
-        Qualifications: string[];
-        Responsibilities: string[];
-    };
-    job_onet_soc: string;
-    job_onet_job_zone: string;
+export interface job {
+  job_title: string;
+  employer_name: string;
+  employer_logo: string;
+  job_publisher: string;
+  job_description: string;
+  job_employment_type: string;
+  job_is_remote: string;
+  job_posted_at: string;
+  job_city: string;
+  job_location: string;
+  job_benefits: string[];
+  job_salary: number;
+  job_min_salary: number;
+  job_max_salary: number;
+  job_salary_period: string;
+  job_qualifications: string[];
+  job_responsibilities: string[];
 }
+
+export interface JobWithTime extends job {
+  job_posted_at: string;
+}
+
+export interface JobType extends job {
+  job_id: string;
+}
+
+export interface JobWithIdType extends job {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export const jobEntries = [
+  {
+    job_title: "Software Engineer",
+    employer_name: "Admin Company",
+    employer_logo: "https://image.pngaaa.com/392/5315392-middle.png",
+    job_description: "Develop and maintain software applications.",
+    job_employment_type: "Full-time",
+    job_is_remote: "true",
+    job_city: "San Francisco",
+    job_location: "Remote",
+    job_benefits: ["Health Insurance", "401k"],
+    job_salary: 120000,
+    job_min_salary: 100000,
+    job_max_salary: 140000,
+    job_salary_period: "yearly",
+    job_qualifications: ["Bachelor's Degree", "3+ years experience"],
+    job_responsibilities: ["Write code", "Fix bugs"],
+    company_id: "688f1920de6e0cd1aa4c1ca1",
+  },
+  {
+    job_title: "Frontend Developer",
+    employer_name: "Admin Company",
+    employer_logo: "https://image.pngaaa.com/392/5315392-middle.png",
+    job_description:
+      "Build responsive and interactive user interfaces using modern web technologies.",
+    job_employment_type: "Full-time",
+    job_is_remote: "true",
+    job_city: "New York",
+    job_location: "Remote",
+    job_benefits: ["Health Insurance", "401k", "Flexible Hours"],
+    job_salary: 95000,
+    job_min_salary: 80000,
+    job_max_salary: 110000,
+    job_salary_period: "yearly",
+    job_qualifications: [
+      "Bachelor's Degree",
+      "React experience",
+      "JavaScript proficiency",
+    ],
+    job_responsibilities: [
+      "Develop UI components",
+      "Optimize performance",
+      "Collaborate with designers",
+    ],
+    company_id: "688f1920de6e0cd1aa4c1ca1",
+  },
+  {
+    job_title: "Backend Developer",
+    employer_name: "Admin Company",
+    employer_logo: "https://image.pngaaa.com/392/5315392-middle.png",
+    job_description:
+      "Design and implement server-side logic, databases, and APIs.",
+    job_employment_type: "Part-time",
+    job_is_remote: "false",
+    job_city: "Austin",
+    job_location: "Austin, TX",
+    job_benefits: ["Health Insurance", "Remote Work Options"],
+    job_salary: 85000,
+    job_min_salary: 70000,
+    job_max_salary: 100000,
+    job_salary_period: "yearly",
+    job_qualifications: [
+      "Bachelor's Degree",
+      "Node.js experience",
+      "Database knowledge",
+    ],
+    job_responsibilities: [
+      "Build APIs",
+      "Database design",
+      "Server maintenance",
+    ],
+    company_id: "688f1920de6e0cd1aa4c1ca1",
+  },
+  {
+    job_title: "Data Analyst",
+    employer_name: "Admin Company",
+    employer_logo: "https://image.pngaaa.com/392/5315392-middle.png",
+    job_description:
+      "Analyze data to provide business insights and support decision-making processes.",
+    job_employment_type: "Contract",
+    job_is_remote: "true",
+    job_city: "Chicago",
+    job_location: "Remote",
+    job_benefits: ["Flexible Schedule", "Learning Budget"],
+    job_salary: 75000,
+    job_min_salary: 60000,
+    job_max_salary: 90000,
+    job_salary_period: "yearly",
+    job_qualifications: [
+      "Bachelor's Degree",
+      "SQL knowledge",
+      "Excel expertise",
+    ],
+    job_responsibilities: [
+      "Data analysis",
+      "Report generation",
+      "Dashboard creation",
+    ],
+    company_id: "688f1920de6e0cd1aa4c1ca1",
+  },
+  {
+    job_title: "UI/UX Designer",
+    employer_name: "Admin Company",
+    employer_logo: "https://image.pngaaa.com/392/5315392-middle.png",
+    job_description:
+      "Create intuitive and visually appealing user interfaces and experiences.",
+    job_employment_type: "Internship",
+    job_is_remote: "false",
+    job_city: "Seattle",
+    job_location: "Seattle, WA",
+    job_benefits: ["Mentorship Program", "Health Insurance"],
+    job_salary: 45000,
+    job_min_salary: 40000,
+    job_max_salary: 50000,
+    job_salary_period: "yearly",
+    job_qualifications: [
+      "Design portfolio",
+      "Figma proficiency",
+      "User research knowledge",
+    ],
+    job_responsibilities: [
+      "Design mockups",
+      "User research",
+      "Prototype creation",
+    ],
+    company_id: "688f1920de6e0cd1aa4c1ca1",
+  },
+  {
+    job_title: "DevOps Engineer",
+    employer_name: "Admin Company",
+    employer_logo: "https://image.pngaaa.com/392/5315392-middle.png",
+    job_description:
+      "Manage CI/CD pipelines and cloud infrastructure for scalable applications.",
+    job_employment_type: "Freelance",
+    job_is_remote: "true",
+    job_city: "Denver",
+    job_location: "Remote",
+    job_benefits: ["Flexible Hours", "Project Bonuses"],
+    job_salary: 110000,
+    job_min_salary: 95000,
+    job_max_salary: 125000,
+    job_salary_period: "yearly",
+    job_qualifications: [
+      "AWS certification",
+      "Docker experience",
+      "Kubernetes knowledge",
+    ],
+    job_responsibilities: [
+      "Deploy applications",
+      "Monitor systems",
+      "Automate processes",
+    ],
+    company_id: "688f1920de6e0cd1aa4c1ca1",
+  },
+  {
+    job_title: "QA Engineer",
+    employer_name: "Admin Company",
+    employer_logo: "https://image.pngaaa.com/392/5315392-middle.png",
+    job_description:
+      "Ensure software quality through comprehensive testing and automation.",
+    job_employment_type: "Full-time",
+    job_is_remote: "false",
+    job_city: "Boston",
+    job_location: "Boston, MA",
+    job_benefits: ["Health Insurance", "401k", "Training Budget"],
+    job_salary: 80000,
+    job_min_salary: 70000,
+    job_max_salary: 90000,
+    job_salary_period: "yearly",
+    job_qualifications: [
+      "Testing experience",
+      "Automation tools",
+      "Bug tracking systems",
+    ],
+    job_responsibilities: ["Write test cases", "Execute tests", "Report bugs"],
+    company_id: "688f1920de6e0cd1aa4c1ca1",
+  },
+  {
+    job_title: "Product Manager",
+    employer_name: "Admin Company",
+    employer_logo: "https://image.pngaaa.com/392/5315392-middle.png",
+    job_description:
+      "Lead product development and strategy to deliver exceptional user experiences.",
+    job_employment_type: "Full-time",
+    job_is_remote: "true",
+    job_city: "Miami",
+    job_location: "Remote",
+    job_benefits: ["Health Insurance", "Stock Options", "Unlimited PTO"],
+    job_salary: 130000,
+    job_min_salary: 115000,
+    job_max_salary: 145000,
+    job_salary_period: "yearly",
+    job_qualifications: [
+      "MBA preferred",
+      "Product management experience",
+      "Agile methodology",
+    ],
+    job_responsibilities: [
+      "Define product roadmap",
+      "Coordinate teams",
+      "Analyze metrics",
+    ],
+    company_id: "688f1920de6e0cd1aa4c1ca1",
+  },
+];

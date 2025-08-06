@@ -1,13 +1,16 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import FilterCard, { FilterSection } from "../cards/FilterCard";
+import PriceFilterCard from "../cards/PriceFilterCard";
 
 export default function SearchFilters() {
-  const [jobtype, setJobType] = useState<string>("");
-  const router = useRouter();
-
+  const [queryParams ,setQueryParams] = React.useState<URLSearchParams>()
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    setQueryParams(params);
+  }, []);
   const filters: FilterSection[] = [
     {
       title: "Job Type",
@@ -30,8 +33,9 @@ export default function SearchFilters() {
   ];
 
   return (
-    <>
-        <FilterCard filters={filters} />
-    </>
+    <div className="space-y-4">
+      <FilterCard filters={filters} queryParams={queryParams} />
+      <PriceFilterCard />
+    </div>
   );
 }

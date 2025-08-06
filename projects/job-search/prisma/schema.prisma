@@ -1,0 +1,93 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String       @id @default(auto()) @map("_id") @db.ObjectId
+  username     String
+  logo         String?
+  email        String       @unique
+  password     String
+  role         Role
+  savedJob     savedJobs?
+  appliedJob   appliedJobs?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  ownedCompany Company?     @relation("CompanyOwner")
+}
+
+model Company {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  location    String
+  logo        String?
+  job         Job[]   @relation("CompanyJobs")
+  ownerId     String  @unique @db.ObjectId
+  owner       User    @relation("CompanyOwner", fields: [ownerId], references: [id])
+}
+
+
+
+model appliedJobs {
+  id     String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId String   @unique @db.ObjectId
+  jobIds String[] @db.ObjectId
+  user   User     @relation(fields: [userId], references: [id])
+}
+
+model savedJobs {
+  id     String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId String   @unique @db.ObjectId
+  jobIds String[] @db.ObjectId
+  user   User     @relation(fields: [userId], references: [id])
+}
+
+model Reviews {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String   @db.ObjectId
+  companyId   String   @db.ObjectId
+  content     String
+  rating      Int
+  createdAt   DateTime @default(now())
+}
+
+model Job {
+  id                   String   @id @default(auto()) @map("_id") @db.ObjectId
+  job_title            String
+  employer_name        String
+  employer_logo        String?
+  job_description      String
+  job_employment_type  String
+  job_is_remote        Boolean
+  job_city             String
+  job_location         String
+  job_benefits         String[]
+  job_salary           Int?
+  job_min_salary       Int
+  job_max_salary       Int
+  job_salary_period    String
+  job_qualifications   String[]
+  job_responsibilities String[]
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  company_id           String?  @db.ObjectId
+  company              Company? @relation("CompanyJobs", fields: [company_id], references: [id])
+  applicants           String[] @db.ObjectId
+}
+
+enum Role {
+  admin
+  user
+}
