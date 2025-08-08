@@ -45,7 +45,7 @@ export default function CompanyCard({ company }: CompanyCardProps) {
 
       <div className="flex items-center justify-between">
         <div className="text-xs text-muted-foreground bg-muted/20 px-2 py-1 rounded border border-border/20">
-          {company.job?.length || 0} jobs
+          {company.jobs?.length || 0} jobs
         </div>
 
         <Link

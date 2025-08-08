@@ -9,7 +9,7 @@ export async function GET(
   try {
     const { id } = await params;
 
-    const reviews = await db.reviews.findMany({
+    const reviews = await db.review.findMany({
       where: {
         companyId: id,
       },
@@ -19,7 +19,7 @@ export async function GET(
     });
 
     const reviewsWithUser = await Promise.all(
-      reviews.map(async (review) => {
+      reviews.map(async (review: any) => {
         const user = await db.user.findUnique({
           where: { id: review.userId },
           select: { username: true, logo: true },
@@ -64,7 +64,7 @@ export async function POST(
         { status: 401 }
       );
     }
-    const response = await db.reviews.create({
+    const response = await db.review.create({
       data: {
         content,
         rating,
@@ -112,8 +112,7 @@ export async function DELETE(
       );
     }
 
-    // Check if the review exists and belongs to the current user
-    const existingReview = await db.reviews.findFirst({
+    const existingReview = await db.review.findFirst({
       where: {
         id: reviewId,
         companyId,
@@ -128,7 +127,7 @@ export async function DELETE(
       );
     }
 
-    await db.reviews.delete({
+    await db.review.delete({
       where: {
         id: reviewId,
       },

@@ -20,11 +20,8 @@ export default function page() {
     );
   }
 
-
-
   if (company) {
-    redirect(`/profile/company/${company.id}`);
+    redirect(`/company/${company.id}`);
   }
-
   return <AddCompanyForm />;
 }

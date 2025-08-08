@@ -1,7 +1,7 @@
 import { useState, useTransition } from "react";
-import LoginButton from "../UI/buttons/LoginButton";
 import { AuthContextType, useAuthContext } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
+import Button from "../UI/Button";
 
 export default function LoginForm({ intercepted = false }: { intercepted?: boolean }) {
   const [isPending, startTransition] = useTransition();
@@ -11,6 +11,25 @@ export default function LoginForm({ intercepted = false }: { intercepted?: boole
     email: "",
     password: "",
   });
+
+  const cridentials = {
+    admin : {
+      email: "user1@gmail.com",
+      password: "password"
+    },
+    user1 : {
+      email: "user2@gmail.com",
+      password: "password"
+    },
+    user2 : {
+      email: "user3@gmail.com",
+      password: "password"
+    },
+    user3 : {
+      email: "user4@gmail.com",
+      password: "password"
+    }
+  }
 
   const router = useRouter();
 
@@ -27,6 +46,20 @@ export default function LoginForm({ intercepted = false }: { intercepted?: boole
     startTransition(async () => {
       setStatus("Logging in...");
       const res = await login(formDetails.email, formDetails.password);
+      if (res.success) {
+        setStatus("Login successful!");
+        window.location.href = "/";
+      } else {
+        setStatus(`Login failed: ${res.message}`);
+      }
+    });
+  }
+
+  function guestLogin(key: keyof typeof cridentials){
+    startTransition(async () => {
+      setStatus("Logging in...");
+      const { email, password } = cridentials[key];
+      const res = await login(email, password);
       if (res.success) {
         setStatus("Login successful!");
         window.location.href = "/";
@@ -94,6 +127,12 @@ export default function LoginForm({ intercepted = false }: { intercepted?: boole
           <span className="relative z-10">{isPending ? "Logging in..." : "Login"}</span>
           <span className="absolute inset-0 bg-gradient-to-r from-transparent via-primary-foreground/10 to-transparent opacity-0 group-hover:opacity-100 -translate-x-full group-hover:translate-x-full transition-all duration-1000"></span>
         </button>
+        <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2 ">
+          <Button type="button" onClick={()=>guestLogin("admin")}>Guest Login as Admin</Button>
+          <Button type="button" onClick={()=>guestLogin("user1")}>Guest Login as User1</Button>
+          <Button type="button" onClick={()=>guestLogin("user2")}>Guest Login as User2</Button>
+          <Button type="button" onClick={()=>guestLogin("user3")}>Guest Login as User3</Button>
+        </div>
       </div>
       {status && (
         <div className="text-sm text-foreground mt-4">

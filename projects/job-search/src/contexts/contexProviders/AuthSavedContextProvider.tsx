@@ -1,8 +1,8 @@
-"use client"
-
+"use client";
 
 import AuthContextProvider from "../AuthContext";
 import SavedJobsContextProvider from "../SavedJobsContext";
+import AppliedJobsContextProvider from "../AppliedJobsContext";
 
 export default function AuthSavedContextProvider({
   children,
@@ -11,7 +11,11 @@ export default function AuthSavedContextProvider({
 }) {
   return (
     <AuthContextProvider>
-      <SavedJobsContextProvider>{children}</SavedJobsContextProvider>
-    </AuthContextProvider>
+        <SavedJobsContextProvider>
+          <AppliedJobsContextProvider>
+            {children}
+          </AppliedJobsContextProvider>
+        </SavedJobsContextProvider>
+      </AuthContextProvider>
   );
 }

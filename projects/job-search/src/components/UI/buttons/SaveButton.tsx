@@ -7,19 +7,28 @@ import Button from "@/components/UI/Button";
 import ToastPortal from "../loaders/ToastPortal";
 import Toast from "../loaders/Toast";
 import DotsLoader from "../loaders/DotsLoaders";
+import { JobWithTime } from "@/lib/types";
 
-export default function SaveButton({ job_id, className, size="sm" }: { job_id: string, className?: string, size?: "sm" | "md" | "lg" }) {
-  const { saveJobId, removeJobId, isJobSaved, savingJobId, removingJobId } =
+export default function SaveButton({
+  job,
+  className,
+  size = "sm",
+}: {
+  job: JobWithTime;
+  className?: string;
+  size?: "sm" | "md" | "lg";
+}) {
+  const { saveJob, removeJob, isJobSaved, savingJobId, removingJobId } =
     useSavedContext();
   const [toastVisible, setToastVisible] = useState(false);
   const [status, setStatus] = useState("");
   const [type, setType] = useState<"success" | "error">("success");
 
-  const saved = isJobSaved(job_id);
-  const isLoading = savingJobId === job_id || removingJobId === job_id;
+  const saved = isJobSaved(job.id);
+  const isLoading = savingJobId === job.id || removingJobId === job.id;
 
   async function handleSave() {
-    const result = await saveJobId(job_id);
+    const result = await saveJob(job);
     if (result.success) {
       setStatus("Job saved successfully!");
       setType("success");
@@ -31,7 +40,7 @@ export default function SaveButton({ job_id, className, size="sm" }: { job_id: s
   }
 
   async function handleRemove() {
-    const result = await removeJobId(job_id);
+    const result = await removeJob(job.id);
     if (result.success) {
       setStatus("Job removed from saved list!");
       setType("success");

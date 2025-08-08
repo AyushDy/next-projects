@@ -15,7 +15,6 @@ export default function SearchField() {
 
   const router = useRouter();
 
-
   useEffect(() => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
@@ -46,9 +45,7 @@ export default function SearchField() {
         const result = await getJobSuggestions(debouncedQuery);
 
         if (debouncedQuery === query.trim()) {
-          const titleArray: any[] = result.data.map(
-            (job: any) => job.job_title
-          );
+          const titleArray: any[] = result.data.map((job: any) => job.title);
           setSearchResults([...new Set(titleArray)].slice(0, 8));
           setShowSuggestions(true);
         }
@@ -74,7 +71,7 @@ export default function SearchField() {
         abortControllerRef.current.abort();
       }
     };
-  },[]);
+  }, []);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -87,7 +84,7 @@ export default function SearchField() {
 
   return (
     <form
-      className="flex relative mx-5 lg:w-1/4 ml-auto bg-card/60 backdrop-blur-sm border border-border/50 hover:border-border p-3 rounded-full text-md transition-all duration-300 shadow-sm hover:shadow-md hover:bg-card/80 focus-within:ring-2 focus-within:ring-ring focus-within:border-transparent"
+      className="flex relative mx-5 lg:w-2/4 ml-auto bg-card/60 backdrop-blur-sm border border-border/50 hover:border-border p-3 rounded-full text-md transition-all duration-300 shadow-sm hover:shadow-md hover:bg-card/80 focus-within:ring-2 focus-within:ring-ring focus-within:border-transparent"
       onSubmit={handleSubmit}
     >
       <input
@@ -109,7 +106,7 @@ export default function SearchField() {
       {showSuggestions && (
         <SearchSuggestions
           searchResults={searchResults}
-          onClose={()=>setShowSuggestions(false)}
+          onClose={() => setShowSuggestions(false)}
         />
       )}
     </form>

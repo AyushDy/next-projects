@@ -1,4 +1,3 @@
-import SearchFilters from "@/components/forms/SearchFilters";
 import SearchJobsList from "@/components/UI/lists/SearchJobsList";
 import { searchJobs } from "@/lib/utils";
 import { notFound } from "next/navigation";
@@ -21,8 +20,6 @@ export default async function JobList({
   maxPrice?: number;
 }) {
 
-  console.log("page",page)
-  console.log("pageSize",pageSize)
   
   const result = await searchJobs(q, employmentType, jobType, page, pageSize, minPrice, maxPrice);
   if (!result.success) {

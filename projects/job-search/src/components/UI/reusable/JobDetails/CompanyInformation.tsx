@@ -1,16 +1,13 @@
-
 type CompanyInformationProps = {
-    employer_name: string;
-    employer_logo: string | null;
-    job_location: string;
-}
-
-
+  employerName: string;
+  employerLogo: string | null;
+  location: string;
+};
 
 export default function CompanyInformation({
-  employer_name,
-  employer_logo,
-  job_location,
+  employerName,
+  employerLogo,
+  location,
 }: CompanyInformationProps) {
   return (
     <>
@@ -19,16 +16,16 @@ export default function CompanyInformation({
           Company Information
         </h3>
         <div className="flex items-center gap-4">
-          {employer_logo && (
+          {employerLogo && (
             <img
-              src={employer_logo}
-              alt={`${employer_name} logo`}
+              src={employerLogo}
+              alt={`${employerName} logo`}
               className="w-12 h-12 rounded-lg object-cover"
             />
           )}
           <div>
-            <h4 className="font-medium text-foreground">{employer_name}</h4>
-            <p className="text-sm text-muted-foreground">{job_location}</p>
+            <h4 className="font-medium text-foreground">{employerName}</h4>
+            <p className="text-sm text-muted-foreground">{location}</p>
           </div>
         </div>
       </div>

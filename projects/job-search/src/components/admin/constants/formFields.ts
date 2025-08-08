@@ -10,7 +10,7 @@ interface FieldConfig {
   options?: { value: string; label: string }[];
 }
 
-export const EMPLOYMENT_TYPES = [
+export const employmentTypeS = [
   { value: "Full-time", label: "Full Time" },
   { value: "Part-time", label: "Part Time" },
   { value: "Contract", label: "Contract" },
@@ -18,7 +18,7 @@ export const EMPLOYMENT_TYPES = [
   { value: "Freelance", label: "Freelance" },
 ];
 
-export const SALARY_PERIODS = [
+export const salaryPeriodS = [
   { value: "Yearly", label: "Yearly" },
   { value: "Monthly", label: "Monthly" },
   { value: "Hourly", label: "Hourly" },
@@ -32,7 +32,7 @@ export const FORM_FIELDS: {
 } = {
   basic: [
     {
-      name: "job_title" as keyof JobFormData,
+      name: "title" as keyof JobFormData,
       label: "Job Title",
       required: true,
       placeholder: "e.g. Senior Software Engineer",
@@ -40,7 +40,7 @@ export const FORM_FIELDS: {
   ],
   details: [
     {
-      name: "job_description" as keyof JobFormData,
+      name: "description" as keyof JobFormData,
       label: "Job Description",
       type: "textarea",
       required: true,
@@ -49,69 +49,63 @@ export const FORM_FIELDS: {
         "Describe the job role, requirements, and what the candidate will be doing...",
     },
     {
-      name: "job_employment_type" as keyof JobFormData,
+      name: "employmentType" as keyof JobFormData,
       label: "Employment Type",
       type: "select",
       required: true,
-      options: EMPLOYMENT_TYPES,
+      options: employmentTypeS,
     },
     {
-      name: "job_city" as keyof JobFormData,
+      name: "city" as keyof JobFormData,
       label: "City",
       required: true,
       placeholder: "e.g. San Francisco",
     },
     {
-      name: "job_location" as keyof JobFormData,
+      name: "location" as keyof JobFormData,
       label: "Full Location",
       required: true,
       placeholder: "e.g. San Francisco, CA, USA",
     },
     {
-      name: "job_is_remote" as keyof JobFormData,
+      name: "isRemote" as keyof JobFormData,
       label: "Remote Work Available",
       type: "checkbox",
     },
   ],
   salary: [
     {
-      name: "job_salary" as keyof JobFormData,
-      label: "Salary (Optional)",
-      type: "number",
-      placeholder: "120000",
-    },
-    {
-      name: "job_min_salary" as keyof JobFormData,
+      name: "minSalary" as keyof JobFormData,
       label: "Min Salary",
       type: "number",
       required: true,
       placeholder: "80000",
     },
     {
-      name: "job_max_salary" as keyof JobFormData,
+      name: "maxSalary" as keyof JobFormData,
       label: "Max Salary",
       type: "number",
       required: true,
       placeholder: "150000",
     },
     {
-      name: "job_salary_period" as keyof JobFormData,
+      name: "salaryPeriod" as keyof JobFormData,
       label: "Salary Period",
       type: "select",
       required: true,
-      options: SALARY_PERIODS,
+      options: salaryPeriodS,
     },
   ],
   additional: [
     {
-      name: "job_benefits" as keyof JobFormData,
+      name: "benefits" as keyof JobFormData,
       label: "Benefits (comma-separated)",
       type: "textarea",
       rows: 3,
       placeholder: "Health Insurance, 401k, Flexible Hours, Remote Work",
     },
     {
-      name: "job_qualifications" as keyof JobFormData,
+      name: "qualifications" as keyof JobFormData,
       label: "Required Qualifications (comma-separated)",
       type: "textarea",
       required: true,
@@ -119,7 +113,7 @@ export const FORM_FIELDS: {
       placeholder: "Bachelor's degree, 5+ years experience, JavaScript, React",
     },
     {
-      name: "job_responsibilities" as keyof JobFormData,
+      name: "responsibilities" as keyof JobFormData,
       label: "Key Responsibilities (comma-separated)",
       type: "textarea",
       required: true,

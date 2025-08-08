@@ -2,10 +2,7 @@ import db from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { id } from "zod/locales";
 
-
-
-
-//search suggestions 
+//search suggestions
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = req.nextUrl;
@@ -24,7 +21,7 @@ export async function GET(req: NextRequest) {
       where: {
         OR: [
           {
-            job_title: {
+            title: {
               contains: query,
               mode: "insensitive",
             },
@@ -43,9 +40,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        message: error instanceof Error ? error.message :  "An error occurred while fetching job suggestions",
+        message:
+          error instanceof Error
+            ? error.message
+            : "An error occurred while fetching job suggestions",
       },
       { status: 500 }
     );
-  } 
-} 
+  }
+}

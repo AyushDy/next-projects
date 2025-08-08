@@ -25,6 +25,7 @@ export default function Links() {
             <ProfileLink text="Create a Company" url="/company" />
           )}
           <ProfileLink text="Saved Jobs" url="/profile/saved" />
+          <ProfileLink text="Applied Jobs" url="/profile/applications" />
         </>
       )}
     </div>

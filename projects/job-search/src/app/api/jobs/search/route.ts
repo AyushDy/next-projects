@@ -1,187 +1,190 @@
 import db from "@/lib/prisma";
 import { JobWithTime } from "@/lib/types";
 import { formatJobsWithTimestamps } from "@/lib/utils";
-import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
-//search for jobs for all users
+
 export async function GET(req: NextRequest) {
   try {
-    const query = req.nextUrl.searchParams.get("q");
+    const query = req.nextUrl.searchParams.get("q") || "";
     const employmentType = req.nextUrl.searchParams.get("employmentType");
-    let jobType = req.nextUrl.searchParams.get("jobType");
+    let isRemote = req.nextUrl.searchParams.get("isRemote");
     const page = parseInt(req.nextUrl.searchParams.get("page") || "1", 10);
-    const pageSize = parseInt(
-      req.nextUrl.searchParams.get("pageSize") || "10",
-      10
-    );
-    const minPrice = parseInt(
-      req.nextUrl.searchParams.get("minPrice") || "0",
-      10
-    );
-    const maxPrice = parseInt(
-      req.nextUrl.searchParams.get("maxPrice") || "1000000",
-      10
-    );
+    const pageSize = parseInt(req.nextUrl.searchParams.get("pageSize") || "10", 10);
+    const minSalary = parseInt(req.nextUrl.searchParams.get("minSalary") || "0", 10);
+    const maxSalary = parseInt(req.nextUrl.searchParams.get("maxSalary") || "1000000", 10);
 
-    console.log("Employment type:", employmentType, "Job type:", jobType);
+    if (isRemote === "hybrid") isRemote = "";
 
-    if (jobType === "hybrid") {
-      jobType = "";
-    }
-
-    if (!query) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Query parameter 'q' is required",
-        },
-        { status: 400 }
-      );
-    }
-
-    if (query.trim().length <= 3) {
-      const whereFilter: Prisma.JobWhereInput = {
-        AND: [
+    if (query.trim().length > 3) {
+      const pipeline: any[] = [
+  {
+    $search: {
+      index: "default", 
+      compound: {
+        should: [
           {
-            OR: [
-              { job_title: { contains: query, mode: "insensitive" } },
-              { job_description: { contains: query, mode: "insensitive" } },
-              { employer_name: { contains: query, mode: "insensitive" } },
-            ],
+            autocomplete: {
+              query,
+              path: "title",
+              tokenOrder: "sequential", 
+              fuzzy: {
+                maxEdits: 1, 
+              },
+            },
           },
-          employmentType
-            ? {
-                job_employment_type: {
-                  contains: employmentType,
-                  mode: "insensitive",
-                },
-              }
-            : {},
-          jobType ? { job_is_remote: jobType === "remote" } : {},
           {
-            OR: [
-              {
-                AND: [
-                  { job_min_salary: { lte: maxPrice } }, 
-                  { job_max_salary: { gte: minPrice } }, 
-                ],
+            autocomplete: {
+              query,
+              path: "description",
+              tokenOrder: "sequential",
+              fuzzy: {
+                maxEdits: 1,
               },
-              {
-                AND: [
-                  { job_salary: { not: null } },
-                  { job_salary: { gte: minPrice, lte: maxPrice } },
-                ],
-              },
-            ],
+            },
           },
         ],
-      };
-
-      const [jobs, totalCount] = await Promise.all([
-        db.job.findMany({
-          where: whereFilter,
-          orderBy: { createdAt: "desc" },
-          skip: (page - 1) * pageSize,
-          take: pageSize,
-        }),
-        db.job.count({
-          where: whereFilter,
-        }),
-      ]);
-
-      const totalPages = Math.ceil(totalCount / pageSize);
-      const formattedJobs = formatJobsWithTimestamps(jobs);
-
-      return NextResponse.json(
-        { success: true, data: formattedJobs, totalPages },
-        { status: 200 }
-      );
-    }
-
-    const facetPipeline: any[] = [
-      {
-        $search: {
-          index: "jobs-fuzzy-search",
-          text: {
-            query,
-            path: ["job_title", "job_description"],
-            fuzzy: { maxEdits: 2, prefixLength: 3 },
+        minimumShouldMatch: 1,
+      },
+    },
+  },
+  {
+    $match: {
+      ...(employmentType && {
+        employmentType: { $regex: new RegExp(employmentType, "i") },
+      }),
+      ...(isRemote && { isRemote: isRemote === "true" }),
+      minSalary: { $gte: minSalary },
+      maxSalary: { $lte: maxSalary },
+    },
+  },
+  {
+    $facet: {
+      data: [
+        { $sort: { createdAt: -1 } },
+        { $skip: (page - 1) * pageSize },
+        { $limit: pageSize },
+        {
+          $lookup: {
+            from: "Company",
+            localField: "companyId",
+            foreignField: "_id",
+            as: "company",
           },
         },
-      },
-      {
-        $match: {
-          ...(employmentType && {
-            job_employment_type: { $regex: new RegExp(employmentType, "i") },
-          }),
-          ...(jobType && { job_is_remote: jobType === "remote" }),
-          $or: [
-            {
-              $and: [
-                { job_min_salary: { $lte: maxPrice } }, 
-                { job_max_salary: { $gte: minPrice } }, 
+        {
+          $addFields: {
+            company: { $arrayElemAt: ["$company", 0] },
+          },
+        },
+        {
+          $project: {
+            id: "$_id",
+            _id: 0,
+            title: 1,
+            description: 1,
+            employmentType: 1,
+            isRemote: 1,
+            city: 1,
+            location: 1,
+            minSalary: 1,
+            maxSalary: 1,
+            salaryPeriod: 1,
+            benefits: 1,
+            qualifications: 1,
+            responsibilities: 1,
+            createdAt: 1,
+            updatedAt: 1,
+            employerName: "$company.name",
+            employerLogo: "$company.logo",
+          },
+        },
+      ],
+      totalCount: [{ $count: "count" }],
+    },
+  },
+];
+
+
+      const response = (await db.$runCommandRaw({
+        aggregate: "Job",
+        pipeline,
+        cursor: {},
+      })) as any;
+
+      const [{ data = [], totalCount = [] }] = response?.cursor?.firstBatch || [];
+      const formatted = formatJobsWithTimestampsLocal(data);
+
+      return NextResponse.json({
+        success: true,
+        data: formatted,
+        totalCount: totalCount?.[0]?.count || 0,
+        totalPages: Math.ceil((totalCount?.[0]?.count || 0) / pageSize),
+      });
+    }
+
+    const where: any = {
+      AND: [
+        query
+          ? {
+              OR: [
+                { title: { contains: query, mode: "insensitive" } },
+                { description: { contains: query, mode: "insensitive" } },
               ],
-            },
-          
-            {
-              job_salary: { $gte: minPrice, $lte: maxPrice },
-            },
+            }
+          : {},
+        employmentType
+          ? { employmentType: { equals: employmentType, mode: "insensitive" } }
+          : {},
+        isRemote ? { isRemote: isRemote === "true" } : {},
+        {
+          AND: [
+            { minSalary: { gte: minSalary } },
+            { maxSalary: { lte: maxSalary } },
           ],
         },
-      },
-      {
-        $facet: {
-          data: [
-            { $sort: { createdAt: -1 } },
-            { $skip: (page - 1) * pageSize },
-            { $limit: pageSize },
-            {
-              $project: {
-                id: "$_id",
-                _id: 0,
-                job_title: 1,
-                employer_name: 1,
-                employer_logo: 1,
-                job_publisher: 1,
-                job_description: 1,
-                job_employment_type: 1,
-                job_is_remote: 1,
-                job_city: 1,
-                job_location: 1,
-                job_benefits: 1,
-                job_salary: 1,
-                job_min_salary: 1,
-                job_max_salary: 1,
-                job_salary_period: 1,
-                job_qualifications: 1,
-                job_responsibilities: 1,
-                createdAt: 1,
-                updatedAt: 1,
-              },
+      ],
+    };
+
+    const [jobs, totalCount] = await Promise.all([
+      db.job.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        include: {
+          company: {
+            select: {
+              name: true,
+              logo: true,
             },
-          ],
-          totalCount: [{ $count: "count" }],
+          },
+          _count: {
+            select: {
+              applications: true,
+              savedBy: true,
+            },
+          },
         },
-      },
-    ];
+      }),
+      db.job.count({ where }),
+    ]);
 
-    const response = (await db.$runCommandRaw({
-      aggregate: "Job",
-      pipeline: facetPipeline,
-      cursor: {},
-    })) as any;
-
-    const [{ data, totalCount }] = response?.cursor?.firstBatch || [];
-    const jobs = formatJobsWithTimestampsLocal(data || []);
-    const count = totalCount?.[0]?.count || 0;
-    const totalPages = Math.ceil(count / pageSize);
+    const formattedJobs = formatJobsWithTimestamps(
+      jobs.map((job) => ({
+        ...job,
+        applicationCount: job._count.applications,
+        saveCount: job._count.savedBy,
+        employerName: job.company?.name,
+        employerLogo: job.company?.logo,
+      }))
+    );
 
     return NextResponse.json({
       success: true,
-      data: jobs,
-      totalCount: count,
-      totalPages: totalPages,
+      data: formattedJobs,
+      totalCount,
+      totalPages: Math.ceil(totalCount / pageSize),
     });
   } catch (error: any) {
     console.error("Search error:", error);
@@ -189,18 +192,12 @@ export async function GET(req: NextRequest) {
       {
         success: false,
         message: "Error searching jobs",
-        error:
-          process.env.NODE_ENV === "development" ? error.message : undefined,
+        data : error,
       },
       { status: 500 }
     );
   }
 }
-
-
-
-
-
 
 function formatJobsWithTimestampsLocal(jobs: any[]): JobWithTime[] {
   function timeAgo(date: Date): string {
@@ -229,27 +226,21 @@ function formatJobsWithTimestampsLocal(jobs: any[]): JobWithTime[] {
   }
 
   const mapped = jobs.map(
-    (job): JobWithTime => ({
-      id: job.id["$oid"],
-      job_id: job.id["$oid"],
-      job_title: job.job_title,
-      employer_name: job.employer_name,
-      employer_logo: job.employer_logo,
-      job_description: job.job_description,
-      job_employment_type: job.job_employment_type,
-      job_is_remote: job.job_is_remote,
-      job_city: job.job_city,
-      job_location: job.job_location,
-      job_benefits: job.job_benefits,
-      job_salary: job.job_salary,
-      job_min_salary: job.job_min_salary,
-      job_max_salary: job.job_max_salary,
-      job_salary_period: job.job_salary_period,
-      job_qualifications: job.job_qualifications,
-      job_responsibilities: job.job_responsibilities,
-      job_posted_at: timeAgo(new Date(job.createdAt)),
-      company_id: job.company_id,
-    })
+    (job): JobWithTime => {
+
+      let createdAtDate :Date;
+      if(job.createdAt?.$date) {
+        createdAtDate = new Date(job.createdAt.$date );
+      } else {
+        createdAtDate = new Date(job.createdAt);
+      }
+      return {
+      ...job,
+      id: job.id?.$oid || job.id,
+      postedAt: timeAgo(createdAtDate),
+      companyId: job.companyId,
+      }
+    }
   );
   return mapped;
 }

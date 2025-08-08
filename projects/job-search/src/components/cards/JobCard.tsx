@@ -6,75 +6,66 @@ import { MapPin, Clock, DollarSign } from "lucide-react";
 
 export default function JobCard({ job }: { job: JobWithTime }) {
   const getSalaryDisplay = () => {
-    if (job.job_min_salary && job.job_max_salary) {
-      return `$${job.job_min_salary.toLocaleString()} - $${job.job_max_salary.toLocaleString()}/ ${job.job_salary_period}`;
+      return `$${job.minSalary.toLocaleString()} - $${job.maxSalary.toLocaleString()}/ ${job.salaryPeriod}`;
     }
-
-    if (job.job_salary) {
-      return `$${job.job_salary.toLocaleString()} / ${job.job_salary_period}`;
-    }
-
-    return "Competitive";
-  };
+  
 
   return (
     <div className="bg-card/20 backdrop-blur-lg border shadow shadow-primary/10 rounded-xl p-6 hover:bg-card/30 transition-all duration-200 group">
-      
       <div className="flex justify-between items-start mb-4">
         <div className="flex-1">
           <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
-            {job.job_title}
+            {job.title}
           </h3>
           <div className="flex items-center gap-2 mb-3">
             <Image
-              src={job.employer_logo || "/vercel.svg"}
-              alt={job.employer_name}
+              src={job.employerLogo || "/vercel.svg"}
+              alt={job.employerName}
               height={20}
               width={20}
               className="rounded"
             />
             <span className="text-muted-foreground text-sm">
-              {job.employer_name}
+              {job.employerName}
             </span>
           </div>
         </div>
         <div className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium">
-          {"$ "}{getSalaryDisplay()}
+          {"$ "}
+          {getSalaryDisplay()}
         </div>
       </div>
 
-      
       <div className="flex flex-wrap gap-4 mb-4 text-sm text-muted-foreground">
         <div className="flex items-center gap-1">
           <MapPin className="w-4 h-4" />
-          {job.job_location || "Remote"}
+          {job.location || "Remote"}
         </div>
         <div className="flex items-center gap-1">
           <Clock className="w-4 h-4" />
-          {job.job_employment_type || "Full-time"}
+          {job.employmentType || "Full-time"}
         </div>
-        {job.job_is_remote && (
+        {job.isRemote && (
           <span className="bg-green-500/10 text-green-600 px-2 py-1 rounded text-xs">
             Remote
           </span>
         )}
       </div>
 
-      
-      {job.job_benefits && job.job_benefits.length > 0 && (
+      {job.benefits && job.benefits.length > 0 && (
         <div className="mb-4">
           <div className="flex flex-wrap gap-2">
-            {job.job_benefits.slice(0, 2).map((benefit, index) => (
+            {job.benefits.slice(0, 2).map((benefit, index) => (
               <span
-                key={benefit+index}
+                key={benefit + index}
                 className="bg-accent/20 text-accent-foreground px-2 py-1 rounded text-xs"
               >
                 {benefit}
               </span>
             ))}
-            {job.job_benefits.length > 2 && (
+            {job.benefits.length > 2 && (
               <span className="text-muted-foreground text-xs">
-                +{job.job_benefits.length - 2} more
+                +{job.benefits.length - 2} more
               </span>
             )}
           </div>
@@ -83,11 +74,11 @@ export default function JobCard({ job }: { job: JobWithTime }) {
 
       <div className="flex justify-between items-center pt-4 border-t border-border/20">
         <span className="text-xs text-muted-foreground">
-          {job.job_posted_at || "Recently posted"}
+          {job.postedAt || "Recently posted"}
         </span>
         <div className="flex gap-2">
-          <ViewDetails job_id={job.job_id} />
-          <SaveButton job_id={job.job_id} />
+          <ViewDetails id={job.id} />
+          <SaveButton job={job} />
         </div>
       </div>
     </div>

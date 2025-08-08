@@ -5,7 +5,7 @@ import FilterCard, { FilterSection } from "../cards/FilterCard";
 import PriceFilterCard from "../cards/PriceFilterCard";
 
 export default function SearchFilters() {
-  const [queryParams ,setQueryParams] = React.useState<URLSearchParams>()
+  const [queryParams, setQueryParams] = React.useState<URLSearchParams>();
   useEffect(() => {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);

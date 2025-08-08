@@ -5,11 +5,11 @@ import { useState } from "react";
 import ApplicantList from "../ApplicantList";
 
 export default function ShowApplicantsButton({
-  job_id,
-  job_title,
+  id,
+  title,
 }: {
-  job_id: string;
-  job_title: string;
+  id: string;
+  title: string;
 }) {
   const [showApplicants, setShowApplicants] = useState(false);
 
@@ -17,8 +17,8 @@ export default function ShowApplicantsButton({
     <>
       <Button onClick={() => setShowApplicants(true)}>View Applicants</Button>
       <ApplicantList
-        jobId={job_id}
-        jobTitle={job_title}
+        jobId={id}
+        jobTitle={title}
         isOpen={showApplicants}
         onClose={() => setShowApplicants(false)}
       />

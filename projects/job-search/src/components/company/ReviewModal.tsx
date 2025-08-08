@@ -23,7 +23,6 @@ export default function ReviewModal({
 
   const handleSubmit = async () => {
     if (!rating || !review.trim()) return;
-
     setSubmitting(true);
     try {
       await onSubmit(rating, review);

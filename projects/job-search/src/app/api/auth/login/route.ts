@@ -29,7 +29,6 @@ export async function POST(req: NextRequest) {
       );
     }
     const { password: _, ...userWithoutPassword } = user;
-    console.log("User without password:", userWithoutPassword);
     const token = await signJWT(userWithoutPassword);
 
     const cookieStore = await cookies();

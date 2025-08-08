@@ -61,3 +61,29 @@ export async function deleteCompany(id:string){
 
 }
 
+
+export async function acceptApplication(applicationId:string){
+  try{
+    const res = await axios.patch(`/api/companies/jobs/applicants/accept`,{
+      applicationId
+    },{
+      withCredentials : true
+    })
+    return {success:true};
+  }catch{
+    return{success :false};
+  }
+}
+
+export async function rejectApplication(applicationId:string){
+  try{
+    await axios.patch(`/api/companies/jobs/applicants/reject`,{
+      applicationId
+    },{
+      withCredentials : true
+    })
+    return {success:true};
+  }catch{
+    return{success :false};
+  }
+}

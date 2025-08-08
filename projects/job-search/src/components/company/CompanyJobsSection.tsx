@@ -1,25 +1,29 @@
 "use client";
 
-import { AuthContextType, useAuthContext } from "@/contexts/AuthContext";
 import { JobWithTime } from "@/lib/types";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState, useTransition } from "react";
 import ViewDetails from "../UI/buttons/ViewDetails";
+import axios from "axios";
+import { useParams } from "next/navigation";
 
 export default function CompanyJobsSection() {
   const [jobs, setJobs] = useState<JobWithTime[]>([]);
+  const [isPending, startTransition] = useTransition();
+  const params = useParams();
+  const {id} = params;
 
-  const { company } = useAuthContext() as AuthContextType;
-  const companyId = company?.id;
+
 
   useEffect(() => {
+    startTransition(async () => {
     async function fetchJobs() {
       try {
-        const response = await fetch(`/api/companies/jobs`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch jobs");
+        const response = await axios.get(`/api/companies/jobs/${id}`);
+        if (!response.data.success) {
+          setJobs([]);
+          return;
         }
-        const data = await response.json();
-        setJobs(data.jobs || []);
+        setJobs(response.data.jobs || []);
       } catch (error) {
         console.error("Error fetching jobs:", error);
         setJobs([]);
@@ -27,7 +31,12 @@ export default function CompanyJobsSection() {
       }
     }
     fetchJobs();
-  }, [companyId]);
+    });
+  }, [id]);
+
+  if (isPending) {
+    return <div className="text-center py-8">Loading jobs...</div>;
+  }
 
   return (
     <div className="bg-card/30 backdrop-blur-lg border-2 border-border/30 rounded-2xl p-8">
@@ -38,13 +47,11 @@ export default function CompanyJobsSection() {
         {jobs &&
           jobs?.map((job: JobWithTime) => (
             <div
-              key={job.job_id}
+              key={job.id}
               className="w-full p-4 flex justify-between items-center rounded-lg bg-card/40 border border-border/20 hover:bg-card/60 transition-colors shadow-sm"
             >
-              <span className="font-medium text-foreground">
-                {job.job_title}
-              </span>
-              <ViewDetails job_id={job.job_id} />
+              <span className="font-medium text-foreground">{job.title}</span>
+              <ViewDetails id={job.id} />
             </div>
           ))}
         {(!jobs || jobs.length === 0) && (

@@ -25,7 +25,7 @@ export default async function page({
   }
 
   if (!permissionResult.job || !permissionResult.user) {
-    return <AccessDenied message={permissionResult.message || "Job not found"} />;
+    return <AccessDenied message={ permissionResult.message || "Job not found" } />;
   }
 
   return (
@@ -33,7 +33,6 @@ export default async function page({
       job={permissionResult.job}
       company={permissionResult.company}
       user={permissionResult.user}
-      companyId={id}
     />
   );
 }

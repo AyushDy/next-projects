@@ -14,80 +14,96 @@ datasource db {
 }
 
 model User {
-  id           String       @id @default(auto()) @map("_id") @db.ObjectId
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
   username     String
   logo         String?
-  email        String       @unique
+  email        String        @unique
   password     String
   role         Role
-  savedJob     savedJobs?
-  appliedJob   appliedJobs?
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-  ownedCompany Company?     @relation("CompanyOwner")
+  savedJobs    savedJob[]    @relation("SavedJobs")
+  applications Application[]
+  ownedCompany Company?      @relation("CompanyOwner")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  Review       Review[]
 }
 
 model Company {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   description String
   location    String
   logo        String?
-  job         Job[]   @relation("CompanyJobs")
-  ownerId     String  @unique @db.ObjectId
-  owner       User    @relation("CompanyOwner", fields: [ownerId], references: [id])
+  jobs        Job[]    @relation("CompanyJobs")
+  owner       User     @relation("CompanyOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId     String   @unique @db.ObjectId
+  reviews     Review[]
 }
 
-
-
-model appliedJobs {
-  id     String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId String   @unique @db.ObjectId
-  jobIds String[] @db.ObjectId
-  user   User     @relation(fields: [userId], references: [id])
+model Review {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  rating    Int
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String   @db.ObjectId
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId String   @db.ObjectId
 }
 
-model savedJobs {
-  id     String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId String   @unique @db.ObjectId
-  jobIds String[] @db.ObjectId
-  user   User     @relation(fields: [userId], references: [id])
-}
-
-model Reviews {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String   @db.ObjectId
-  companyId   String   @db.ObjectId
-  content     String
-  rating      Int
-  createdAt   DateTime @default(now())
+model Application {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  status    Status
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String   @db.ObjectId
+  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  jobId     String   @db.ObjectId
 }
 
 model Job {
-  id                   String   @id @default(auto()) @map("_id") @db.ObjectId
-  job_title            String
-  employer_name        String
-  employer_logo        String?
-  job_description      String
-  job_employment_type  String
-  job_is_remote        Boolean
-  job_city             String
-  job_location         String
-  job_benefits         String[]
-  job_salary           Int?
-  job_min_salary       Int
-  job_max_salary       Int
-  job_salary_period    String
-  job_qualifications   String[]
-  job_responsibilities String[]
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
-  company_id           String?  @db.ObjectId
-  company              Company? @relation("CompanyJobs", fields: [company_id], references: [id])
-  applicants           String[] @db.ObjectId
+  id               String        @id @default(auto()) @map("_id") @db.ObjectId
+  title            String
+  description      String
+  employmentType   String
+  employerLogo     String
+  employerName     String
+  isRemote         Boolean
+  city             String
+  location         String
+  benefits         String[]
+  minSalary        Int
+  maxSalary        Int
+  salaryPeriod     String
+  qualifications   String[]
+  responsibilities String[]
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  company          Company?      @relation("CompanyJobs", fields: [companyId], references: [id], onDelete: Cascade)
+  companyId        String        @db.ObjectId
+  savedBy          savedJob[]
+  applications     Application[]
+}
+
+model savedJob {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  user      User     @relation("SavedJobs", fields: [userId], references: [id], onDelete: Cascade)
+  userId    String   @db.ObjectId
+  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  jobId     String   @db.ObjectId
+  createdAt DateTime @default(now())
+
+  @@unique([userId, jobId])
 }
 
 enum Role {
   admin
   user
+}
+
+enum Status {
+  accepted
+  rejected
+  pending
 }

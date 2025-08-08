@@ -3,19 +3,18 @@ import { JobFormData, JobCreateData } from "@/lib/types";
 import axios from "axios";
 
 const initialFormData: JobFormData = {
-  job_title: "",
-  job_description: "",
-  job_employment_type: "Full-time",
-  job_is_remote: false,
-  job_city: "",
-  job_location: "",
-  job_benefits: "",
-  job_salary: "",
-  job_min_salary: "",
-  job_max_salary: "",
-  job_salary_period: "yearly",
-  job_qualifications: "",
-  job_responsibilities: "",
+  title: "",
+  description: "",
+  employmentType: "Full-time",
+  isRemote: false,
+  city: "",
+  location: "",
+  benefits: "",
+  minSalary: "",
+  maxSalary: "",
+  salaryPeriod: "yearly",
+  qualifications: "",
+  responsibilities: "",
 };
 
 export function useAddJobForm() {
@@ -40,28 +39,30 @@ export function useAddJobForm() {
 
   const processData = (data: JobFormData): JobCreateData => ({
     ...data,
-    job_benefits: data.job_benefits
+    benefits: data.benefits
       .split(",")
       .map((b) => b.trim())
       .filter((b) => b),
-    job_qualifications: data.job_qualifications
+    qualifications: data.qualifications
       .split(",")
       .map((q) => q.trim())
       .filter((q) => q),
-    job_responsibilities: data.job_responsibilities
+    responsibilities: data.responsibilities
       .split(",")
       .map((r) => r.trim())
       .filter((r) => r),
-    job_salary: data.job_salary ? parseInt(data.job_salary) : null,
-    job_min_salary: parseInt(data.job_min_salary),
-    job_max_salary: parseInt(data.job_max_salary),    
+    minSalary: parseInt(data.minSalary),
+    maxSalary: parseInt(data.maxSalary),
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     startTransition(async () => {
       try {
-        const response = await axios.post("/api/companies/jobs", processData(formData));
+        const response = await axios.post(
+          "/api/companies/jobs",
+          processData(formData)
+        );
         const data = response.data;
         if (data.success) {
           resetForm();

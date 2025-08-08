@@ -17,6 +17,8 @@ export async function getAllJobs(page: number = 1) {
     throw error;
   }
 }
+
+
 export async function addJob(JobData: JobType) {
   try {
     const response = await axios.post(
@@ -43,3 +45,4 @@ export async function deleteJobAdmin(id: string) {
     return { success : false};
   }
 }
+

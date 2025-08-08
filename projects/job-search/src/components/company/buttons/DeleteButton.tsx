@@ -1,14 +1,16 @@
-
 import { Trash2 } from "lucide-react";
 import Button from "@/components/UI/Button";
 import { useState } from "react";
-import ConfirmationModal from "@/components/UI/reusable/ConfirmationModal";
-import { deleteJobCompany } from "@/lib/admin-client/company-utils";
-import Toast from "@/components/UI/loaders/Toast";
+import ConfirmationModal from "@/components/UI/modals/ConfirmationModal";
 
-export default function DeleteButton({ jobId , handleDelete}: { jobId: string, handleDelete: (jobId: string) => Promise<void> }) {
+export default function DeleteButton({
+  jobId,
+  handleDelete,
+}: {
+  jobId: string;
+  handleDelete: (jobId: string) => Promise<void>;
+}) {
   const [modalOpen, setModalOpen] = useState(false);
-
 
   async function deleteJob(): Promise<{ success: boolean }> {
     try {
@@ -23,13 +25,20 @@ export default function DeleteButton({ jobId , handleDelete}: { jobId: string, h
 
   return (
     <>
-    {modalOpen && (
-      <ConfirmationModal
-        onCancel={() => setModalOpen(false)}
-        onConfirm={deleteJob}
-      />
-    )}
-      <Button onClick={() => setModalOpen(true)} variant="danger" title="delete job" size="sm" icon={Trash2} className="w-fit">
+      {modalOpen && (
+        <ConfirmationModal
+          onCancel={() => setModalOpen(false)}
+          onConfirm={deleteJob}
+        />
+      )}
+      <Button
+        onClick={() => setModalOpen(true)}
+        variant="danger"
+        title="delete job"
+        size="sm"
+        icon={Trash2}
+        className="w-fit"
+      >
         Delete
       </Button>
     </>

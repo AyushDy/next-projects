@@ -1,8 +1,8 @@
 import axios from "axios";
 import { JobWithTime } from "../../types";
-import { date, success } from "zod";
+import { success } from "zod";
 
-export function getLocalJobIds() {
+export function getLocalJobs() {
   try {
     const jobIds = localStorage.getItem("saved-jobs");
     return jobIds ? JSON.parse(jobIds) : [];
@@ -11,7 +11,27 @@ export function getLocalJobIds() {
   }
 }
 
-export function saveJobIdsInLocal(jobIds: string[]) {
+
+export async function getAppliedJobs(){
+  try{
+    const result = await axios.get("/api/jobs/applications", {
+      withCredentials: true,
+    });
+    if (!result.status) {
+      return {success:false, message: "Failed to get applied jobs"};
+    }
+    return {success:true, data: result.data};
+  } catch(error) {
+    return {success:false, message: "Failed to get applied jobs"};
+  }
+}
+
+
+export async function getAppliedJobIds(){
+
+}
+
+export function saveJobsInLocal(jobIds: string[]) {
   try {
     localStorage.setItem("saved-jobs", JSON.stringify(jobIds));
   } catch {
@@ -38,33 +58,12 @@ export async function getSavedJobs() {
   }
 }
 
-export async function getSavedJobIds() {
-  try {
-    const response = await axios.get("/api/jobs/saved/saved-ids", {
-      withCredentials: true,
-    });
-    if (!response.status) {
-      return { success: false };
-    }
-    return { success: true, data: response.data.savedJobIds };
-  } catch (error) {
-    return {
-      success: false,
-      message:
-        error instanceof Error
-          ? error.message
-          : "failed to fetch saved job ids",
-      data: [],
-    };
-  }
-}
-
 export async function saveJobInDB(jobId: string) {
   try {
     const response = await axios.post(
       `/api/jobs/saved/save`,
       {
-        job_id: jobId,
+        jobId,
       },
       {
         withCredentials: true,
@@ -86,10 +85,12 @@ export async function saveJobInDB(jobId: string) {
   }
 }
 
+
+
 export async function removeSavedJob(jobId: string) {
   try {
     const response = await axios.delete(`/api/jobs/saved/remove`, {
-      data: { job_id: jobId },
+      data: {id : jobId},
       withCredentials: true,
     });
     if (!response.status) {

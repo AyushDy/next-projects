@@ -15,26 +15,11 @@ export default function JobsList({ companyId }: JobsListProps) {
   const [prevJobs, setPrevJobs] = useState<JobWithTime[]>([]);
   const [loading, setLoading] = useState(true);
 
-  async function handleDelete(jobId: string) {
-    try {
-      const res = await deleteJobCompany(jobId);
-      if (res.success) {
-        setJobs((prevJobs) => prevJobs.filter((job) => job.id !== jobId));
-        setPrevJobs((prevJobs) => prevJobs.filter((job) => job.id !== jobId));
-      } else {
-        setJobs(prevJobs);
-        throw new Error("Failed to delete job");
-      }
-    } catch (error) {
-      setJobs(prevJobs);
-      console.error("Error deleting job:", error);
-    }
-  }
 
-  useEffect(() => {
+    useEffect(() => {
     async function fetchJobs() {
       try {
-        const response = await fetch(`/api/companies/jobs`);
+        const response = await fetch(`/api/companies/jobs/${companyId}`);
         if (!response.ok) {
           throw new Error("Failed to fetch jobs");
         }
@@ -51,6 +36,24 @@ export default function JobsList({ companyId }: JobsListProps) {
     fetchJobs();
   }, [companyId]);
 
+
+  async function handleDelete(jobId: string) {
+    try {
+      const res = await deleteJobCompany(jobId);
+      if (res.success) {
+        setJobs((prevJobs) => prevJobs.filter((job) => job.id !== jobId));
+        setPrevJobs((prevJobs) => prevJobs.filter((job) => job.id !== jobId));
+      } else {
+        setJobs(prevJobs);
+        throw new Error("Failed to delete job");
+      }
+    } catch (error) {
+      setJobs(prevJobs);
+      console.error("Error deleting job:", error);
+    }
+  }
+
+ 
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">

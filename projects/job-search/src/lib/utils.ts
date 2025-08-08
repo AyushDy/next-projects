@@ -36,25 +36,8 @@ export function formatJobsWithTimestamps(jobs: any[]): JobWithTime[] {
 
   const mapped = jobs.map(
     (job): JobWithTime => ({
-      id: job.id,
-      job_id: job.id,
-      job_title: job.job_title,
-      employer_name: job.employer_name,
-      employer_logo: job.employer_logo,
-      job_description: job.job_description,
-      job_employment_type: job.job_employment_type,
-      job_is_remote: job.job_is_remote,
-      job_city: job.job_city,
-      job_location: job.job_location,
-      job_benefits: job.job_benefits,
-      job_salary: job.job_salary,
-      job_min_salary: job.job_min_salary,
-      job_max_salary: job.job_max_salary,
-      job_salary_period: job.job_salary_period,
-      job_qualifications: job.job_qualifications,
-      job_responsibilities: job.job_responsibilities,
-      job_posted_at: timeAgo(new Date(job.createdAt)),
-      company_id: job.company_id,
+      ...job,
+      postedAt: timeAgo(new Date(job.createdAt)),
     })
   );
   return mapped;
@@ -95,7 +78,6 @@ export async function searchJobs(
     if (jobType) {
       url.searchParams.append("jobType", jobType);
     }
-    console.log("searchJobs URL:", url.toString());
 
     const response = await axios.get(url.toString());
     return response.data;

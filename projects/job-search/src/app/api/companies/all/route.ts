@@ -6,7 +6,11 @@ import { success } from "zod";
 
 export async function GET(req:NextRequest){
     try{
-        const response = await db.company.findMany({});
+        const response = await db.company.findMany({
+            include : {
+                jobs: true
+            }
+        });
         return NextResponse.json({success : true, companies: response}, {status: 200});
     }catch(error){
         return NextResponse.json({error: "Failed to fetch companies"}, {status: 500});

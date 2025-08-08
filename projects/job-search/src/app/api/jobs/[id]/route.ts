@@ -20,8 +20,14 @@ export async function GET(
     }
     const job = await db.job.findUnique({
       where: { id },
+      include : {
+        company : {
+          include :{
+            reviews : true
+          }
+        }
+      }
     });
-    console.log("Fetched job:", job);
     if (!job) {
       return NextResponse.json(
         { success: false, message: "Job not found" },

@@ -4,8 +4,8 @@ import { User } from "lucide-react";
 import LoginButton from "@/components/UI/buttons/LoginButton";
 import Spinner from "@/components/UI/loaders/Spinner";
 import UserProfileHeader from "@/components/profile/UserProfileHeader";
-import Links from "@/components/UI/links/Links";
 import { AuthContextType, useAuthContext } from "@/contexts/AuthContext";
+import Links from "./Links";
 
 export default function UserProfile() {
   const { user, isAuthenticated, loading } =

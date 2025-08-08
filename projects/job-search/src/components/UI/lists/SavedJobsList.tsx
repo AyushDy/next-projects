@@ -11,7 +11,6 @@ import Button from "../Button";
 import Link from "next/link";
 
 export default function SavedJobsList() {
-  const { savedJobIds } = useSavedContext();
   const [savedJobs, setSavedJobs] = useState<JobWithTime[]>([]);
 
   useEffect(() => {
@@ -22,7 +21,7 @@ export default function SavedJobsList() {
       }
     }
     fetchSavedJobs();
-  }, [savedJobIds]);
+  }, []);
 
   if (!Array.isArray(savedJobs) || savedJobs.length === 0) {
     return (
@@ -46,17 +45,15 @@ export default function SavedJobsList() {
           key={job.id + index}
           className="flex justify-between p-4 border rounded"
         >
-          {job.job_title}
+          {job.title}
           <div>
             <Button variant="primary" className="mr-2">
-              <Link href={`/jobs/${job.job_id}`}>View Job</Link>
+              <Link href={`/jobs/${job.id}`}>View Job</Link>
             </Button>
-            <SaveButton job_id={job.job_id} />
+            <SaveButton job={job} />
           </div>
         </div>
-        
       ))}
-      
     </div>
   );
 }

@@ -3,20 +3,23 @@ import { User, Mail, Shield } from "lucide-react";
 import LoginButton from "@/components/UI/buttons/LoginButton";
 import LogoutButton from "@/components/UI/buttons/LogoutButton";
 import { AuthContextType, useAuthContext } from "@/contexts/AuthContext";
-import Links from "../UI/links/Links";
+import Links from "./Links";
 import Spinner from "../UI/loaders/Spinner";
 
 export default function ProfileDetails() {
-  const { user, isAuthenticated, loading=true } =
-    useAuthContext() as AuthContextType;
+  const {
+    user,
+    isAuthenticated,
+    loading = true,
+  } = useAuthContext() as AuthContextType;
 
-  if(loading && !isAuthenticated){
+  if (loading && !isAuthenticated) {
     return (
-        <div className="flex items-center justify-center h-screen p-4">
-            <Spinner />
-        </div>
-    )
-  }  
+      <div className="flex items-center justify-center h-screen p-4">
+        <Spinner />
+      </div>
+    );
+  }
 
   if (!isAuthenticated && !loading) {
     return (
@@ -37,8 +40,7 @@ export default function ProfileDetails() {
 
   return (
     <div className="pt-20 p-4 max-w-2xl mx-auto">
-        
-\      <div className="bg-white dark:bg-white/10 rounded-lg shadow p-6 mb-4">
+      <div className="bg-white dark:bg-white/10 rounded-lg shadow p-6 mb-4">
         <div className="flex items-center gap-4">
           <div className="bg-blue-100 dark:bg-blue-900 rounded-full p-3">
             <User className="w-6 h-6 text-blue-600 dark:text-blue-400" />
@@ -53,8 +55,7 @@ export default function ProfileDetails() {
         </div>
       </div>
 
-
-       <Links />
+      <Links />
 
       <div className="bg-white  dark:bg-white/10 rounded-lg shadow p-6 mb-4">
         <h2 className="font-semibold mb-4 text-gray-900 dark:text-white">
@@ -73,7 +74,6 @@ export default function ProfileDetails() {
           </div>
         </div>
       </div>
-     
     </div>
   );
 }

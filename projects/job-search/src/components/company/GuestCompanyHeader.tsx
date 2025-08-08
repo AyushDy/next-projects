@@ -2,19 +2,13 @@
 
 import { Building2, MapPin } from "lucide-react";
 import { Company } from "@/lib/types";
-import Button from "@/components/UI/Button";
-import { MessageCircle } from "lucide-react";
 
 interface GuestCompanyHeaderProps {
   company: Company;
-  user?: any;
-  onReviewClick: () => void;
 }
 
 export default function GuestCompanyHeader({
   company,
-  user,
-  onReviewClick,
 }: GuestCompanyHeaderProps) {
   return (
     <div className="bg-card/30 backdrop-blur-lg border-2 border-border/30 rounded-2xl p-8 mb-8">
@@ -51,19 +45,6 @@ export default function GuestCompanyHeader({
             )}
           </div>
         </div>
-
-        {user && (
-          <div className="flex-shrink-0">
-            <Button
-              onClick={onReviewClick}
-              variant="ghost"
-              className="flex items-center gap-2"
-            >
-              <MessageCircle className="w-4 h-4" />
-              Leave Review
-            </Button>
-          </div>
-        )}
       </div>
     </div>
   );

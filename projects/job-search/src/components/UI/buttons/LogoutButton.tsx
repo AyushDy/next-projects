@@ -1,10 +1,9 @@
 "use client";
 
-import { AuthContextType, useAuthContext } from "@/contexts/AuthContext";
+import { useAuthContext } from "@/contexts/AuthContext";
 import { useState, useTransition } from "react";
 import { LogOut } from "lucide-react";
 import Button from "@/components/UI/Button";
-import Toast from "../loaders/ToastPortal";
 
 export default function LogoutButton() {
   const [toasting, setToasting] = useState(false);

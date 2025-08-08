@@ -19,32 +19,28 @@ export default function JobCard({
 
   const router = useRouter();
   const formatSalary = () => {
-    if (!job.job_min_salary && !job.job_max_salary) return null;
+    if (!job.minSalary && !job.maxSalary) return null;
     const currency = "USD";
-    if (job.job_min_salary && job.job_max_salary) {
-      return `${currency} ${job.job_min_salary.toLocaleString()} - ${job.job_max_salary.toLocaleString()}`;
+    if (job.minSalary && job.maxSalary) {
+      return `${currency} ${job.minSalary.toLocaleString()} - ${job.maxSalary.toLocaleString()}`;
     }
-    return `${currency} ${(
-      job.job_min_salary || job.job_max_salary
-    )?.toLocaleString()}`;
+    return `${currency} ${(job.minSalary || job.maxSalary)?.toLocaleString()}`;
   };
 
   return (
     <div className="bg-background/10 backdrop-blur-sm border border-border rounded-lg p-4 hover:bg-background/40 transition-colors">
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <h3 className="font-semibold text-foreground mb-2">
-            {job.job_title}
-          </h3>
+          <h3 className="font-semibold text-foreground mb-2">{job.title}</h3>
 
           <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-3">
             <div className="flex items-center gap-1">
               <MapPin className="w-3 h-3" />
-              {job.job_city}
+              {job.city}
             </div>
             <div className="flex items-center gap-1">
               <Calendar className="w-3 h-3" />
-              {job.job_posted_at}
+              {job.postedAt}
             </div>
             {formatSalary() && (
               <div className="flex items-center gap-1">
@@ -53,7 +49,7 @@ export default function JobCard({
               </div>
             )}
             <span className="bg-primary/20 text-primary px-2 py-1 rounded text-xs">
-              {job.job_employment_type}
+              {job.employmentType}
             </span>
           </div>
 
@@ -65,7 +61,7 @@ export default function JobCard({
               WebkitBoxOrient: "vertical",
             }}
           >
-            {job.job_description.slice(0, 150)}...
+            {job.description.slice(0, 150)}...
           </p>
         </div>
 
@@ -93,7 +89,7 @@ export default function JobCard({
             />
             <DeleteButton jobId={job.id} handleDelete={handleDelete} />
           </div>
-          <ShowApplicantsButton job_id={job.id} job_title={job.job_title} />
+          <ShowApplicantsButton id={job.id} title={job.title} />
         </div>
       </div>
     </div>

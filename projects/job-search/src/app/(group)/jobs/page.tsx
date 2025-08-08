@@ -1,10 +1,10 @@
 export const dynamic = "force-dynamic";
 
 import SearchFilters from "@/components/forms/SearchFilters";
-import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import JobList from "./JobList";
 import Loading from "./loading";
+import MobileFiltersWrapper from "@/components/forms/MobileFiltersWrapper";
 
 export default async function page({
   searchParams,
@@ -32,9 +32,14 @@ export default async function page({
   return (
     <div className="pt-32 bg-background w-full min-h-screen">
       <div className="flex flex-col lg:flex-row justify-start p-4 lg:p-8 gap-4 lg:gap-8 w-full">
-        <div className="lg:sticky lg:top-10 lg:self-start min-w-40 flex-shrink-0">
+        <div className="hidden lg:block lg:sticky lg:top-10 lg:self-start min-w-40 flex-shrink-0">
           <SearchFilters />
         </div>
+        
+        <MobileFiltersWrapper>
+          <SearchFilters />
+        </MobileFiltersWrapper>
+        
         <Suspense fallback={<Loading />}>
           <JobList
             q={q}

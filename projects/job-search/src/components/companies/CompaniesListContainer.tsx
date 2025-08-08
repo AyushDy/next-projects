@@ -28,7 +28,6 @@ export default function CompaniesListContainer() {
         setLoading(false);
       }
     }
-
     fetchCompanies();
   }, []);
 

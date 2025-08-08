@@ -12,14 +12,14 @@ interface JobManagementActionsProps {
   jobId: string;
   companyId: string;
   isAdmin?: boolean;
-  job_title?: string; 
+  title?: string;
 }
 
 export default function JobManagementActions({
   jobId,
   companyId,
   isAdmin = false,
-  job_title = "",
+  title = "",
 }: JobManagementActionsProps) {
   const [showActions, setShowActions] = useState(false);
 
@@ -55,9 +55,14 @@ export default function JobManagementActions({
           </Button>
         </Link>
 
-        <ShowApplicantsButton job_id={jobId} job_title={job_title} />
+        <ShowApplicantsButton id={jobId} title={title} />
 
-        <DeleteButton handleDelete={async()=>{await deleteJobCompany(jobId)}}  jobId={jobId} />
+        <DeleteButton
+          handleDelete={async () => {
+            await deleteJobCompany(jobId);
+          }}
+          jobId={jobId}
+        />
         {isAdmin && (
           <>
             <div className="border-t border-border/20 pt-3 mt-3">

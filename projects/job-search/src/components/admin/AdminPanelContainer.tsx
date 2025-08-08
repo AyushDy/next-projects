@@ -3,6 +3,7 @@
 import { useState } from "react";
 import JobList from "./JobsList";
 import AddJobFormWrapper from "./AddJobFormWrapper";
+import UsersList from "./UsersList";
 
 export default function AdminPanelContainer() {
   const [tab, setTab] = useState<"jobs" | "users" | "add-job">("jobs");
@@ -49,16 +50,7 @@ export default function AdminPanelContainer() {
 
         <div className="bg-card/20 backdrop-blur-md border border-border/30 rounded-lg p-8 shadow-xl">
           {tab === "jobs" && <JobList />}
-          {tab === "users" && (
-            <div className="text-center py-12">
-              <h3 className="text-xl font-semibold text-foreground mb-2">
-                User Management
-              </h3>
-              <p className="text-muted-foreground">
-                User management features coming soon...
-              </p>
-            </div>
-          )}
+          {tab === "users" && <UsersList />}
           {tab === "add-job" && <AddJobFormWrapper />}
         </div>
       </div>

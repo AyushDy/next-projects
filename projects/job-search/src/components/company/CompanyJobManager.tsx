@@ -7,8 +7,8 @@ import Button from "@/components/UI/Button";
 import { companyType,  } from "@/lib/types";
 import { useState } from "react";
 import AddJobFormWrapper from "../admin/AddJobFormWrapper";
-import EditJobFormWrapper from "../admin/EditJobFormWrapper";
 import { JWTPayload } from "jose";
+import ReviewsList from "./ReviewsList";
 
 interface CompanyJobManagerProps {
   company: companyType;
@@ -17,9 +17,8 @@ interface CompanyJobManagerProps {
 
 export default function CompanyJobManager({
   company,
-  user,
 }: CompanyJobManagerProps) {
-  const [tab, setTab] = useState<"job-list" | "add" | "edit">("job-list");
+  const [tab, setTab] = useState<"job-list" | "add">("job-list");
 
   function toggleTab() {
     setTab((prevTab) => (prevTab === "job-list" ? "add" : "job-list"));
@@ -47,8 +46,11 @@ export default function CompanyJobManager({
 
           {tab === "job-list" && <JobsList companyId={company.id} />}
           {tab === "add" && <AddJobFormWrapper />}
-          {tab === "edit" && <EditJobFormWrapper jobId={company.id} />}
+
+
         </div>
+
+        <ReviewsList companyId={company.id} />
       </div>
     </div>
   );

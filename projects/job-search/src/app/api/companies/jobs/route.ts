@@ -7,86 +7,131 @@ import { NextRequest, NextResponse } from "next/server";
 
 
 
+
+
+
 //find jobs for that company
-export async function GET(req:NextRequest) {
-    try{
-        const token = req.cookies.get("token")?.value;
-        if(!token){
-            return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
-        }
-        const decoded = await verifyJWT(token) as { id: string, username: string, role: string } | null;
-        if (!decoded) {
-            return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
-        }
-        const company = await db.company.findUnique({
-            where: { ownerId: decoded.id },
-        });
-        if (!company) {
-            return NextResponse.json({ success: false, message: "Company not found" }, { status: 404 });
-        }
-        const jobs = await db.job.findMany({
-            where: {
-                company_id: company?.id || "",
-            },
-            orderBy: {
-                createdAt: "desc"
-            }
-        });
-        const formattedJobs = formatJobsWithTimestamps(jobs);
-        return NextResponse.json({ success: true, jobs: formattedJobs }, { status: 200 });
-    } catch (error) {
-        console.error("Error fetching jobs:", error);
-        return NextResponse.json({ success: false, message: "Internal Server Error" }, { status: 500 });
-    }
-}
-
-
-
-//upload jobs for companies
-export async function POST(req: NextRequest) {
+export async function GET(req: NextRequest) {
   try {
-    const decoded = await getCurrentUser() as {
-      id: string;
-      username: string;
-      role: string;
-    } | null;
+    const decoded = await getCurrentUser();
     if (!decoded) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
         { status: 401 }
       );
     }
-
-    const body = (await req.json()) as JobData;
     const company = await db.company.findUnique({
-      where: { ownerId: decoded.id },
+      where: { ownerId: decoded.id as string },
+      select: {
+        id: true,
+        name: true,
+        logo: true,
+      },
+    });
+    if (!company) {
+      return NextResponse.json(
+        { success: false, message: "Company not found" },
+        { status: 404 }
+      );
+    }
+    const jobs = await db.job.findMany({
+      where: {
+        companyId: company?.id,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        _count: {
+          select: { applications: true, savedBy: true },
+        },
+        applications : {
+          select: {
+            id : true,
+            createdAt : true
+          }
+        }
+      },
+    });
+    const formattedJobs = formatJobsWithTimestamps(jobs.map(job=>({
+      ...job,
+      applicationCount : job._count.applications,
+      saveCount : job._count.savedBy,
+      applications : job.applications
+    })));
+
+    return NextResponse.json(
+      { success: true, jobs: formattedJobs },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error fetching jobs:", error);
+    return NextResponse.json(
+      { success: false, message: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}
+
+
+
+
+//upload jobs for companies
+export async function POST(req: NextRequest) {
+  try {
+    const decoded = await getCurrentUser();
+    if (!decoded) {
+      return NextResponse.json(
+        { success: false, message: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+    const isAdmin = decoded.role === "admin";
+
+    const body = await req.json();
+
+    const userWithCompany = await db.user.findUnique({
+      where: { id: decoded.id as string },
+      include: {
+        ownedCompany: true,
+      },
     });
 
-    if (!company || !company.id) {
+
+    if (!userWithCompany || !userWithCompany.ownedCompany) {
+      return NextResponse.json(
+        { success: false, message: "Company not found" },
+        { status: 404 }
+      );
+    }
+    const fullData = {
+      ...body,
+      companyId: userWithCompany?.ownedCompany?.id,
+      employerLogo: userWithCompany?.ownedCompany?.logo,  
+      employerName: userWithCompany?.ownedCompany?.name,   
+    }
+
+    const validated = jobSchema.safeParse(fullData);
+    if (!validated.success) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: validated.error.message,
+        },
+        { status: 400 }
+      );
+    }
+
+    if (!userWithCompany || !userWithCompany.ownedCompany) {
       return NextResponse.json(
         { success: false, message: "Company not found" },
         { status: 404 }
       );
     }
 
-    const { company_id, ...jobData } = body;
-
-    const job = {
-      ...jobData,
-      employer_name: decoded.username,
-      employer_logo: company.logo || "",
-      company_id: company.id,
-    };
-    const parsed = jobSchema.safeParse(job);
-    if (!parsed.success) {
-      return NextResponse.json(
-        { success: false, message: parsed.error.message },
-        { status: 400 }
-      );
-    }
     const uploaded = await db.job.create({
       data: {
-        ...parsed.data,
+        ...validated.data,
       },
     });
     return NextResponse.json({
@@ -95,9 +140,13 @@ export async function POST(req: NextRequest) {
       job: uploaded,
     });
   } catch (error) {
-    return NextResponse.json({
-      success:false,
-      message : error instanceof Error ? error.message : "Failed to upload job"
-    },{status : 500})
+    return NextResponse.json(
+      {
+        success: false,
+        message:
+          error instanceof Error ? error.message : "Failed to upload job",
+      },
+      { status: 500 }
+    );
   }
 }

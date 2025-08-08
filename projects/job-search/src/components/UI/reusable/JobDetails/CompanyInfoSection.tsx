@@ -1,5 +1,4 @@
 import { Star } from "lucide-react";
-import PlaceholderSection from "@/components/UI/reusable/PlaceholderSection";
 
 interface CompanyInfoSectionProps {
   showPlaceholder?: boolean;

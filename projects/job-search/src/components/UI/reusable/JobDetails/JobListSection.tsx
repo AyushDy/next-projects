@@ -14,7 +14,7 @@ export default function JobListSection({
   if (!items || items.length === 0) return null;
 
   return (
-    <div className="bg-card/20 backdrop-blur-lg border border-border/20 rounded-xl p-8">
+    <div className="bg-card/20 backdrop-blur-lg border overflow-hidden border-border/20 rounded-xl p-8">
       <h2 className="text-2xl font-semibold text-foreground mb-4">{title}</h2>
       <ul className="space-y-3">
         {items.map((item, index) => (

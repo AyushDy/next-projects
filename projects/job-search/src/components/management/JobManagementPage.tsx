@@ -6,22 +6,20 @@ import JobSidebarSection from "@/components/UI/reusable/JobDetails/JobSidebarSec
 import CompanyInformation from "../UI/reusable/JobDetails/CompanyInformation";
 
 interface JobManagementPageProps {
-  job: JobWithTime;
+  job: any;
   company: any;
   user: any;
-  companyId: string;
 }
 
 export default function JobManagementPage({
   job,
   user,
-  companyId,
+  company,
 }: JobManagementPageProps) {
   const isAdmin = user?.role === "admin";
   return (
     <div className="min-h-screen bg-background pt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
         <div className="mb-8">
           <div className="bg-card/20 backdrop-blur-lg border border-border/20 rounded-xl p-6 shadow-lg">
             <div className="flex items-center justify-between">
@@ -36,7 +34,7 @@ export default function JobManagementPage({
               </div>
               <div className="text-sm text-muted-foreground">
                 Job ID:{" "}
-                <span className="font-mono text-foreground">{job.job_id}</span>
+                <span className="font-mono text-foreground">{job.id}</span>
               </div>
             </div>
           </div>
@@ -44,13 +42,13 @@ export default function JobManagementPage({
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
-            <JobHeaderSection job={job}  />
+            <JobHeaderSection job={job} />
 
             {isAdmin && (
               <CompanyInformation
-                employer_name={job.employer_name}
-                employer_logo={job.employer_logo}
-                job_location={job.job_location}
+                employerName={company.name}
+                employerLogo={company.logo}
+                location={company.location}
               />
             )}
 
@@ -59,9 +57,9 @@ export default function JobManagementPage({
 
           <div className="space-y-6">
             <JobManagementActions
-              job_title={job.job_title}
-              jobId={job.job_id}
-              companyId={companyId}
+              title={job.title}
+              jobId={job.id}
+              companyId={company.id}
               isAdmin={isAdmin}
             />
 

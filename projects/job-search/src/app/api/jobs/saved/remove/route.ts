@@ -3,7 +3,7 @@ import db from "@/lib/prisma";
 import { UserWithIdType } from "@/lib/zod";
 import { NextRequest, NextResponse } from "next/server";
 import { success } from "zod";
-
+import { id } from "zod/v4/locales";
 
 //remove job from saved jobs
 export async function DELETE(req: NextRequest) {
@@ -16,40 +16,25 @@ export async function DELETE(req: NextRequest) {
       );
     }
     const body = await req.json();
-    const { job_id } = body;
-    if (!job_id) {
+    const { id: jobId }: { id: string } = body;
+    if (!jobId) {
       return NextResponse.json(
         { success: false, message: "Bad Request" },
         { status: 400 }
       );
     }
-    const foundSavedJobs = await db.savedJobs.findUnique({
+    await db.savedJob.delete({
       where: {
-        userId: user.id,
-        jobIds: {
-          has: job_id,
-        },
-      },
-    });
-    if (!foundSavedJobs) {
-      return NextResponse.json(
-        { success: false, message: "Job not found in saved jobs" },
-        { status: 404 }
-      );
-    }
-    const updatedSavedJobs = await db.savedJobs.update({
-      where: { userId: user.id },
-      data: {
-        jobIds: {
-          set: foundSavedJobs.jobIds.filter((id) => id !== job_id),
-        },
+        userId_jobId : {
+          userId: user.id,
+          jobId: jobId,
+        }
       },
     });
     return NextResponse.json(
       {
         success: true,
         message: "Job removed from saved jobs successfully",
-        data: updatedSavedJobs,
       },
       { status: 200 }
     );

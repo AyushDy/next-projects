@@ -1,11 +1,12 @@
-import SavedJobsList from "@/components/UI/lists/SavedJobsList";
+import ProfileJobsList from "@/components/profile/ProfileJobsList";
+import SavedJobsList from "@/components/profile/ProfileJobsList";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 export default function page() {
+  type PageType = "saved";
   return (
     <div className="pt-20 p-4 max-w-2xl mx-auto">
-      {/* Header */}
       <div className="bg-background rounded-lg shadow p-6 mb-4">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold">Saved Jobs</h1>
@@ -19,9 +20,8 @@ export default function page() {
         </div>
       </div>
 
-      {/* Jobs List */}
       <div className="bg-background rounded-lg shadow p-6">
-        <SavedJobsList />
+        <ProfileJobsList type="saved" />
       </div>
     </div>
   );

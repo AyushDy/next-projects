@@ -19,8 +19,6 @@ interface JobLayoutProps {
 export default function JobLayout({
   job,
   backButtonText,
-  showApplyButton = true,
-  showQuickActions = true,
   showPlaceholders = true,
   showCompanyInfo = true,
   children,
