@@ -5,7 +5,7 @@ import { success } from "zod";
 export async function getAllJobs(page: number = 1) {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/admin/jobs`,
+      `/api/admin/jobs`,
       {
         params: { page },
         withCredentials: true,
@@ -22,7 +22,7 @@ export async function getAllJobs(page: number = 1) {
 export async function addJob(JobData: JobType) {
   try {
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/admin/jobs`,
+      `/api/admin/jobs`,
       JobData,
       {
         withCredentials: true,
@@ -37,7 +37,7 @@ export async function addJob(JobData: JobType) {
 
 export async function deleteJobAdmin(id: string) {
   try {
-    await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/admin/jobs/${id}`, {
+    await axios.delete(`/api/admin/jobs/${id}`, {
       withCredentials: true,
     });
     return {success :true};

@@ -3,7 +3,7 @@ import axios from "axios";
 export async function getCompanyById(id: string) {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/companies/by-id/${id}`,
+      `/api/companies/by-id/${id}`,
       {
         withCredentials: true,
       }
@@ -19,7 +19,7 @@ export async function getCompanyById(id: string) {
 export async function getCompanyByUserId(id: string) {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/companies/by-user-id/${id}`,
+      `/api/companies/by-user-id/${id}`,
       {
         withCredentials: true,
       }
@@ -40,7 +40,7 @@ export async function getCompanyByUserId(id: string) {
 export async function getApplicantsByJobId(jobId: string) {
   try {
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/companies/jobs/applicants`,
+      `api/companies/jobs/applicants`,
       { jobId },
       {
         withCredentials: true,

@@ -2,7 +2,6 @@ import axios from "axios";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { JobWithTime } from "./types";
-import { success } from "zod";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -55,7 +54,7 @@ export async function searchJobs(
   try {
     if (!query && !query.trim()) return { success: false, message: "Bad request" };
 
-    const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/jobs/search`);
+    const url = new URL(`/jobs/search`);
     url.searchParams.append("page", (page.toString()));
     url.searchParams.append("pageSize", pageSize.toString());
 
@@ -91,7 +90,7 @@ export async function getJobById(jobId: string) {
   try {
     if (!jobId.trim()) return { success: false, message: "Bad Request" };
     const result = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/jobs/${jobId}`
+      `//localhost:3000/api/jobs/${jobId}`
     );
     return { success: true, data: result.data };
   } catch (error) {
@@ -108,7 +107,7 @@ export async function getJobById(jobId: string) {
 export async function getJobSuggestions(query: string) {
   try {
     const url = new URL(
-      `${process.env.NEXT_PUBLIC_API_URL}/jobs/search/suggestions`
+      `/api/jobs/search/suggestions`
     );
     url.searchParams.append("q", query);
     const response = await axios.get(url.toString());

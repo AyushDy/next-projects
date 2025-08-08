@@ -5,7 +5,7 @@ export async function createUser(body: UserType) {
   try {
     const { username, email, password, role } = body;
 
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/auth/signup`;
+    const url = `api/auth/signup`;
     const response = await axios.post(url, {
       username,
       email,
@@ -36,7 +36,7 @@ export async function createUser(body: UserType) {
 export async function loginUser(email: string, password: string) {
   try {
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+      `/api/auth/login`,
       {
         email,
         password,
@@ -58,7 +58,7 @@ export async function loginUser(email: string, password: string) {
 export async function logoutUser() {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
+      `/api/auth/logout`,
       {
         withCredentials: true,
       }
@@ -77,7 +77,7 @@ export async function logoutUser() {
 
 export async function getMe(){
     try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
+        const response = await axios.get(`/api/auth/me`, {
             withCredentials: true,
         });
 
@@ -94,7 +94,7 @@ export async function getMe(){
 
 export async function getMyCompany(){
   try {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/companies`, {
+    const response = await axios.get(`/api/companies`, {
       withCredentials: true,
     });
 
