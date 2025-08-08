@@ -1,5 +1,8 @@
 //to implement, get, update and delete jobs by admin users
 
+export const dynamic = "force-dynamic";
+
+
 import { getCurrentUser } from "@/lib/jwt";
 import db from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
