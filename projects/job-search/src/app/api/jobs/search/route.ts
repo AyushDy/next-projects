@@ -1,3 +1,6 @@
+export const dynamic = "force-dynamic";
+
+
 import db from "@/lib/prisma";
 import { JobWithTime } from "@/lib/types";
 import { formatJobsWithTimestamps } from "@/lib/utils";

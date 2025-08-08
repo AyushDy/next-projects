@@ -1,8 +1,9 @@
+export const dynamic = "force-dynamic";
+
 import { getCurrentUser } from "@/lib/jwt";
 import db from "@/lib/prisma";
-import { UserType, UserWithIdType } from "@/lib/zod";
+import { UserWithIdType } from "@/lib/zod";
 import { NextRequest, NextResponse } from "next/server";
-import { success } from "zod";
 
 //save job
 export async function POST(req: NextRequest) {

@@ -1,9 +1,10 @@
+export const dynamic = "force-dynamic";
+
+
 import { getCurrentUser } from "@/lib/jwt";
 import db from "@/lib/prisma";
 import { UserWithIdType } from "@/lib/zod";
 import { NextRequest, NextResponse } from "next/server";
-import { success } from "zod";
-import { id } from "zod/v4/locales";
 
 //remove job from saved jobs
 export async function DELETE(req: NextRequest) {

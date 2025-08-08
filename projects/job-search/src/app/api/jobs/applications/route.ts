@@ -1,7 +1,9 @@
+export const dynamic = "force-dynamic";
+
+
 import { getCurrentUser } from "@/lib/jwt";
 import db from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { success } from "zod";
 
 
 //get all applied jobs for the current user

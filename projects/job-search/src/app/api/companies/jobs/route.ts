@@ -1,3 +1,6 @@
+export const dynamic = "force-dynamic";
+
+
 import { getCurrentUser, verifyJWT } from "@/lib/jwt";
 import db from "@/lib/prisma";
 import { JobData } from "@/lib/types";
