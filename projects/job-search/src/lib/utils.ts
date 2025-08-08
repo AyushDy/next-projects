@@ -54,31 +54,34 @@ export async function searchJobs(
   try {
     if (!query && !query.trim()) return { success: false, message: "Bad request" };
 
-    const url = new URL(`/jobs/search`);
-    url.searchParams.append("page", (page.toString()));
-    url.searchParams.append("pageSize", pageSize.toString());
+    const url = `http://localhost:3000/api/jobs/search?page=${page}&pageSize=${pageSize}`;
+
+    const params = new URLSearchParams({
+      page: page.toString(),
+      pageSize: pageSize.toString(),
+    });
 
     if (query) {
-      url.searchParams.append("q", query);
+      params.append("q", query);
     }
 
     if (minPrice) {
-      url.searchParams.append("minPrice", minPrice.toString());
+      params.append("minPrice", minPrice.toString());
     }
 
     if (maxPrice) {
-      url.searchParams.append("maxPrice", maxPrice.toString());
+      params.append("maxPrice", maxPrice.toString());
     }
 
     if (employmentType) {
-      url.searchParams.append("employmentType", employmentType);
+      params.append("employmentType", employmentType);
     }
 
     if (jobType) {
-      url.searchParams.append("jobType", jobType);
+      params.append("jobType", jobType);
     }
 
-    const response = await axios.get(url.toString());
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_SITE_URL}/api/jobs/search?${params.toString()}`);
     return response.data;
   } catch (error) {
     console.error("Error searching jobs:", error);
@@ -89,8 +92,7 @@ export async function searchJobs(
 export async function getJobById(jobId: string) {
   try {
     if (!jobId.trim()) return { success: false, message: "Bad Request" };
-    const result = await axios.get(
-      `//localhost:3000/api/jobs/${jobId}`
+    const result = await axios.get(`/api/jobs/${jobId}`
     );
     return { success: true, data: result.data };
   } catch (error) {
