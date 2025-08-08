@@ -92,7 +92,7 @@ export async function searchJobs(
 export async function getJobById(jobId: string) {
   try {
     if (!jobId.trim()) return { success: false, message: "Bad Request" };
-    const result = await axios.get(`/api/jobs/${jobId}`
+    const result = await axios.get(`${process.env.NEXT_PUBLIC_SITE_URL}/api/jobs/${jobId}`
     );
     return { success: true, data: result.data };
   } catch (error) {
@@ -109,7 +109,7 @@ export async function getJobById(jobId: string) {
 export async function getJobSuggestions(query: string) {
   try {
     const url = new URL(
-      `/api/jobs/search/suggestions`
+      `${process.env.NEXT_PUBLIC_SITE_URL}/api/jobs/search/suggestions`
     );
     url.searchParams.append("q", query);
     const response = await axios.get(url.toString());
