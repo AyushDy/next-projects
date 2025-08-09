@@ -8,20 +8,26 @@ export default async function JobList({
   employmentType,
   jobType,
   pageSize,
-  minPrice,
-  maxPrice
-}:{
+  minSalary,
+  maxSalary,
+}: {
   q: string;
   page: number;
   employmentType: string;
   jobType: string;
   pageSize: number;
-  minPrice?: number;
-  maxPrice?: number;
+  minSalary?: number;
+  maxSalary?: number;
 }) {
-
-  
-  const result = await searchJobs(q, employmentType, jobType, page, pageSize, minPrice, maxPrice);
+  const result = await searchJobs(
+    q,
+    employmentType,
+    jobType,
+    page,
+    pageSize,
+    minSalary,
+    maxSalary
+  );
   if (!result.success) {
     notFound();
   }

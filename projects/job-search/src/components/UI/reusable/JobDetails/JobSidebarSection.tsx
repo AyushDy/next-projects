@@ -22,7 +22,7 @@ export default function JobSidebarSection({
   const { isJobApplied } = useAppliedContext();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {job.benefits && job.benefits.length > 0 && (
         <div className="bg-card/20 backdrop-blur-lg border border-border/20 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
           <JobBenefits benefits={job.benefits} />

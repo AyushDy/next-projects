@@ -17,8 +17,8 @@ export default function JobHeaderSection({ job }: JobHeaderSectionProps) {
   const showActions = company?.id !== job?.companyId && user?.role !== "admin";
 
   return (
-    <div className="bg-card/20 backdrop-blur-lg border border-border/20 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
-      <div className="flex items-start justify-between mb-6">
+    <div className="bg-card/20 backdrop-blur-lg border border-border/20 rounded-2xl p-4 sm:p-6 lg:p-8 shadow-lg hover:shadow-xl transition-all duration-300">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
         <JobTitle
           title={job.title}
           companyId={job.company?.id}
@@ -32,17 +32,17 @@ export default function JobHeaderSection({ job }: JobHeaderSectionProps) {
         />
       </div>
 
-      <div className="flex flex-wrap gap-3 text-muted-foreground mb-8">
+      <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-3 text-muted-foreground mb-6 sm:mb-8">
         <div className="flex items-center gap-2 bg-muted/10 px-3 py-2 rounded-lg">
-          <MapPin className="w-4 h-4 text-primary" />
-          <span className="text-sm font-medium">{job.location}</span>
+          <MapPin className="w-4 h-4 text-primary flex-shrink-0" />
+          <span className="text-sm font-medium truncate">{job.location}</span>
         </div>
         <div className="flex items-center gap-2 bg-muted/10 px-3 py-2 rounded-lg">
-          <Clock className="w-4 h-4 text-primary" />
+          <Clock className="w-4 h-4 text-primary flex-shrink-0" />
           <span className="text-sm font-medium">{job.employmentType}</span>
         </div>
         <div className="flex items-center gap-2 bg-muted/10 px-3 py-2 rounded-lg">
-          <Star className="w-4 h-4 text-primary" />
+          <Star className="w-4 h-4 text-primary flex-shrink-0" />
           <span className="text-sm font-medium">{job.postedAt}</span>
         </div>
         {job.isRemote && (
@@ -53,8 +53,8 @@ export default function JobHeaderSection({ job }: JobHeaderSectionProps) {
       </div>
 
       {showActions && (
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="flex gap-5 w-full justify-end">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+          <div className="flex gap-3 sm:gap-5 w-full justify-end">
             <ApplyButton job={job} />
             <SaveButton size="md" job={job} />
           </div>

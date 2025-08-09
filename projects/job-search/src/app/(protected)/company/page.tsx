@@ -2,10 +2,11 @@
 
 import AddCompanyForm from "@/components/company/AddCompanyForm";
 import { useAuthContext } from "@/contexts/AuthContext";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function page() {
   const {company, user } = useAuthContext() || {};
+  const router = useRouter();
 
 
   if (!user) {
@@ -21,7 +22,7 @@ export default function page() {
   }
 
   if (company) {
-    redirect(`/company/${company.id}`);
+    router.push(`/company/${company.id}`);
   }
   return <AddCompanyForm />;
 }

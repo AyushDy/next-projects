@@ -28,10 +28,10 @@ export default function JobLayout({
 
       <JobPageHeader backButtonText={backButtonText} />
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-3 gap-8">
+      <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
 
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-4 sm:space-y-6">
             <JobHeaderSection
               job={job}
             />
@@ -43,10 +43,12 @@ export default function JobLayout({
           </div>
 
 
-          <JobSidebarSection
-            job={job}
-            showPlaceholders={showPlaceholders}
-          />
+          <div className="order-2 lg:order-none">
+            <JobSidebarSection
+              job={job}
+              showPlaceholders={showPlaceholders}
+            />
+          </div>
         </div>
 
 

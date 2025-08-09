@@ -11,13 +11,23 @@ export async function GET(req: NextRequest) {
   try {
     const query = req.nextUrl.searchParams.get("q") || "";
     const employmentType = req.nextUrl.searchParams.get("employmentType");
-    let isRemote = req.nextUrl.searchParams.get("isRemote");
+    let isRemote = req.nextUrl.searchParams.get("jobType");
     const page = parseInt(req.nextUrl.searchParams.get("page") || "1", 10);
     const pageSize = parseInt(req.nextUrl.searchParams.get("pageSize") || "10", 10);
     const minSalary = parseInt(req.nextUrl.searchParams.get("minSalary") || "0", 10);
     const maxSalary = parseInt(req.nextUrl.searchParams.get("maxSalary") || "1000000", 10);
 
-    if (isRemote === "hybrid") isRemote = "";
+    const shouldFilterRemote = isRemote && isRemote !== "hybrid";
+    const isRemoteValue = isRemote === "remote";
+
+    console.log("Search query:", query);
+    console.log("Employment type:", employmentType);
+    console.log("Is remote:", isRemote);
+    console.log("Should filter remote:", shouldFilterRemote);
+    console.log("Page:", page);
+    console.log("Page size:", pageSize);
+    console.log("Min salary:", minSalary);
+    console.log("Max salary:", maxSalary);
 
     if (query.trim().length > 3) {
       const pipeline: any[] = [
@@ -53,10 +63,8 @@ export async function GET(req: NextRequest) {
   },
   {
     $match: {
-      ...(employmentType && {
-        employmentType: { $regex: new RegExp(employmentType, "i") },
-      }),
-      ...(isRemote && { isRemote: isRemote === "true" }),
+      ...(employmentType && { employmentType }),
+      ...(shouldFilterRemote && { isRemote: isRemoteValue }),
       minSalary: { $gte: minSalary },
       maxSalary: { $lte: maxSalary },
     },
@@ -139,14 +147,14 @@ export async function GET(req: NextRequest) {
         employmentType
           ? { employmentType: { equals: employmentType, mode: "insensitive" } }
           : {},
-        isRemote ? { isRemote: isRemote === "true" } : {},
+        shouldFilterRemote ? { isRemote: isRemoteValue } : {},
         {
           AND: [
             { minSalary: { gte: minSalary } },
             { maxSalary: { lte: maxSalary } },
           ],
         },
-      ],
+      ].filter(condition => Object.keys(condition).length > 0), // Remove empty objects
     };
 
     const [jobs, totalCount] = await Promise.all([

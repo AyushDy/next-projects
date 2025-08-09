@@ -48,8 +48,9 @@ export default function FilterCard({ filters, queryParams }: Props) {
       ...prev,
       [section]: value,
     }));
-    queryParams?.set(section, value);
-    router.push(`?${queryParams?.toString()}`);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set(section, value);
+    router.push(`?${params.toString()}`);
   }
 
   function clearFilter(section: string) {

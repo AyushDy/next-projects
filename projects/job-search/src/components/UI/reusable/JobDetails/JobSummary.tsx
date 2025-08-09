@@ -31,18 +31,18 @@ export default function JobSummary({
   };
 
   return (
-    <div className="bg-card/20 backdrop-blur-lg border border-border/20 rounded-xl p-6">
-      <h3 className="text-lg font-semibold text-foreground mb-4">
+    <div className="bg-card/20 backdrop-blur-lg border border-border/20 rounded-xl p-4 sm:p-6">
+      <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">
         Job Summary
       </h3>
-      <div className="space-y-3 text-sm">
+      <div className="space-y-2 sm:space-y-3 text-xs sm:text-sm">
         <div className="flex justify-between">
           <span className="text-muted-foreground">Job Type:</span>
           <span className="text-foreground font-medium">{employmentType}</span>
         </div>
         <div className="flex justify-between">
           <span className="text-muted-foreground">Location:</span>
-          <span className="text-foreground font-medium">{city}</span>
+          <span className="text-foreground font-medium truncate ml-2">{city}</span>
         </div>
         <div className="flex justify-between">
           <span className="text-muted-foreground">Remote:</span>
@@ -56,7 +56,7 @@ export default function JobSummary({
         </div>
         <div className="flex justify-between">
           <span className="text-muted-foreground">Salary:</span>
-          <span className="text-foreground font-medium">
+          <span className="text-foreground font-medium truncate ml-2">
             {getSalaryDisplay()}
           </span>
         </div>

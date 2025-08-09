@@ -48,14 +48,11 @@ export async function searchJobs(
   jobType: string = "",
   page: number = 1,
   pageSize: number = 10,
-  minPrice?: number,
-  maxPrice?: number
+  minSalary?: number,
+  maxSalary?: number
 ) {
   try {
     if (!query && !query.trim()) return { success: false, message: "Bad request" };
-
-    const url = `http://localhost:3000/api/jobs/search?page=${page}&pageSize=${pageSize}`;
-
     const params = new URLSearchParams({
       page: page.toString(),
       pageSize: pageSize.toString(),
@@ -65,12 +62,12 @@ export async function searchJobs(
       params.append("q", query);
     }
 
-    if (minPrice) {
-      params.append("minPrice", minPrice.toString());
+    if (minSalary) {
+      params.append("minSalary", minSalary.toString());
     }
 
-    if (maxPrice) {
-      params.append("maxPrice", maxPrice.toString());
+    if (maxSalary) {
+      params.append("maxSalary", maxSalary.toString());
     }
 
     if (employmentType) {
@@ -80,6 +77,8 @@ export async function searchJobs(
     if (jobType) {
       params.append("jobType", jobType);
     }
+
+    console.log("Search params:", params.toString());
 
     const response = await axios.get(`${process.env.NEXT_PUBLIC_SITE_URL}/api/jobs/search?${params.toString()}`);
     return response.data;
@@ -91,7 +90,6 @@ export async function searchJobs(
 
 export async function getJobById(jobId: string) {
   try {
-    if (!jobId.trim()) return { success: false, message: "Bad Request" };
     const result = await axios.get(`${process.env.NEXT_PUBLIC_SITE_URL}/api/jobs/${jobId}`
     );
     return { success: true, data: result.data };

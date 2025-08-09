@@ -23,10 +23,10 @@ export default function JobSalary({
   };
 
   return (
-    <div className="bg-primary/10 text-primary px-4 py-2 rounded-full text-lg font-semibold whitespace-nowrap">
+    <div className="bg-primary/10 text-primary px-3 sm:px-4 py-2 rounded-full text-sm sm:text-base lg:text-lg font-semibold whitespace-nowrap self-start">
       {getSalaryDisplay()}
       {salaryPeriod && (
-        <span className="text-sm font-normal">/{salaryPeriod}</span>
+        <span className="text-xs sm:text-sm font-normal">/{salaryPeriod}</span>
       )}
     </div>
   );

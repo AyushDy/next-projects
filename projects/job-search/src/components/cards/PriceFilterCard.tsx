@@ -2,18 +2,18 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 
 export default function PriceFilterCard() {
-  const [minPrice, setMinPrice] = useState<number>(0);
-  const [maxPrice, setMaxPrice] = useState<number>(200000);
+  const [minSalary, setminSalary] = useState<number>(0);
+  const [maxSalary, setmaxSalary] = useState<number>(200000);
   const router = useRouter();
   const searchParams = useSearchParams();
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    const urlMinPrice = searchParams.get("minPrice");
-    const urlMaxPrice = searchParams.get("maxPrice");
+    const urlminSalary = searchParams.get("minSalary");
+    const urlmaxSalary = searchParams.get("maxSalary");
 
-    if (urlMinPrice) setMinPrice(Number(urlMinPrice));
-    if (urlMaxPrice) setMaxPrice(Number(urlMaxPrice));
+    if (urlminSalary) setminSalary(Number(urlminSalary));
+    if (urlmaxSalary) setmaxSalary(Number(urlmaxSalary));
   }, [searchParams]);
 
   const updateURL = () => {
@@ -24,25 +24,29 @@ export default function PriceFilterCard() {
     timeoutRef.current = setTimeout(() => {
       const params = new URLSearchParams(searchParams.toString());
 
-      params.set("minPrice", String(minPrice));
-      params.set("maxPrice", String(maxPrice));
+      params.set("minSalary", String(minSalary));
+      params.set("maxSalary", String(maxSalary));
 
       router.push(`?${params.toString()}`, { scroll: false });
     }, 500);
   };
 
-  const handleMinPriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleminSalaryChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const value = Number(event.target.value);
-    if (value <= maxPrice) {
-      setMinPrice(value);
+    if (value <= maxSalary) {
+      setminSalary(value);
       updateURL();
     }
   };
 
-  const handleMaxPriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlemaxSalaryChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const value = Number(event.target.value);
-    if (value >= minPrice) {
-      setMaxPrice(value);
+    if (value >= minSalary) {
+      setmaxSalary(value);
       updateURL();
     }
   };
@@ -69,41 +73,41 @@ export default function PriceFilterCard() {
       <h2 className="text-lg font-semibold text-foreground">Salary Filter</h2>
 
       <div className="flex justify-between text-sm text-muted-foreground">
-        <span>Min: {formatPrice(minPrice)}</span>
-        <span>Max: {formatPrice(maxPrice)}</span>
+        <span>Min: {formatPrice(minSalary)}</span>
+        <span>Max: {formatPrice(maxSalary)}</span>
       </div>
 
       <div className="flex flex-col space-y-4">
         <div className="space-y-2">
-          <label htmlFor="minPrice" className="text-sm text-foreground">
+          <label htmlFor="minSalary" className="text-sm text-foreground">
             Minimum Salary
           </label>
           <input
             type="range"
             min="0"
-            value={minPrice}
+            value={minSalary}
             max="200000"
             step="5000"
-            id="minPrice"
-            name="minPrice"
-            onChange={handleMinPriceChange}
+            id="minSalary"
+            name="minSalary"
+            onChange={handleminSalaryChange}
             className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer"
           />
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="maxPrice" className="text-sm text-foreground">
+          <label htmlFor="maxSalary" className="text-sm text-foreground">
             Maximum Salary
           </label>
           <input
             type="range"
             min="5000"
-            value={maxPrice}
+            value={maxSalary}
             max="200000"
             step="5000"
-            id="maxPrice"
-            name="maxPrice"
-            onChange={handleMaxPriceChange}
+            id="maxSalary"
+            name="maxSalary"
+            onChange={handlemaxSalaryChange}
             className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer"
           />
         </div>

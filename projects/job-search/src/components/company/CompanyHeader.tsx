@@ -1,10 +1,10 @@
-import { companyType } from "@/lib/types";
+import { Company, companyType } from "@/lib/types";
 import { Building, MapPin, Users } from "lucide-react";
 
 
 
 interface CompanyHeaderProps {
-  company: companyType;
+  company: Company;
 }
 
 export default function CompanyHeader({ company }: CompanyHeaderProps) {

@@ -37,7 +37,7 @@ export default function AddCompanyForm() {
       if (response.ok) {
         setMessage("Company created successfully!");
         setFormData({ name: "", description: "", location: "", logo: "" });
-        router.push("/profile");
+        window.location.href = "/profile";
       } else {
         setMessage("Failed to create company. Please try again.");
       }

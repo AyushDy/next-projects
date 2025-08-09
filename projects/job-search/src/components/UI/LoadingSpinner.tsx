@@ -3,11 +3,13 @@ import { cn } from "@/lib/utils";
 interface LoadingSpinnerProps {
   size?: "sm" | "md" | "lg";
   className?: string;
+  bg?: string;
 }
 
 export default function LoadingSpinner({
   size = "md",
   className,
+  bg = "bg-background"
 }: LoadingSpinnerProps) {
   const sizeClasses = {
     sm: "w-4 h-4",
@@ -18,7 +20,7 @@ export default function LoadingSpinner({
   return (
     <div
       className={cn(
-        "animate-spin rounded-full border-2 border-primary/20 border-t-primary",
+        `${bg} animate-spin rounded-full border-2 border-background border-t-primary`,
         sizeClasses[size],
         className
       )}

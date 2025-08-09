@@ -4,14 +4,14 @@ import { ArrowLeft, Plus } from "lucide-react";
 import CompanyHeader from "./CompanyHeader";
 import JobsList from "../UI/lists/JobsList";
 import Button from "@/components/UI/Button";
-import { companyType,  } from "@/lib/types";
+import { Company,  } from "@/lib/types";
 import { useState } from "react";
 import AddJobFormWrapper from "../admin/AddJobFormWrapper";
 import { JWTPayload } from "jose";
-import ReviewsList from "./ReviewsList";
+import ReviewsSection from "./ReviewsSection";
 
 interface CompanyJobManagerProps {
-  company: companyType;
+  company: Company;
   user: JWTPayload
 }
 
@@ -50,7 +50,7 @@ export default function CompanyJobManager({
 
         </div>
 
-        <ReviewsList companyId={company.id} />
+        < ReviewsSection company={company} />
       </div>
     </div>
   );

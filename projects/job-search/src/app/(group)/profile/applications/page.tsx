@@ -7,7 +7,7 @@ export default function page() {
     <div className="pt-20 p-4 max-w-2xl mx-auto">
       <div className="bg-background rounded-lg shadow p-6 mb-4">
         <div className="flex items-center justify-between">
-          <h1 className="text-xl font-bold">Saved Jobs</h1>
+          <h1 className="text-xl font-bold">Applied Jobs</h1>
           <Link
             href="/profile"
             className="flex items-center text-blue-600 hover:text-blue-700"

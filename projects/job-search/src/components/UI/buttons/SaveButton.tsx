@@ -67,10 +67,17 @@ export default function SaveButton({
         variant="primary"
         size={size}
         disabled={isLoading}
-        icon={saved ? BookmarkCheck : Bookmark}
-        className={`w-[100px] bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg ${className}`}
+        className={`bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg min-h-[36px] sm:min-h-[32px] min-w-[36px] sm:min-w-[32px] ${className}`}
       >
-        {!isLoading ? saved ? "Remove" : "Save" : <DotsLoader />}
+        {!isLoading ? (
+          saved ? (
+            <BookmarkCheck className="w-4 h-4" />
+          ) : (
+            <Bookmark className="w-4 h-4" />
+          )
+        ) : (
+          <DotsLoader />
+        )}
       </Button>
     </>
   );
