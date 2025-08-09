@@ -1,11 +1,18 @@
 import AnimatedSection from "@/components/animations/AnimatedSection";
 import StaggeredGrid from "@/components/animations/StaggeredGrid";
+import SearchField from "@/components/forms/SearchField";
 
 export default function Home() {
   return (
     <div className="bg-gradient-to-br from-background to-primary/5 dark:to-primary/10 min-h-screen">
       {/* Hero Section */}
-      <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 py-16 sm:py-20">
+
+      
+      <div className="min-h-screen flex flex-col space-y-15 items-center justify-center px-4 sm:px-6 py-16 sm:py-20">
+<div className="lg:hidden">
+        <SearchField />
+      </div>
+
         <div className="text-center max-w-4xl space-y-6 sm:space-y-8">
           <AnimatedSection direction="fade" delay={200}>
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-extrabold text-foreground leading-tight">

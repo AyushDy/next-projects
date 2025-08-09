@@ -1,3 +1,5 @@
+"use client"
+
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useSearchSuggestions } from "@/hooks/useSearchSuggestions";
