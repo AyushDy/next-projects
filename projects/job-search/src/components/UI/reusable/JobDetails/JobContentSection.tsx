@@ -11,9 +11,7 @@ interface JobContentSectionProps {
   showPlaceholders?: boolean;
 }
 
-export default function JobContentSection({
-  job,
-}: JobContentSectionProps) {
+export default function JobContentSection({ job }: JobContentSectionProps) {
   return (
     <div className="space-y-4 sm:space-y-6">
       <div className="bg-card/15 backdrop-blur-lg border border-border/20 rounded-xl hover:bg-card/20 transition-all duration-300">
@@ -40,7 +38,7 @@ export default function JobContentSection({
         </div>
       )}
 
-     <ReviewsSection company={job.company} />
+      <ReviewsSection company={job.company} />
     </div>
   );
 }

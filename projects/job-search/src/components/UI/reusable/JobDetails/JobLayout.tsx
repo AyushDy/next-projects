@@ -25,32 +25,22 @@ export default function JobLayout({
 }: JobLayoutProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 dark:from-background dark:via-background dark:to-primary/10">
-
       <JobPageHeader backButtonText={backButtonText} />
 
       <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-
           <div className="lg:col-span-2 space-y-4 sm:space-y-6">
-            <JobHeaderSection
-              job={job}
-            />
+            <JobHeaderSection job={job} />
 
             <JobContentSection job={job} showPlaceholders={showPlaceholders} />
 
-
-          {children}
+            {children}
           </div>
-
 
           <div className="order-2 lg:order-none">
-            <JobSidebarSection
-              job={job}
-              showPlaceholders={showPlaceholders}
-            />
+            <JobSidebarSection job={job} showPlaceholders={showPlaceholders} />
           </div>
         </div>
-
 
         <CompanyInfoSection showPlaceholder={showCompanyInfo} />
       </div>

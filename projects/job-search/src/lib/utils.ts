@@ -77,9 +77,6 @@ export async function searchJobs(
     if (jobType) {
       params.append("jobType", jobType);
     }
-
-    console.log("Search params:", params.toString());
-
     const response = await axios.get(`${process.env.NEXT_PUBLIC_SITE_URL}/api/jobs/search?${params.toString()}`);
     return response.data;
   } catch (error) {

@@ -13,11 +13,14 @@ export default function JobTitle({
   title,
   employerName,
   employerLogo,
-  companyId
+  companyId,
 }: JobTitleProps) {
   return (
     <div className="flex items-start gap-3 sm:gap-4 mb-4 sm:mb-6 min-w-0 flex-1">
-      <Link href={`/company/${companyId}`} className="bg-card/40 p-2 sm:p-3 rounded-lg flex-shrink-0">
+      <Link
+        href={`/company/${companyId}`}
+        className="bg-card/40 p-2 sm:p-3 rounded-lg flex-shrink-0"
+      >
         <Image
           src={employerLogo || "/vercel.svg"}
           alt={employerName}
@@ -30,7 +33,10 @@ export default function JobTitle({
         <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground mb-2 leading-tight">
           {title}
         </h1>
-        <Link href={`/company/${companyId}`} className="flex items-center gap-2 text-sm sm:text-base lg:text-lg text-muted-foreground">
+        <Link
+          href={`/company/${companyId}`}
+          className="flex items-center gap-2 text-sm sm:text-base lg:text-lg text-muted-foreground"
+        >
           <Building2 className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
           <span className="truncate">{employerName}</span>
         </Link>

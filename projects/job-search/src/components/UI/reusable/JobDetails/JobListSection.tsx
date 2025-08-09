@@ -15,7 +15,9 @@ export default function JobListSection({
 
   return (
     <div className="bg-card/20 backdrop-blur-lg border overflow-hidden border-border/20 rounded-xl p-4 sm:p-6 lg:p-8">
-      <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-foreground mb-3 sm:mb-4">{title}</h2>
+      <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-foreground mb-3 sm:mb-4">
+        {title}
+      </h2>
       <ul className="space-y-2 sm:space-y-3">
         {items.map((item, index) => (
           <li

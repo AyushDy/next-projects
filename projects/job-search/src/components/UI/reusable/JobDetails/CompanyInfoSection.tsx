@@ -15,7 +15,9 @@ export default function CompanyInfoSection({
         <div className="w-12 h-12 sm:w-16 sm:h-16 bg-muted/20 rounded-full mx-auto mb-3 sm:mb-4 flex items-center justify-center">
           <Star className="w-6 h-6 sm:w-8 sm:h-8 opacity-50" />
         </div>
-        <h3 className="text-base sm:text-lg font-semibold mb-2">Company Information</h3>
+        <h3 className="text-base sm:text-lg font-semibold mb-2">
+          Company Information
+        </h3>
         <p className="text-xs sm:text-sm max-w-md mx-auto">
           Detailed company profile, culture, and additional job openings will be
           displayed here

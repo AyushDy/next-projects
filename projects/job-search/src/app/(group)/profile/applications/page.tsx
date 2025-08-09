@@ -1,8 +1,10 @@
+export const dynamic = "force-dynamic";
+
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import ProfileJobsList from "@/components/profile/ProfileJobsList";
 
-export default function page() {
+export default async function page() {
   return (
     <div className="pt-20 p-4 max-w-2xl mx-auto">
       <div className="bg-background rounded-lg shadow p-6 mb-4">

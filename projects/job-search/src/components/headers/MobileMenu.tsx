@@ -3,6 +3,7 @@
 import SearchField from "../forms/SearchField";
 import HeaderNavLinks from "../UI/navs/HeaderNavLinks";
 import ThemeButton from "../UI/buttons/ThemeButton";
+import { Suspense } from "react";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -26,7 +27,13 @@ export default function MobileMenu({
       >
         <div className="px-4 py-6 space-y-4">
           <div className="w-full">
-            <SearchField />
+            <Suspense
+              fallback={
+                <div className="w-full h-12 bg-card/20 rounded-xl animate-pulse" />
+              }
+            >
+              <SearchField />
+            </Suspense>
           </div>
 
           <div className="flex flex-col space-y-3">
@@ -37,8 +44,7 @@ export default function MobileMenu({
             <ThemeButton />
           </div>
         </div>
-      </div>
-      {" "}
+      </div>{" "}
       {isOpen && (
         <div
           className="fixed inset-0 z-30 bg-black/20 lg:hidden"

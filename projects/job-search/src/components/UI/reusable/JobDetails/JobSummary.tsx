@@ -42,7 +42,9 @@ export default function JobSummary({
         </div>
         <div className="flex justify-between">
           <span className="text-muted-foreground">Location:</span>
-          <span className="text-foreground font-medium truncate ml-2">{city}</span>
+          <span className="text-foreground font-medium truncate ml-2">
+            {city}
+          </span>
         </div>
         <div className="flex justify-between">
           <span className="text-muted-foreground">Remote:</span>

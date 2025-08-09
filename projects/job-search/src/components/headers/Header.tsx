@@ -1,15 +1,13 @@
 "use client";
 import { Inter } from "next/font/google";
 import SearchField from "../forms/SearchField";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import HeaderNavLinks from "../UI/navs/HeaderNavLinks";
 import ThemeButton from "../UI/buttons/ThemeButton";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import MobileMenu from "./MobileMenu";
-
-
 
 export const inter = Inter({
   subsets: ["latin"],
@@ -72,7 +70,13 @@ export default function Header() {
         </Link>
 
         <div className="hidden lg:flex items-center flex-1 justify-center max-w-2xl mx-8">
-          <SearchField />
+          <Suspense
+            fallback={
+              <div className="w-full h-10 bg-card/20 rounded-xl animate-pulse" />
+            }
+          >
+            <SearchField />
+          </Suspense>
         </div>
 
         <div className="hidden lg:flex items-center gap-4">
@@ -93,10 +97,10 @@ export default function Header() {
         </button>
       </div>
 
-\      <MobileMenu 
-        isOpen={isMobileMenuOpen} 
-        visible={visible} 
-        onClose={() => setIsMobileMenuOpen(false)} 
+      <MobileMenu
+        isOpen={isMobileMenuOpen}
+        visible={visible}
+        onClose={() => setIsMobileMenuOpen(false)}
       />
     </>
   );

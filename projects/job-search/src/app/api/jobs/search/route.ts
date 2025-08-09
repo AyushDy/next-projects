@@ -20,15 +20,6 @@ export async function GET(req: NextRequest) {
     const shouldFilterRemote = isRemote && isRemote !== "hybrid";
     const isRemoteValue = isRemote === "remote";
 
-    console.log("Search query:", query);
-    console.log("Employment type:", employmentType);
-    console.log("Is remote:", isRemote);
-    console.log("Should filter remote:", shouldFilterRemote);
-    console.log("Page:", page);
-    console.log("Page size:", pageSize);
-    console.log("Min salary:", minSalary);
-    console.log("Max salary:", maxSalary);
-
     if (query.trim().length > 3) {
       const pipeline: any[] = [
   {

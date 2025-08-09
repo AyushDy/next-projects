@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import ProfileJobsList from "@/components/profile/ProfileJobsList";
 import SavedJobsList from "@/components/profile/ProfileJobsList";
 import { ArrowLeft } from "lucide-react";
