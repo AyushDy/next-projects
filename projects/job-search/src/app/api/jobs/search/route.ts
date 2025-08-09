@@ -1,11 +1,9 @@
 export const dynamic = "force-dynamic";
 
-
 import db from "@/lib/prisma";
 import { JobWithTime } from "@/lib/types";
 import { formatJobsWithTimestamps } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
-
 
 export async function GET(req: NextRequest) {
   try {
@@ -13,100 +11,118 @@ export async function GET(req: NextRequest) {
     const employmentType = req.nextUrl.searchParams.get("employmentType");
     let isRemote = req.nextUrl.searchParams.get("jobType");
     const page = parseInt(req.nextUrl.searchParams.get("page") || "1", 10);
-    const pageSize = parseInt(req.nextUrl.searchParams.get("pageSize") || "10", 10);
-    const minSalary = parseInt(req.nextUrl.searchParams.get("minSalary") || "0", 10);
-    const maxSalary = parseInt(req.nextUrl.searchParams.get("maxSalary") || "1000000", 10);
+    const pageSize = parseInt(
+      req.nextUrl.searchParams.get("pageSize") || "10",
+      10
+    );
+    const minSalary = parseInt(
+      req.nextUrl.searchParams.get("minSalary") || "0",
+      10
+    );
+    const maxSalary = parseInt(
+      req.nextUrl.searchParams.get("maxSalary") || "1000000",
+      10
+    );
 
     const shouldFilterRemote = isRemote && isRemote !== "hybrid";
     const isRemoteValue = isRemote === "remote";
 
     if (query.trim().length > 3) {
       const pipeline: any[] = [
-  {
-    $search: {
-      index: "default", 
-      compound: {
-        should: [
-          {
-            autocomplete: {
-              query,
-              path: "title",
-              tokenOrder: "sequential", 
-              fuzzy: {
-                maxEdits: 1, 
-              },
+        {
+          $search: {
+            index: "default",
+            compound: {
+              should: [
+                {
+                  autocomplete: {
+                    query,
+                    path: "title",
+                    tokenOrder: "sequential",
+                    fuzzy: { maxEdits: 2 },
+                  },
+                },
+                {
+                  autocomplete: {
+                    query,
+                    path: "description",
+                    tokenOrder: "sequential",
+                    fuzzy: { maxEdits: 2 },
+                  },
+                },
+                {
+                  text: {
+                    query,
+                    path: "title",
+                    fuzzy: { maxEdits: 2 },
+                  },
+                },
+                {
+                  text: {
+                    query,
+                    path: "description",
+                    fuzzy: { maxEdits: 2 },
+                  },
+                },
+              ],
+              minimumShouldMatch: 1,
             },
           },
-          {
-            autocomplete: {
-              query,
-              path: "description",
-              tokenOrder: "sequential",
-              fuzzy: {
-                maxEdits: 1,
+        },
+        {
+          $match: {
+            ...(employmentType && { employmentType }),
+            ...(shouldFilterRemote && { isRemote: isRemoteValue }),
+            minSalary: { $gte: minSalary },
+            maxSalary: { $lte: maxSalary },
+          },
+        },
+        {
+          $facet: {
+            data: [
+              { $sort: { createdAt: -1 } },
+              { $skip: (page - 1) * pageSize },
+              { $limit: pageSize },
+              {
+                $lookup: {
+                  from: "Company",
+                  localField: "companyId",
+                  foreignField: "_id",
+                  as: "company",
+                },
               },
-            },
-          },
-        ],
-        minimumShouldMatch: 1,
-      },
-    },
-  },
-  {
-    $match: {
-      ...(employmentType && { employmentType }),
-      ...(shouldFilterRemote && { isRemote: isRemoteValue }),
-      minSalary: { $gte: minSalary },
-      maxSalary: { $lte: maxSalary },
-    },
-  },
-  {
-    $facet: {
-      data: [
-        { $sort: { createdAt: -1 } },
-        { $skip: (page - 1) * pageSize },
-        { $limit: pageSize },
-        {
-          $lookup: {
-            from: "Company",
-            localField: "companyId",
-            foreignField: "_id",
-            as: "company",
-          },
-        },
-        {
-          $addFields: {
-            company: { $arrayElemAt: ["$company", 0] },
+              {
+                $addFields: {
+                  company: { $arrayElemAt: ["$company", 0] },
+                },
+              },
+              {
+                $project: {
+                  id: "$_id",
+                  _id: 0,
+                  title: 1,
+                  description: 1,
+                  employmentType: 1,
+                  isRemote: 1,
+                  city: 1,
+                  location: 1,
+                  minSalary: 1,
+                  maxSalary: 1,
+                  salaryPeriod: 1,
+                  benefits: 1,
+                  qualifications: 1,
+                  responsibilities: 1,
+                  createdAt: 1,
+                  updatedAt: 1,
+                  employerName: "$company.name",
+                  employerLogo: "$company.logo",
+                },
+              },
+            ],
+            totalCount: [{ $count: "count" }],
           },
         },
-        {
-          $project: {
-            id: "$_id",
-            _id: 0,
-            title: 1,
-            description: 1,
-            employmentType: 1,
-            isRemote: 1,
-            city: 1,
-            location: 1,
-            minSalary: 1,
-            maxSalary: 1,
-            salaryPeriod: 1,
-            benefits: 1,
-            qualifications: 1,
-            responsibilities: 1,
-            createdAt: 1,
-            updatedAt: 1,
-            employerName: "$company.name",
-            employerLogo: "$company.logo",
-          },
-        },
-      ],
-      totalCount: [{ $count: "count" }],
-    },
-  },
-];
-
+      ];
 
       const response = (await db.$runCommandRaw({
         aggregate: "Job",
@@ -114,7 +130,8 @@ export async function GET(req: NextRequest) {
         cursor: {},
       })) as any;
 
-      const [{ data = [], totalCount = [] }] = response?.cursor?.firstBatch || [];
+      const [{ data = [], totalCount = [] }] =
+        response?.cursor?.firstBatch || [];
       const formatted = formatJobsWithTimestampsLocal(data);
 
       return NextResponse.json({
@@ -145,7 +162,7 @@ export async function GET(req: NextRequest) {
             { maxSalary: { lte: maxSalary } },
           ],
         },
-      ].filter(condition => Object.keys(condition).length > 0), // Remove empty objects
+      ].filter((condition) => Object.keys(condition).length > 0),
     };
 
     const [jobs, totalCount] = await Promise.all([
@@ -194,7 +211,7 @@ export async function GET(req: NextRequest) {
       {
         success: false,
         message: "Error searching jobs",
-        data : error,
+        data: error,
       },
       { status: 500 }
     );
@@ -227,22 +244,19 @@ function formatJobsWithTimestampsLocal(jobs: any[]): JobWithTime[] {
     return `${count} ${label}${count !== 1 ? "s" : ""} ago`;
   }
 
-  const mapped = jobs.map(
-    (job): JobWithTime => {
-
-      let createdAtDate :Date;
-      if(job.createdAt?.$date) {
-        createdAtDate = new Date(job.createdAt.$date );
-      } else {
-        createdAtDate = new Date(job.createdAt);
-      }
-      return {
+  const mapped = jobs.map((job): JobWithTime => {
+    let createdAtDate: Date;
+    if (job.createdAt?.$date) {
+      createdAtDate = new Date(job.createdAt.$date);
+    } else {
+      createdAtDate = new Date(job.createdAt);
+    }
+    return {
       ...job,
       id: job.id?.$oid || job.id,
       postedAt: timeAgo(createdAtDate),
       companyId: job.companyId,
-      }
-    }
-  );
+    };
+  });
   return mapped;
 }
