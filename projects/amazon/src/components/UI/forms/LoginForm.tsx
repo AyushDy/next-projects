@@ -16,6 +16,17 @@ export default function LoginForm() {
     password: "",
   });
 
+  const demoUsers = {
+    admin : {
+      email : "user1@gmail.com",
+      password : "password"
+    },
+    user : {
+      email : "user2@gmail.com",
+      password : "password"
+    }
+  }
+
   async function handleSubmit(e: FormEvent) {
     setIsLoading(true);
     e.preventDefault();
@@ -75,6 +86,26 @@ export default function LoginForm() {
           type="submit"
         >
           {isLoading ? "Logging in..." : "Login"}
+        </button>
+        <button
+          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-black bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 disabled:bg-gray-300"
+          disabled={isLoading}
+          type="button"
+          onClick={() => {
+            setFormDetails(demoUsers.admin);
+          }}
+        >
+          Login as Admin
+        </button>
+        <button
+          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-black bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 disabled:bg-gray-300"
+          disabled={isLoading}
+          type="button"
+          onClick={() => {
+            setFormDetails(demoUsers.user);
+          }}
+        >
+          Login as User
         </button>
         {status && (
           <p className="text-red-500 text-sm text-center pt-2">{status}</p>
