@@ -1,8 +1,8 @@
 "use client";
 
-import { ProductCategory, Supplier } from "@/generated/prisma";
 import { ADD_PRODUCT, GET_ALL_SUPPLIERS } from "@/lib/gql/queries";
 import gqlClient from "@/lib/services/gql";
+import { ProductCategory } from "@prisma/client";
 import {
   Button,
   Dialog,

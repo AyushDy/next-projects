@@ -1,8 +1,8 @@
 "use client";
 
-import { RoleType, User } from "@/generated/prisma";
 import { LOG_OUT } from "@/lib/gql/queries";
 import gqlClient from "@/lib/services/gql";
+import { RoleType } from "@prisma/client";
 import {  createContext, useState } from "react";
 
 export type UserWithoutPassword = {

@@ -1,7 +1,7 @@
-import { RoleType } from "@/generated/prisma/wasm";
 import { getUserFromCookies } from "@/lib/helper";
 import { generateToken } from "@/lib/services/jwt";
 import prisma from "@/lib/services/prisma";
+import { RoleType } from "@prisma/client";
 import { cookies } from "next/headers";
 
 export async function loginUser(

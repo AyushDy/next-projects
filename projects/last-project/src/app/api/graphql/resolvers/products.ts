@@ -1,6 +1,6 @@
-import { ProductCategory } from "@/generated/prisma";
 import { getUserFromCookies } from "@/lib/helper";
 import prisma from "@/lib/services/prisma";
+import { ProductCategory } from "@prisma/client";
 
 export default async function addProduct(
   _: any,

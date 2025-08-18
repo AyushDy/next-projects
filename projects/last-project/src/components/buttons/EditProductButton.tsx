@@ -1,6 +1,5 @@
 "use client";
 
-import { ProductCategory, Supplier } from "@/generated/prisma";
 import { ADD_PRODUCT, GET_ALL_SUPPLIERS, UPDATE_PRODUCT } from "@/lib/gql/queries";
 import gqlClient from "@/lib/services/gql";
 import {
@@ -14,6 +13,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ProductWithSupplier } from "../cards/ProductCard";
+import { ProductCategory } from "@prisma/client";
 
 const productCategories: ProductCategory[] = [
   "electronics",

@@ -1,6 +1,5 @@
 "use client";
 
-import { Sale } from "@/generated/prisma";
 import {
   CartesianGrid,
   Legend,

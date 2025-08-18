@@ -1,8 +1,8 @@
 import { Card, Flex, Box, Text, Badge, Button, Avatar } from "@radix-ui/themes";
 import AddSaleProductButton from "../buttons/AddSaleButton";
 import Link from "next/link";
-import { Product } from "@/generated/prisma";
 import RestockProductButton from "../buttons/RestockProductButton";
+import { Product } from "@prisma/client";
 
 export type ProductWithSupplier = Product & {
   supplier: {
