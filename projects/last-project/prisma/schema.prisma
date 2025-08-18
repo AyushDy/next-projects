@@ -1,0 +1,96 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String     @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  email    String     @unique
+  username String     @unique
+  password String
+  avatar   String?
+  role     RoleType   @default(staff)
+  StockLog StockLog[]
+}
+
+model Supplier {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  email        String     @unique
+  phone        String?
+  address      String?
+  products     Product[]
+  transactions StockLog[]
+}
+
+model Product {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  price       Float
+  category    ProductCategory @default(others)
+  stock       Int
+  imageUrl    String
+  sales       Sale[]
+  StockLog    StockLog[]
+  supplier    Supplier        @relation(fields: [supplierId], references: [id])
+  supplierId  String          @db.ObjectId
+}
+
+model Sale {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String   @db.ObjectId
+  quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+}
+
+model StockLog {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  product    Product   @relation(fields: [productId], references: [id])
+  productId  String    @db.ObjectId
+  change     Int
+  reason     String
+  user       User      @relation(fields: [userId], references: [id])
+  userId     String    @db.ObjectId
+  createdAt  DateTime  @default(now())
+  supplierId String?   @db.ObjectId
+  Supplier   Supplier? @relation(fields: [supplierId], references: [id])
+  customerId String?   @db.ObjectId
+  Customer   Customer? @relation(fields: [customerId], references: [id])
+}
+
+model Customer {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  email     String     @unique
+  purchases StockLog[]
+}
+
+enum ProductCategory {
+  electronics
+  beauty
+  food
+  accessories
+  clothing
+  furniture
+  decor
+  others
+}
+
+enum RoleType {
+  admin
+  staff
+  manager
+}
