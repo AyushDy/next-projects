@@ -12,6 +12,17 @@ export default function LoginForm() {
   const [error, setError] = useState<{ message: string }>({ message: "" });
   const [loading, setLoading] = useState(false);
 
+  const quickLoginCreds = {
+    admin : {
+      userCred: "user1",
+      password: "password"
+    },
+    user : {
+      userCred: "user2",
+      password: "password"
+    }
+  }
+
   async function handleLogin() {
     setError({ message: "" });
     setLoading(true);
@@ -69,6 +80,28 @@ export default function LoginForm() {
       >
         <Text>Login</Text>
       </Button>
+      <div className="flex justify-between mt-4">
+        <button
+          type="button"
+          className="text-sm text-blue-500"
+          onClick={() => {
+            setUserCred(quickLoginCreds.admin.userCred);
+            setPassword(quickLoginCreds.admin.password);
+          }}
+        >
+          Login as Admin
+        </button>
+        <button
+          type="button"
+          className="text-sm text-blue-500"
+          onClick={() => {
+            setUserCred(quickLoginCreds.user.userCred);
+            setPassword(quickLoginCreds.user.password);
+          }}
+        >
+          Login as Staff
+        </button>
+      </div>
       <p className="text-red-500 h-5 text-sm text-center">{error.message}</p>
     </Card>
     </form>
