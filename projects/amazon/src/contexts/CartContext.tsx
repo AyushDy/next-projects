@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
@@ -14,14 +13,28 @@ import {
   removeFromCart,
   syncWithLocalCart,
 } from "@/actions/cart-actions";
-import { useAuthContext } from "./AuthContext";
+import { AuthContextType, useAuthContext } from "./AuthContext";
 
-export const CartContext = createContext(null);
+type CartItem = Product & { quantity: number };
 
-export default function CartProvider({ children }) {
-  const [cartItems, setCartItems] = useState([]);
+export type CartContextType = {
+  cartItems: CartItem[];
+  cartCount: number;
+  updateCart: (product: Product, quantity?: number) => Promise<any>;
+  handleRemoveFromCart: (product: Product, quantity?: number) => Promise<any>;
+  getItemCount: (item: Product) => number;
+};
+
+export const CartContext = createContext<CartContextType | null>(null);
+
+import { ReactNode } from "react";
+import { Product } from "@prisma/client";
+
+export default function CartProvider({ children }: { children: ReactNode }) {
+  
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [cartCount, setCartCount] = useState(0);
-  const { isLoggedin } = useAuthContext();
+  const { isLoggedin } = useAuthContext() as AuthContextType;
 
   useEffect(() => {
     async function initializeCart(){
@@ -29,9 +42,16 @@ export default function CartProvider({ children }) {
         try{
           const result = await getUserCart();
           if(result.success){
-            updateCartState(result.cart?.items || []);
+            updateCartState(
+              (result.cart?.items || [])
+                .filter((item: any) => item && item.product)
+                .map((item: any) => ({
+                  ...item.product,
+                  quantity: item.quantity,
+                }))
+            );
           }
-        }catch(err){
+        }catch(err:any){
           console.log(err.message)
           updateCartState([]);
         }
@@ -49,9 +69,16 @@ export default function CartProvider({ children }) {
         try{
           const result = await getUserCart();
           if(result.success){
-            updateCartState(result.cart?.items || []);
+            updateCartState(
+              (result.cart?.items || [])
+                .filter((item: any) => item && item.product)
+                .map((item: any) => ({
+                  ...item.product,
+                  quantity: item.quantity,
+                }))
+            );
           }
-        }catch (err){
+        }catch (err:any){
           console.log("Error refershing cart : ",err.message);
         }
       }
@@ -61,7 +88,7 @@ export default function CartProvider({ children }) {
     }
   },[isLoggedin]);
 
-  const updateCart = async (product, quantity = 1) => {
+  const updateCart = async (product:Product, quantity = 1) => {
     try {
       const res = await addToCart(product.productId, quantity);
       if (isLoggedin && !res?.success) return res;
@@ -74,12 +101,12 @@ export default function CartProvider({ children }) {
           cart: updatedCart,
         };
       return res;
-    } catch (err) {
+    } catch (err:any) {
       return { success: false, message: err.message };
     }
   };
 
-  const handleRemoveFromCart = async (product, quantity = 1) => {
+  const handleRemoveFromCart = async (product:Product, quantity = 1) => {
     try {
       const res = await removeFromCart(product.productId, quantity);
       if (isLoggedin && !res?.success) {
@@ -94,7 +121,7 @@ export default function CartProvider({ children }) {
           cart: updatedCart,
         };
       return res;
-    } catch (err) {
+    } catch (err:any) {
       return {
         success: false,
         message: err?.message || "Something went wrong",
@@ -102,12 +129,12 @@ export default function CartProvider({ children }) {
     }
   };
 
-  const getItemCount = (item) => {
-    const cartItem = cartItems.find((_item) => _item.id == item.id);
+  const getItemCount = (item: Product) => {
+    const cartItem = cartItems.find((_item: Product) => _item.id == item.id) ;
     return cartItem ? cartItem.quantity : 0;
   };
 
-  const modifyCart = (product, quantity, operation = "add") => {
+  const modifyCart = (product: Product, quantity: number, operation = "add") => {
     const updatedCart = [...cartItems];
     const index = updatedCart.findIndex(
       (item) => item.productId === product.productId
@@ -125,7 +152,7 @@ export default function CartProvider({ children }) {
     return updatedCart;
   };
 
-  const updateCartState = (newCart) => {
+  const updateCartState = (newCart: CartItem[]) => {
     setCartItems(newCart);
     setCartCount(getCartCount(newCart));
     saveCartItems(newCart);
@@ -136,8 +163,6 @@ export default function CartProvider({ children }) {
       value={{
         cartCount,
         cartItems,
-        setCartItems,
-        setCartCount,
         updateCart,
         getItemCount,
         handleRemoveFromCart,

@@ -1,9 +1,7 @@
-//@ts-nocheck
 
 import SearchBar from "./UI/SearchBar";
 import Link from "next/link";
 import CartIcon from "./UI/buttons/CartIcon";
-import AddProductButton from "./UI/AddProduct";
 import NavLinks from "./NavLinks";
 import Caregories from "./Categories";
 

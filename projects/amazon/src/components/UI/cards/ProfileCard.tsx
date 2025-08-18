@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { updateUserProfile} from "@/actions/auth-actions";
 import { useRouter } from "next/navigation";
-import { useAuthContext } from "@/contexts/AuthContext";
+import { AuthContextType, useAuthContext } from "@/contexts/AuthContext";
 
 
 interface UserData {
@@ -24,9 +24,7 @@ interface UserData {
   exp?: number;
 }
 
-interface AuthContext {
-  handleLogout : () => void
-}
+
 
 export default function ProfileCard({ user }: { user: UserData }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -34,7 +32,7 @@ export default function ProfileCard({ user }: { user: UserData }) {
   const [status, setStatus] = useState("");
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
-  const { handleLogout } = useAuthContext() as AuthContext;
+  const { handleLogout } = useAuthContext() as AuthContextType;
 
   const handleSave = () => {
     if (editedUsername.trim() === user.username) {

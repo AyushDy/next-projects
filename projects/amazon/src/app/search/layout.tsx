@@ -1,8 +1,6 @@
-//@ts-nocheck
 
 import React from "react";
 import FilterSidebar from "@/components/FilterSidebar";
-import Header from "@/components/Header";
 
 export default function SearchLayout({  children,
 }: {

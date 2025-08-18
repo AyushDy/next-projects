@@ -10,7 +10,7 @@ export default function Toaster({text, onClose}:{text:string;onClose:()=>void}){
             onClose();
         },3000);
         return ()=>clearTimeout(timer);
-    });
+    },[]);
 
     if(!visible) return null;
 

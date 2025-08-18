@@ -1,4 +1,4 @@
-//@ts-nocheck
+
 "use client";
 
 import {
@@ -12,10 +12,19 @@ import { useRouter } from "next/navigation";
 import { getCartItems } from "@/lib/Cart";
 import { syncWithLocalCart } from "@/actions/cart-actions";
 
-const AuthContext = createContext();
+export type AuthContextType = {
+  user: any;
+  isLoggedin: boolean;
+  loading: boolean;
+  handleLogin: (obj: any) => Promise<any>;
+  handleLogout: (obj: any) => Promise<any>;
+  handleSignup: (obj: any) => Promise<any>;
+};
 
-export default function AuthContextProvider({ children }) {
-  const [user, setUser] = useState("");
+const AuthContext = createContext<AuthContextType | null>(null);
+
+export default function AuthContextProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<any>(null);
   const [isLoggedin, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -33,9 +42,9 @@ export default function AuthContextProvider({ children }) {
     checkAuth();
   }, []);
 
-  async function handleSignup(obj) {
+  async function handleSignup(obj: any): Promise<string> {
     setLoading(true);
-    const result = await createUser(obj);
+    const result: any | string = await createUser(obj);
     if (typeof result === "string") return result;
     if (!result.email || !result.username || !result.role) {
       setLoading(false);
@@ -47,7 +56,7 @@ export default function AuthContextProvider({ children }) {
     return "Account Created Successfully.";
   }
 
-  async function handleLogin(obj) {
+  async function handleLogin(obj: any) {
     setLoading(true);
     const result = await LoginUser(obj);
     if (typeof result === "string") {
@@ -71,7 +80,7 @@ export default function AuthContextProvider({ children }) {
     return "Login Successfull.";
   }
 
-  async function handleLogout(obj) {
+  async function handleLogout(obj: any) {
     setLoading(true);
     try {
       await logoutUser();
@@ -82,7 +91,7 @@ export default function AuthContextProvider({ children }) {
       sessionStorage.removeItem("guestCart");
       
       return { success: true, message: "Logout successfull." };
-    } catch (error) {
+    } catch (error: any) {
       setLoading(false);
       return { success: false, message: error.message };
     }

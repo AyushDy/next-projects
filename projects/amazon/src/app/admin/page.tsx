@@ -1,4 +1,4 @@
-//@ts-no
+
 
 import { getCurrentUser } from "@/actions/auth-actions";
 import { getAllProducts } from "@/actions/server-actions";

@@ -2,6 +2,7 @@
 
 import db from "@/services/Prisma";
 import { getCurrentUser } from "./auth-actions";
+import { Product } from "@/components/UI/forms/EditProductForm";
 
 
 type cartItem = {
@@ -99,7 +100,7 @@ export async function getUserCart() {
     });
 
     const productMap = new Map();
-    products.forEach((item) => {
+    products.forEach((item : Product) => {
       productMap.set(item.productId, item);
     });
 
