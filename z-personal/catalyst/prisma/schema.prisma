@@ -1,0 +1,240 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum TeamMemberRole {
+  MEMBER
+  LEAD
+  ADMIN
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  REVIEW
+  DONE
+  BLOCKED
+}
+
+enum ProjectVisibility {
+  PUBLIC
+  PRIVATE
+}
+
+enum ProjectMemberRole {
+  MEMBER
+  OWNER
+}
+
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  bio           String?
+  password      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+  teams         TeamMember[]
+  ownerProjects Project[]
+  projects      ProjectMember[]
+  ledTeams      Team[]          @relation("ledTeams")
+  createdTasks  Task[]
+  assignedTasks TaskAssignee[]
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@index([identifier])
+}
+
+model Team {
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  image         String         @default("https://www.ibcs.com/wp-content/uploads/2024/01/Projekt-bez-nazwy-15.png")
+  description   String?
+  teamLeadId    String         @db.ObjectId
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  members       TeamMember[]
+  projectLinks  ProjectTeam[]
+  boardLinks    BoardTeam[]
+  assignedTasks TaskAssignee[]
+  teamLead      User           @relation("ledTeams", fields: [teamLeadId], references: [id])
+}
+
+model TeamMember {
+  id       String         @id @default(auto()) @map("_id") @db.ObjectId
+  userId   String         @db.ObjectId
+  teamId   String         @db.ObjectId
+  role     TeamMemberRole @default(MEMBER)
+  joinedAt DateTime       @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, teamId], name: "unique_team_user")
+}
+
+model Project {
+  id          String            @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  slug        String            @unique
+  description String?
+  ownerId     String            @db.ObjectId
+  visibility  ProjectVisibility @default(PRIVATE)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  owner      User            @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  teams      ProjectTeam[]
+  members    ProjectMember[]
+  boards     Board[]
+  boardTeams BoardTeam[]
+}
+
+model ProjectMember {
+  id        String            @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String            @db.ObjectId
+  projectId String            @db.ObjectId
+  role      ProjectMemberRole @default(MEMBER)
+  joinedAt  DateTime          @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, projectId], name: "unique_project_member")
+}
+
+model ProjectTeam {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  projectId String   @db.ObjectId
+  teamId    String   @db.ObjectId
+  role      String?
+  addedAt   DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  team    Team    @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, teamId], name: "unique_project_team")
+}
+
+model Board {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  projectId   String   @db.ObjectId
+  name        String
+  description String?
+  isArchived  Boolean  @default(false)
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  project Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  columns BoardColumn[]
+  teams   BoardTeam[]
+}
+
+model BoardColumn {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  boardId String   @db.ObjectId
+  name    String
+  order   Int      @default(0)
+  taskIds String[] @default([])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  board Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  tasks Task[]
+}
+
+model BoardTeam {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  boardId   String   @db.ObjectId
+  projectId String   @db.ObjectId
+  teamId    String   @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  board   Board   @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  team    Team    @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([boardId, teamId], name: "unique_board_team")
+}
+
+model Task {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  columnId    String     @db.ObjectId
+  title       String
+  tempId      String?     
+  description String?
+  status      TaskStatus @default(TODO)
+  priority    Int?
+  position    Int        @default(0)
+  dueDate     DateTime?
+  createdById String     @db.ObjectId
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  column    BoardColumn    @relation(fields: [columnId], references: [id], onDelete: Cascade)
+  createdBy User           @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  assignees TaskAssignee[]
+}
+
+model TaskAssignee {
+  id             String  @id @default(auto()) @map("_id") @db.ObjectId
+  taskId         String  @db.ObjectId
+  assigneeUserId String? @db.ObjectId
+  assigneeTeamId String? @db.ObjectId
+  role           String?
+  task           Task    @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user           User?   @relation(fields: [assigneeUserId], references: [id], onDelete: Cascade)
+  team           Team?   @relation(fields: [assigneeTeamId], references: [id], onDelete: Cascade)
+}
