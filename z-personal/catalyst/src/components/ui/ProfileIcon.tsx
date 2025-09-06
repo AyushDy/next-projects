@@ -9,13 +9,13 @@ export default function ProfileIcon({ user }:{ user: User | null }) {
 
   return (
     <>
-      <div className="ml-auto">
+      <div className="">
           <Avatar>
             <AvatarImage
               src={user?.image as string}
               alt="Profile Picture"
             />
-            <AvatarFallback>
+            <AvatarFallback className="text-primary">
               {user?.name
                 ? user.name.charAt(0).toUpperCase()
                 : "P"}

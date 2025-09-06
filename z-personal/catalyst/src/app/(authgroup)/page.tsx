@@ -8,16 +8,8 @@ export default function Home() {
     <main className="flex gap-4 h-full">
       <div className="h-full w-1/4">
         <div className="w-full h-full p-4">
-          <Card className="p-4 min-h-66 rounded-md">
-            <Suspense
-              fallback={
-                <div className="flex h-full w-full gap-2 items-center justify-center">
-                  <Spinner size="md" /> <span>Loading...</span>
-                </div>
-              }
-            >
+          <Card className="p-4 min-h-66 rounded-xs">
               <ProjectsList />
-            </Suspense>
           </Card>
         </div>
       </div>
@@ -25,7 +17,7 @@ export default function Home() {
 
       <div className="w-1/2">
         <div className="w-full h-full p-4">
-          <Card className="p-4 w-full min-h-46 flex">
+          <Card className="p-4 w-full min-h-46 flex rounded-xs">
             <p className="text-2xl text-center">Latest Updates..</p>
             <Suspense fallback={<div className="flex items-center justify-center"><Spinner size="md" /> <span>Loading...</span></div>}>
               <p>q</p>

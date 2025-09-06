@@ -27,9 +27,9 @@ export function LogoutButton() {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="outline">Log out</Button>
+        <Button variant="outline" className="rounded-xs">Log out</Button>
       </AlertDialogTrigger>
-      <AlertDialogContent>
+      <AlertDialogContent className="rounded-xs">
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
@@ -37,9 +37,9 @@ export function LogoutButton() {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel className="rounded-xs">Cancel</AlertDialogCancel>
           <AlertDialogAction
-            className="hover:bg-red-500 text-background hover:text-white"
+            className="hover:bg-red-500 text-background hover:text-white rounded-xs"
             onClick={handleLogout}
           >
             Log out

@@ -12,11 +12,11 @@ export function NotificationButton() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="ml-auto">
+        <Button variant="outline" className="ml-auto rounded-xs">
             <Bell className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="start">
+      <DropdownMenuContent className="w-56 rounded-xs p-3" align="start">
         No notifications...
       </DropdownMenuContent>
     </DropdownMenu>

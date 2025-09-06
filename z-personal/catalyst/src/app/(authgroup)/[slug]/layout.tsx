@@ -29,6 +29,23 @@ export default function Layout({
   const [isCollapsed, setIsCollapsed] = useState(false);
   const { data: project, isLoading } = useProject(slug);
 
+  const renderActiveTab = () => {
+    switch (tab) {
+      case "boards":
+        return boards;
+      case "teams":
+        return teams;
+      case "members":
+        return members;
+      case "settings":
+        return settings;
+      case "overview":
+        return overview;
+      default:
+        return boards;
+    }
+  };
+
   return (
     <main className="flex h-full">
       <div
@@ -55,16 +72,10 @@ export default function Layout({
           isCollapsed ? "ml-16" : "ml-64"
         } flex-1 p-4 lg:p-20 transition-all duration-300 min-w-0 overflow-hidden`}
       >
-        {tab === "boards"
-          ? boards
-          : tab === "teams"
-          ? teams
-          : tab === "members"
-          ? members
-          : tab === "settings"
-          ? settings
-          : overview}
-        {children}
+        <div key={tab} className="h-full">
+          {renderActiveTab()}
+        </div>
+        <div className="hidden">{children}</div>
       </div>
     </main>
   );

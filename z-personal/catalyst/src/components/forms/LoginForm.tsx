@@ -18,7 +18,8 @@ export function LoginForm() {
   const [password, setPassword] = useState("");
   const [isPending, startTransition] = useTransition();
 
-  async function handleSubmit() {
+  async function handleSubmit(e : React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     startTransition(async () => {
       const result = await signIn("credentials", {
         email,
@@ -30,7 +31,7 @@ export function LoginForm() {
   }
 
   return (
-    <Card className="w-full max-w-sm border-none">
+    <Card className="w-full max-w-sm rounded-xs border-none">
       <form onSubmit={handleSubmit}>
         <CardHeader className="mb-2">
           <CardTitle>Login to your account</CardTitle>
@@ -46,6 +47,7 @@ export function LoginForm() {
                 id="email"
                 type="email"
                 value={email}
+                className="rounded-xs"
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
@@ -63,13 +65,14 @@ export function LoginForm() {
                 id="password"
                 type="password"
                 value={password}
+                className="rounded-xs"
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
           </div>
         </CardContent>
         <CardFooter className="flex-col gap-2">
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full rounded-xs" disabled={isPending}>
             {isPending ? "Logging in..." : "Login"}
           </Button>
           <GoogleLogin />

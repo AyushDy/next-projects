@@ -7,8 +7,8 @@ import { Search } from "lucide-react"
 export function SearchInput() {
   return (
     <div className="flex w-full ml-auto max-w-sm items-center gap-2">
-      <Input type="text" placeholder="Search..." />
-      <Button type="submit" variant="outline">
+      <Input type="text" placeholder="Search..." className="rounded-xs"/>
+      <Button type="submit" variant="outline" className="rounded-xs">
         <Search className="h-4 w-4" />
       </Button>
     </div>

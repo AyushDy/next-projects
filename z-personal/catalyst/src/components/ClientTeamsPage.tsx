@@ -1,39 +1,87 @@
 "use client";
 
-import { AddBoardButton } from "@/components/buttons/AddBoardButton";
-import BoardCard from "@/components/cards/BoardCard";
-import { Card, CardContent } from "@/components/ui/card";
-import { useBoards } from "@/lib/hooks/useBoards";
-import { CalendarDays, Loader2 } from "lucide-react";
-import React from "react";
-import SkeletonBoards from "./skeleton/SkeletonBoards";
+import { useTeams } from "@/lib/hooks/useTeams";
+import { Spinner } from "./ui/LoadingSpinner";
+import { useEffect, useState } from "react";
+import TeamListItem from "./cards/TeamListItem";
+import TeamMemberList from "./cards/TeamMemberList";
+import { AddTeamToProjectButton } from "./buttons/AddTeamToProjectButton";
+
+export type Team = {
+  id: string;
+  name: string;
+  image: string;
+  members: {
+    id: string;
+    user: {
+      id: string;
+      name: string;
+      email: string;
+      image: string;
+    };
+  }[];
+  teamLead: {
+    id: string;
+    name: string;
+    email: string;
+    image: string;
+  };
+};
 
 export default function ClientTeamsPage({ slug }: { slug: string }) {
+  const { data: teams, isLoading } = useTeams(slug);
+  const [currentTeam, setCurrentTeam] = useState<null | Team>(null);
 
+  useEffect(() => {
+    if (teams && teams.length > 0) {
+      if (currentTeam) {
+        const updatedCurrentTeam = teams.find(
+          (team) => team.id === currentTeam.id
+        );
+        if (updatedCurrentTeam) {
+          setCurrentTeam(updatedCurrentTeam); 
+        } else {
+          setCurrentTeam(teams[0]); 
+        }
+      } else {
+        setCurrentTeam(teams[0]);
+      }
+    }
+  }, [teams, currentTeam?.id]);
+
+  if (isLoading) {
+    return (
+      <div className="flex gap-2">
+        <Spinner size="md" />
+        Loading...
+      </div>
+    );
+  }
+
+  if (!teams) {
+    return <div>No teams found.</div>;
+  }
 
   return (
-    <div className="space-y-6">
-      <Header slug={slug} />
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div className="flex flex-col w-full">
+      <div className="flex gap-2 justify-between items-center mb-4">
+        <h1>Teams in {slug}</h1>
+        <AddTeamToProjectButton projectSlug={slug} />
       </div>
 
-      
-    </div>
-  );
-}
-
-function Header({ slug }: { slug: string }) {
-  return (
-    <>
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Teams</h1>
-          <p className="text-muted-foreground">
-            Manage and organize the teams affiliated with your project.
-          </p>
+      <div className="flex gap-10">
+        <div className="flex flex-col gap-4 w-fit">
+          {teams.map((team) => (
+            <TeamListItem
+              key={team.id}
+              team={team}
+              setTeam={setCurrentTeam}
+              isActive={currentTeam?.id === team.id}
+            />
+          ))}
         </div>
-        
+        <TeamMemberList currentTeam={currentTeam} />
       </div>
-    </>
+    </div>
   );
 }

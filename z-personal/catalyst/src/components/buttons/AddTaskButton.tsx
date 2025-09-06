@@ -6,7 +6,10 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { toast } from "sonner";
 import { nanoid } from "nanoid";
-import { ColumnsContextType, useColumnsContext } from "../context/ColumnsContextProvider";
+import {
+  ColumnsContextType,
+  useColumnsContext,
+} from "../context/ColumnsContextProvider";
 
 export default function AddTaskButton({ columnId }: { columnId?: string }) {
   const [adding, setAdding] = useState(false);
@@ -20,7 +23,7 @@ export default function AddTaskButton({ columnId }: { columnId?: string }) {
       return;
     }
 
-    const tempTaskId = "_tmp"+nanoid();
+    const tempTaskId = "_tmp" + nanoid();
     const newTask = {
       id: tempTaskId,
       title: taskTitle,
@@ -43,24 +46,53 @@ export default function AddTaskButton({ columnId }: { columnId?: string }) {
   return (
     <>
       {!adding ? (
-        <Button variant={"outline"} onClick={() => setAdding(true)}>
-          <PlusIcon className="mr-2" /> Add a Card
+        <Button
+          variant="ghost"
+          onClick={() => setAdding(true)}
+          className="w-full justify-start text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+        >
+          <PlusIcon className="mr-2 h-4 w-4" />
+          Add a Card
         </Button>
       ) : (
-        <div className="w-full">
-          <Input 
-            placeholder="Enter card title" 
-            value={taskTitle} 
-            onChange={(e) => setTaskTitle(e.target.value)} 
+        <div className="space-y-3">
+          <Input
+            placeholder="Enter card title"
+            value={taskTitle}
+            onChange={(e) => setTaskTitle(e.target.value)}
             autoFocus
+            className="resize-none"
             onKeyDown={(e) => {
-              if (e.key === "Enter") handleAddTask();
-              if (e.key === "Escape") setAdding(false);
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleAddTask();
+                setAdding(false);
+              }
+              if (e.key === "Escape") {
+                setAdding(false);
+                setTaskTitle("");
+              }
             }}
           />
-          <div className="flex gap-2 py-2">
-            <Button onClick={handleAddTask}>Add Card</Button>
-            <Button variant={"outline"} onClick={() => setAdding(false)}>
+          <div className="flex gap-2">
+            <Button
+              onClick={() => {
+                handleAddTask();
+                setAdding(false);
+              }}
+              size="sm"
+              className="flex-1"
+            >
+              Add Card
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setAdding(false);
+                setTaskTitle("");
+              }}
+              size="sm"
+            >
               Cancel
             </Button>
           </div>

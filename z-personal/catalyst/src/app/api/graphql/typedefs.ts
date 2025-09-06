@@ -2,21 +2,34 @@ import gql from "graphql-tag";
 
 export const typeDefs = gql`
   type Query {
-    getUserProjects(userId: String!): [Project!]
+    getCurrentUser: User
+    getUserProjects: [Project!]
     getProjectBySlug(slug: String!): Project
     getProjectBoardsBySlug(slug: String!): [Board!]
     getBoardColumns(boardId: String!): [BoardColumn!]
     isUniqueProjectSlug(slug: String!): Boolean!
+    getTaskById(id: String!): Task
+    getTeamsForProject(slug: String!): [Team]!
+    getCommentsByTaskId(taskId: String!): [Comment!]
+    getUserByEmail(email: String!): User
+    getCurrentUserTeams: [Team]!
   }
 
   type Mutation {
+    uploadImageToCloudinary(file: Upload!): String!
     createUser(
       name: String!
       email: String!
       password: String!
       image: String
       bio: String
-    ): User
+    ): Boolean
+    updateUser(
+      name: String
+      email: String
+      bio: String
+      image: String
+    ): Boolean
     login(email: String!, password: String!): Boolean
     createProject(
       name: String!
@@ -45,8 +58,23 @@ export const typeDefs = gql`
       newTasks: [TaskInput]!
       updatedTasks: [UpdatedTaskInput]!
       columnChanges: [ColumnChangesInput]!
+      deletedTasks: [DeletedTaskInput]!
     ): Boolean
-    addBoardColumn(boardId: String!, order: Int!, name: String! ): Boolean
+    addBoardColumn(boardId: String!, order: Int!, name: String!): Boolean
+    updateTask(taskId: String!, updates: UpdateTaskInput!): Boolean
+    reorderColumns(columnOrders: [ColumnOrderInput!]!): Boolean
+    deleteColumn(columnId: String!): Boolean
+    createComment(taskId: String!, content: String!): Boolean
+    createTeam(name: String!, description: String, image: String): Boolean
+    addMemberToTeam(teamId: String!, userId: String!): Boolean
+    addTeamToProject(teamId: String!, projectSlug: String!): Boolean
+  }
+
+  scalar Upload
+
+  input DeletedTaskInput {
+    id: String!
+    columnId: String!
   }
 
   input TaskInput {
@@ -60,12 +88,12 @@ export const typeDefs = gql`
   }
 
   input UpdateTaskInput {
-    title: String!
+    title: String
     description: String
-    status: TaskStatus!
+    status: TaskStatus
     priority: Int
     dueDate: String
-    columnId: String!
+    columnId: String
   }
 
   input UpdatedTaskInput {
@@ -75,7 +103,13 @@ export const typeDefs = gql`
 
   input ColumnChangesInput {
     id: String!
+    order: Int!
     taskIds: [String!]!
+  }
+
+  input ColumnOrderInput {
+    id: String!
+    order: Int!
   }
 
   enum TeamMemberRole {
@@ -110,6 +144,7 @@ export const typeDefs = gql`
     ledTeams: [Team!]
     createdTasks: [Task!]
     projects: [ProjectMember!]
+    comments: [Comment!]
   }
 
   type Team {
@@ -118,7 +153,7 @@ export const typeDefs = gql`
     image: String!
     description: String
     teamLead: User!
-    members: [TeamMember!]
+    members: [TeamMember]!
     projects: [ProjectTeam!]
     boards: [BoardTeam!]
     createdAt: String
@@ -208,6 +243,7 @@ export const typeDefs = gql`
     assignees: [TaskAssignee!]
     createdAt: String
     updatedAt: String
+    comments: [Comment!]
   }
 
   type TaskAssignee {
@@ -217,6 +253,15 @@ export const typeDefs = gql`
     assigneeUser: User
     assigneeTeam: Team
     createdAt: String
+  }
+
+  type Comment {
+    id: ID!
+    content: String!
+    createdAt: String!
+    updatedAt: String!
+    task: Task!
+    createdBy: User!
   }
 
   type Account {

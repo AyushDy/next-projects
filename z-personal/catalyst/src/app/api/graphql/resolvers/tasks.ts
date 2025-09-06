@@ -61,7 +61,7 @@ export async function moveTask(
     if (!fromColumn || !toColumn) throw new Error("Column not found");
 
     if (args.fromColumnId === args.toColumnId) {
-      const taskIds = Array.from(new Set([...fromColumn.taskIds || []]));
+      const taskIds = Array.from(new Set([...(fromColumn.taskIds || [])]));
       const currentIndex = taskIds.indexOf(args.taskId);
 
       if (currentIndex === -1) throw new Error("Task not found in column");
@@ -105,3 +105,44 @@ export async function moveTask(
     return false;
   }
 }
+
+export async function getTaskById(_: any, args: { id: string }) {
+  try {
+    const task = await prisma.task.findUnique({
+      where: { id: args.id },
+      include: { createdBy: true },
+    });
+
+    return task;
+  } catch (error) {
+    console.error("Error fetching task:", error);
+    return null;
+  }
+}
+
+export async function updateTask(
+  _: any,
+  args: { taskId: string; updates: { title?: string; description?: string } }
+) {
+  try {
+    const session = await auth();
+    const userId = session?.user.id;
+    if (!userId) throw new Error("Not authenticated");
+
+    await prisma.task.update({
+      where: { id: args.taskId },
+      data: {
+        ...(args.updates.title ? { title: args.updates.title } : {}),
+        ...(args.updates.description
+          ? { description: args.updates.description }
+          : {}),
+      },
+    });
+
+    return true;
+  } catch (error) {
+    console.error("Error updating task:", error);
+    return false;
+  }
+}
+

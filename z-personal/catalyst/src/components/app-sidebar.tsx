@@ -47,13 +47,12 @@ export function AppSidebar({
 }) {
   return (
     <div className="h-full w-full">
-      {/* Toggle Button */}
       <div className="flex justify-end p-2">
         <Button
           variant="ghost"
           size="sm"
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="h-8 w-8 p-0"
+          className="h-8 w-8 p-0 rounded-xs"
         >
           {isCollapsed ? (
             <ChevronRight className="h-4 w-4" />
@@ -63,13 +62,12 @@ export function AppSidebar({
         </Button>
       </div>
 
-      {/* Navigation Items */}
       <div className="px-2 space-y-1">
         {items.map((item) => (
           <Button
             variant={tab === item.title ? "default" : "ghost"}
             key={item.title}
-            className={`flex w-full gap-3 rounded-lg px-3 py-2 text-sm ${
+            className={`flex w-full gap-3 rounded-xs px-3 py-2 text-sm  ${
               isCollapsed ? "justify-center" : "justify-start"
             }`}
             onClick={() => setTab(item.title as TabTypes)}

@@ -56,6 +56,7 @@ model User {
   ledTeams      Team[]          @relation("ledTeams")
   createdTasks  Task[]
   assignedTasks TaskAssignee[]
+  comments      Comment[]
 }
 
 model Account {
@@ -182,11 +183,11 @@ model Board {
 }
 
 model BoardColumn {
-  id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  boardId String   @db.ObjectId
-  name    String
-  order   Int      @default(0)
-  taskIds String[] @default([])
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  boardId   String   @db.ObjectId
+  name      String
+  order     Int      @default(0)
+  taskIds   String[] @default([])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -213,7 +214,7 @@ model Task {
   id          String     @id @default(auto()) @map("_id") @db.ObjectId
   columnId    String     @db.ObjectId
   title       String
-  tempId      String?     
+  tempId      String?
   description String?
   status      TaskStatus @default(TODO)
   priority    Int?
@@ -226,6 +227,7 @@ model Task {
   column    BoardColumn    @relation(fields: [columnId], references: [id], onDelete: Cascade)
   createdBy User           @relation(fields: [createdById], references: [id], onDelete: Cascade)
   assignees TaskAssignee[]
+  comments  Comment[]
 }
 
 model TaskAssignee {
@@ -237,4 +239,16 @@ model TaskAssignee {
   task           Task    @relation(fields: [taskId], references: [id], onDelete: Cascade)
   user           User?   @relation(fields: [assigneeUserId], references: [id], onDelete: Cascade)
   team           Team?   @relation(fields: [assigneeTeamId], references: [id], onDelete: Cascade)
+}
+
+model Comment {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  taskId      String   @db.ObjectId
+  content     String
+  createdById String   @db.ObjectId
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  task      Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  createdBy User @relation(fields: [createdById], references: [id], onDelete: Cascade)
 }

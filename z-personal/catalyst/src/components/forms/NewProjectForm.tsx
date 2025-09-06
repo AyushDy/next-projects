@@ -40,7 +40,12 @@ export function NewProjectForm() {
           <div className="flex items-end gap-3">
             <div className="flex-1 space-y-2">
               <Label htmlFor="owner">Owner *</Label>
-              <Input id="owner" value="you" readOnly className="h-10" />
+              <Input
+                id="owner"
+                value="you"
+                readOnly
+                className="h-10 rounded-xs"
+              />
             </div>
             <span className="text-2xl font-light text-muted-foreground pb-2">
               /
@@ -49,8 +54,8 @@ export function NewProjectForm() {
               <Label htmlFor="name">Project name *</Label>
               <Input
                 id="name"
-                placeholder="my-awesome-project"
-                className="h-10"
+                placeholder="My Awesome Project..."
+                className="h-10 rounded-xs"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
@@ -59,21 +64,18 @@ export function NewProjectForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="slug">Project slug *</Label>
+            <Label htmlFor="slug">Unique Project slug *</Label>
             <Input
               id="slug"
               placeholder="my-awesome-project"
-              className="h-10"
+              className="h-10 rounded-xs"
               value={slug}
               onChange={(e) => setSlug(e.target.value)}
               required
             />
             <p className="text-xs text-muted-foreground">
-              URL path for the project. Use lowercase letters, numbers, and
-              hyphens.
-            </p>
-            <p className="text-xs text-muted-foreground">
-              This will be used as the URL path for the project.
+              Use lowercase letters, numbers, and
+              hyphens. This will be used as the URL path for the project.
             </p>
           </div>
 
@@ -82,7 +84,7 @@ export function NewProjectForm() {
             <Input
               id="description"
               placeholder="Brief description..."
-              className="h-10"
+              className="h-10 rounded-xs"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
@@ -91,9 +93,9 @@ export function NewProjectForm() {
 
         <div className="space-y-6">
           <h2 className="text-xl font-semibold border-b pb-3">Configuration</h2>
-          <div className="border rounded-lg p-4">
+          <div className="border rounded-xs p-4">
             <div className="flex justify-between items-center">
-              <div >
+              <div>
                 <p className="font-medium">Visibility</p>
                 <p className="text-sm text-muted-foreground">
                   Who can see this project?
@@ -105,10 +107,10 @@ export function NewProjectForm() {
                   setVisibility(value as "PUBLIC" | "PRIVATE")
                 }
               >
-                <SelectTrigger className="w-32">
+                <SelectTrigger className="w-32 rounded-xs">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="rounded-xs">
                   <SelectItem value="PUBLIC">Public</SelectItem>
                   <SelectItem value="PRIVATE">Private</SelectItem>
                 </SelectContent>
@@ -116,7 +118,7 @@ export function NewProjectForm() {
             </div>
           </div>
 
-          <div className="border rounded-lg p-4">
+          <div className="border rounded-xs p-4">
             <div className="flex items-center gap-3">
               <Checkbox
                 id="createBoard"
@@ -129,7 +131,7 @@ export function NewProjectForm() {
             </div>
           </div>
 
-          <div className="border rounded-lg p-4">
+          <div className="border rounded-xs p-4">
             <div className="flex items-center gap-3">
               <Checkbox
                 id="createTeam"
@@ -155,7 +157,7 @@ export function NewProjectForm() {
           <Button
             onClick={createProject}
             disabled={isPending || !name.trim() || !slug.trim()}
-            className="bg-green-600 hover:bg-green-700 text-white px-8 h-11"
+            className="bg-green-600 hover:bg-green-700 text-white px-8 h-11 rounded-xs"
           >
             {isPending ? "Creating..." : "Create Project"}
           </Button>

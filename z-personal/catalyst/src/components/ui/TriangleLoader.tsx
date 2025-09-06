@@ -1,4 +1,3 @@
-// components/ui/spinner.tsx
 "use client";
 import * as React from "react";
 import { cn } from "@/lib/utils"; // shadcn utility for merging classNames
@@ -8,17 +7,35 @@ interface SpinnerProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export function Spinner({ size = "md", className, ...props }: SpinnerProps) {
+  // Tailwind-style helper classes in case you want to tweak appearance via className
   const sizes = {
-    sm: "h-4 w-4 border-2",
-    md: "h-6 w-6 border-2",
-    lg: "h-10 w-10 border-4",
+    sm: "inline-block",
+    md: "inline-block",
+    lg: "inline-block",
+  } as const;
+
+  // Keep the original animation geometry by driving size with a pixel width.
+  // The original loader used 50px; we preserve that for the `md` size so the
+  // animation timing and transform-origin look correct.
+  const pixelSizes: Record<string, number> = {
+    sm: 24,
+    md: 50,
+    lg: 80,
   };
 
+  const spinnerSize = `${pixelSizes[size]}px`;
+
   return (
-    <div className="loader">
+    <div
+      role="status"
+      aria-label="Loading"
+      className={cn("loader", sizes[size], className)}
+      style={{ width: spinnerSize }}
+      {...props}
+    >
       <style jsx>{`
         .loader {
-          width: 50px;
+          /* width is set inline so the animation scales correctly for each size */
           aspect-ratio: 1.154;
           position: relative;
           background: conic-gradient(
@@ -71,3 +88,5 @@ export function Spinner({ size = "md", className, ...props }: SpinnerProps) {
     </div>
   );
 }
+
+export default Spinner;

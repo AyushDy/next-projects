@@ -20,6 +20,7 @@ export async function getBoardColumns(_: any, args: { boardId: string }) {
           },
         },
       },
+      orderBy: { order: "asc" },
     });
 
     return columns;
@@ -29,33 +30,36 @@ export async function getBoardColumns(_: any, args: { boardId: string }) {
   }
 }
 
-export async function addBoardColumn(_: any, args: {
-  boardId : string;
-  name : string;
-  order : number;
-}) {
+export async function addBoardColumn(
+  _: any,
+  args: {
+    boardId: string;
+    name: string;
+    order: number;
+  }
+) {
   try {
     const session = await auth();
-    if(!session?.user){
+    if (!session?.user) {
       throw new Error("unauthorized");
     }
 
     const board = await prisma.board.findUnique({
-      where : {id : args.boardId}
+      where: { id: args.boardId },
     });
 
-    if(!board) return false;
-    
+    if (!board) return false;
+
     await prisma.boardColumn.create({
-      data : {
-        boardId : args.boardId,
-        name : args.name,
-        order : args.order
-      }
-    })
+      data: {
+        boardId: args.boardId,
+        name: args.name,
+        order: args.order,
+      },
+    });
     return true;
   } catch (error) {
-    console.error("error creating column",error);
+    console.error("error creating column", error);
     return false;
   }
 }
@@ -65,7 +69,8 @@ export async function syncBoardColumns(
   args: {
     newTasks: Array<Omit<Task, "id"> & { tempId: string }>;
     updatedTasks: Array<{ id: string; updates: Partial<Task> }>;
-    columnChanges: Array<{ id: string; taskIds: string[] }>;
+    columnChanges: Array<{ id: string; taskIds: string[]; order: number }>;
+    deletedTasks: Array<{ id: string; columnId: string }>;
   }
 ) {
   try {
@@ -94,6 +99,14 @@ export async function syncBoardColumns(
         }
       }
 
+      await tx.task.deleteMany({
+        where: {
+          id: {
+            in: args.deletedTasks.map((task) => task.id),
+          },
+        },
+      });
+
       for (const { id, updates } of args.updatedTasks) {
         if (tempIdToRealId.has(id)) continue;
 
@@ -109,11 +122,16 @@ export async function syncBoardColumns(
           (id) => tempIdToRealId.get(id) || id
         );
         const filteredtaskIds = realTaskIds.filter(
-          (id) => !id.startsWith("tmp_")
+          (id) =>
+            !id.startsWith("tmp_") &&
+            !args.deletedTasks.some((task) => task.id === id)
         );
         await tx.boardColumn.update({
           where: { id: column.id },
-          data: { taskIds: filteredtaskIds },
+          data: {
+            taskIds: filteredtaskIds,
+            order: column.order,
+          },
         });
       }
     });
@@ -121,6 +139,75 @@ export async function syncBoardColumns(
     return true;
   } catch (error) {
     console.error("Error syncing board columns:", error);
+    return false;
+  }
+}
+
+export async function reorderColumns(
+  _: any,
+  args: {
+    columnOrders: Array<{ id: string; order: number }>;
+  }
+) {
+  try {
+    const session = await auth();
+    if (!session?.user) {
+      throw new Error("unauthorized");
+    }
+
+    await prisma.$transaction(async (tx) => {
+      for (const { id, order } of args.columnOrders) {
+        await tx.boardColumn.update({
+          where: { id },
+          data: { order },
+        });
+      }
+    });
+
+    return true;
+  } catch (error) {
+    console.error("Error reordering columns:", error);
+    return false;
+  }
+}
+
+
+export async function deleteColumn(_:any, args: { columnId: string }) {
+  try {
+    const session = await auth();
+    if (!session?.user) {
+      throw new Error("unauthorized");
+    }
+
+    const column = await prisma.boardColumn.findUnique({
+      where: { id: args.columnId },
+      include: { board: {
+        include : { project: {
+          include: {
+            members: {
+              select: {
+                userId: true
+              },
+            },
+          }
+        }}
+      }}
+    });
+    if (!column) return false;
+
+    const isMember = column.board.project.members.some(
+      (member) => member.userId === session.user.id
+    );
+
+    if (!isMember) throw new Error("Not authorized");
+
+    await prisma.boardColumn.delete({
+      where: { id: args.columnId },
+    });
+
+    return true;
+  } catch (error) {
+    console.error("Error deleting column:", error);
     return false;
   }
 }

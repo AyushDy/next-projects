@@ -1,51 +1,56 @@
 import { useState } from "react";
-import { Task } from "../context/ColumnsContextProvider";
+import {
+  ColumnsContextType,
+  Task,
+  useColumnsContext,
+} from "../context/ColumnsContextProvider";
 import { Card } from "../ui/card";
-import { Input } from "../ui/input";
-import { usePathname, useRouter } from "next/navigation";
+import TaskDetails from "./TaskDetailsCard";
+import TaskCheckbox from "../forms/TaskCheckBox";
+import { Trash } from "lucide-react";
 
 export default function TaskCard({ task }: { task: Task }) {
-  const [checked, setChecked] = useState(false);
-  const pathName = usePathname();
-  const router = useRouter();
-
+  const [open, setOpen] = useState(false);
+  const { deleteTask } = useColumnsContext() as ColumnsContextType;
 
   return (
-    <div onClick={()=>router.push(`${pathName}/${task.id}`)}>
-    <Card className="p-2 rounded-md group bg-primary/10 backdrop-blur-sm transition-all duration-200 relative overflow-visible">
-      <Checkbox checked={checked} setChecked={setChecked} />
-      <h3
-        className={
-          "font-semibold break-words transition-all duration-200" +
-          ((checked ? " ml-7" : " ml-0 ") + " group-hover:ml-7")
-        }
+    <div>
+      {open && <TaskDetails taskId={task.id} onClose={() => setOpen(false)} />}
+      <Card
+        className="group relative cursor-pointer task-card-hover bg-card border border-border p-3 rounded-lg"
+        onClick={() => setOpen(true)}
       >
-        {task.title}
-      </h3>
-    </Card>
+        <div className="flex items-start gap-3">
+          <TaskCheckbox
+            taskId={task.id}
+            status={task.status as "TODO" | "DONE"}
+          />
+          <div className="flex-1 min-w-0">
+            <h3
+              className={`font-medium break-words text-sm leading-relaxed transition-all duration-200 ${
+                task.status === "DONE"
+                  ? "line-through text-muted-foreground"
+                  : "text-foreground"
+              }`}
+            >
+              {task.title}
+            </h3>
+          </div>
+          {task.status === "DONE" && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                console.log("Deleting task:", task.id);
+                deleteTask(task.id);
+              }}
+              className="opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-red-100 dark:hover:bg-red-900/30 bg-background/95 p-1.5 rounded-md shadow-sm border border-border hover:border-red-300 dark:hover:border-red-600 hover:scale-105"
+              title="Delete completed task"
+            >
+              <Trash className="w-3 h-3 text-red-600 dark:text-red-400" />
+            </button>
+          )}
+        </div>
+      </Card>
     </div>
-  );
-}
-
-
-function Checkbox({
-  checked,
-  setChecked,
-}: {
-  checked: boolean;
-  setChecked: (v: boolean) => void;
-}) {
-  return (
-    <Input
-      type="checkbox"
-      checked={checked}
-      onChange={(e) => setChecked(e.target.checked)}
-      className={
-        `absolute left-2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full border-2 border-primary accent-primary transition-all duration-200 ` +
-        (checked
-          ? "opacity-100 pointer-events-auto"
-          : "opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto")
-      }
-    />
   );
 }

@@ -8,6 +8,8 @@ import {
   MOVE_TASK,
   SYNC_BOARD_COLUMNS,
   ADD_BOARD_COLUMN,
+  REORDER_COLUMNS,
+  DELETE_COLUMN,
 } from "@/lib/grapgql/query";
 import { Column } from "./useBoards";
 import { Task } from "@prisma/client";
@@ -95,8 +97,6 @@ export function useAddTask() {
   });
 }
 
-
-
 export function useSyncBoardColumns(boardId?: string) {
   const queryClient = useQueryClient();
 
@@ -105,15 +105,22 @@ export function useSyncBoardColumns(boardId?: string) {
       newTasks,
       updatedTasks,
       columnChanges,
+      deletedTasks,
     }: {
       newTasks: Array<Task>;
       updatedTasks: Array<{ id: string; updates: Partial<Task> }>;
-      columnChanges: Array<{ id: string; taskIds: Array<string> }>;
+      columnChanges: Array<{
+        id: string;
+        taskIds: Array<string>;
+        order: number;
+      }>;
+      deletedTasks: Array<{ id: string; columnId: string }>;
     }) => {
       return gqlClient.request(SYNC_BOARD_COLUMNS, {
         newTasks,
         updatedTasks,
         columnChanges,
+        deletedTasks,
       });
     },
     onSuccess: () => {
@@ -184,6 +191,42 @@ export function useMoveTasks(boardId: string) {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["boards", boardId] });
+    },
+  });
+}
+
+export function useReorderColumns(boardId?: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      columnOrders,
+    }: {
+      columnOrders: Array<{ id: string; order: number }>;
+    }) => {
+      return gqlClient.request(REORDER_COLUMNS, {
+        columnOrders,
+      });
+    },
+    onSuccess: () => {
+      if (boardId) {
+        queryClient.invalidateQueries({ queryKey: ["boards", boardId] });
+      } else {
+        queryClient.invalidateQueries({ queryKey: ["boards"] });
+      }
+    },
+  });
+}
+
+export function useDeleteColumn() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (columnId: string) => {
+      return gqlClient.request(DELETE_COLUMN, { columnId });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["boards"] });
     },
   });
 }

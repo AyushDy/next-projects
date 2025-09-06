@@ -47,14 +47,17 @@ export async function createProject(
       return false;
     }
 
+    const userId = session.user.id;
+
+
     const result = await prisma.$transaction(async (tx) => {
       const project = await tx.project.create({
         data: {
           ...parsed.data,
-          ownerId: session.user.id,
+          ownerId: userId,
           members: {
             create: {
-              userId: session.user.id,
+              userId: userId,
               role: "OWNER",
             },
           },
@@ -94,12 +97,12 @@ export async function createProject(
       if (args.createTeam) {
         const createdTeam = await tx.team.create({
           data: {
-            name: `${name} Team`,
+            name: `${name}'s Team`,
             description: `Team for project ${name}`,
-            teamLeadId: session.user.id,
+            teamLeadId: userId,
             members: {
               create: {
-                userId: session.user.id,
+                userId: userId,
                 role: "ADMIN",
               },
             },
@@ -136,14 +139,30 @@ export async function createProject(
   }
 }
 
-export async function getUserProjects(_: any, args: { userId: string }) {
+export async function getUserProjects() {
   try {
-    if (!args.userId) {
-      throw new Error("User ID is required");
+    const session = await auth();
+    if (!session?.user.id) {
+      throw new Error("Unauthorized");
     }
     const projects = await prisma.project.findMany({
       where: {
-        ownerId: args.userId,
+        OR: [
+          { ownerId: session.user.id },
+          {
+            teams: {
+              some: {
+                team: {
+                  members: {
+                    some: {
+                      userId: session.user.id,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        ],
       },
       include: {
         owner: true,
@@ -210,17 +229,14 @@ export async function deleteProject(_: any, args: { slug: string }) {
     }
     const project = await prisma.project.findFirst({
       where: {
-        AND: [
-          { slug: args.slug },
-          { ownerId: session.user.id },
-        ],
+        AND: [{ slug: args.slug }, { ownerId: session.user.id }],
       },
     });
     if (!project) {
       throw new Error("Project not found");
     }
 
-    if(project.ownerId !== session.user.id){
+    if (project.ownerId !== session.user.id) {
       throw new Error("Unauthorized");
     }
 
@@ -234,7 +250,6 @@ export async function deleteProject(_: any, args: { slug: string }) {
     return false;
   }
 }
-
 
 export async function isUniqueProjectSlug(_: any, args: { slug: string }) {
   try {

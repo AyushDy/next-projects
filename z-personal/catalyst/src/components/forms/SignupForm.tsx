@@ -43,14 +43,16 @@ export function SignupForm() {
         };
         if (!res.createUser) {
           alert("Error creating user");
-        }
-        alert("user created successfully!");
-      } catch (error) {}
+          console.error("Error creating user:", res);
+        }else alert("user created successfully!");
+      } catch (error) {
+        console.error("Error creating user:", error);
+      }
     });
   }
 
   return (
-    <Card className="w-full max-w-sm border-none">
+    <Card className="w-full rounded-xs max-w-sm border-none">
       <CardHeader>
         <CardTitle>Create an account</CardTitle>
         <CardDescription>
@@ -66,6 +68,7 @@ export function SignupForm() {
                 id="name"
                 type="text"
                 value={formData.name}
+                className="rounded-xs"
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
@@ -79,6 +82,7 @@ export function SignupForm() {
                 id="email"
                 type="email"
                 value={formData.email}
+                className="rounded-xs"
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
@@ -94,6 +98,7 @@ export function SignupForm() {
                 id="password"
                 type="password"
                 value={formData.password}
+                className="rounded-xs"
                 onChange={(e) =>
                   setFormData({ ...formData, password: e.target.value })
                 }
@@ -104,7 +109,7 @@ export function SignupForm() {
         </form>
       </CardContent>
       <CardFooter className="flex-col gap-2">
-        <Button type="button" className="w-full" onClick={handleSignup}>
+        <Button type="button" className="w-full rounded-xs" onClick={handleSignup}>
           {isPending ? "Creating..." : "Create Account"}
         </Button>
         <GoogleLogin />

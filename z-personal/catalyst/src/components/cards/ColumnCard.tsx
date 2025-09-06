@@ -4,13 +4,23 @@ import AddTaskButton from "../buttons/AddTaskButton";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
 import { useMemo, useState } from "react";
 import { ChevronsRightLeft, ChevronsLeftRight } from "lucide-react";
+import { GripVertical } from "lucide-react";
 import {
   ColumnsContextType,
   useColumnsContext,
 } from "../context/ColumnsContextProvider";
 import TaskCard from "./TaskCard";
+import { ColumnsMenuButton } from "../buttons/ColumnsMenuButton";
 
-export default function ColumnCard({ column }: { column: Column }) {
+export default function ColumnCard({
+  column,
+  dragHandleProps,
+  isDragging,
+}: {
+  column: Column;
+  dragHandleProps?: any;
+  isDragging?: boolean;
+}) {
   const { tasksMap } = useColumnsContext() as ColumnsContextType;
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -25,62 +35,119 @@ export default function ColumnCard({ column }: { column: Column }) {
       {(provided) => (
         <div ref={provided.innerRef} {...provided.droppableProps}>
           <Card
-            className={`h-fit flex-shrink-0 p-2 ${
-              isCollapsed ? "w-10 px-0" : "w-70 p-4"
-            }`}
+            className={`flex-shrink-0 kanban-drag-transition h-fit max-h-[calc(100vh-200px)] flex flex-col ${
+              isCollapsed ? "kanban-column-collapsed" : "kanban-column-width"
+            } ${
+              isDragging ? "kanban-drag-active" : "shadow-md hover:shadow-lg"
+            } bg-card border border-border`}
           >
             <div
-              className={`flex ${
-                isCollapsed ? "flex-col-reverse pr-2 gap-5" : ""
-              } justify-between items-center`}
-              onClick={() => setIsCollapsed(!isCollapsed)}
+              className={`flex flex-col h-full ${isCollapsed ? "p-2" : "p-4"}`}
             >
-              {!isCollapsed ? (
-                <h2 className="truncate">{column.name}</h2>
-              ) : (
-                <span
-                  className="block text-sm font-semibold whitespace-nowrap rotate-180 writing-vertical-ltr"
-                  style={{
-                    writingMode: "vertical-rl",
-                    textOrientation: "mixed",
-                  }}
-                >
-                  {column.name}
-                </span>
-              )}
-              <button
-                className="ml-2 hover:bg-background/80 p-1 rounded-lg"
-                title={isCollapsed ? "Expand list" : "Collapse list"}
+              <div
+                className={`flex items-center ${
+                  isCollapsed ? "flex-col gap-2" : "justify-between"
+                } mb-3 flex-shrink-0`}
               >
-                {!isCollapsed ? <ChevronsRightLeft /> : <ChevronsLeftRight />}
-              </button>
-            </div>
-            {!isCollapsed && (
-              <>
-                <div className="max-h-90 overflow-auto thin-scrollbar mt-2 space-y-2">
-                  {sortedTasks.map((task, index) => (
-                    <Draggable
-                      key={task.id}
-                      draggableId={task.id as string}
-                      index={index}
+                <div className="flex items-center gap-2 min-w-0 flex-1">
+                  {!isCollapsed && (
+                    <div
+                      {...dragHandleProps}
+                      className="cursor-grab active:cursor-grabbing p-1 hover:bg-muted rounded transition-colors"
                     >
-                      {(provided) => (
-                        <div
-                          className="rounded-md"
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                        >
-                          <TaskCard task={task} />
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
+                      <GripVertical
+                        size={16}
+                        className="text-muted-foreground"
+                      />
+                    </div>
+                  )}
+                  {!isCollapsed ? (
+                    <h2 className="text-lg font-semibold truncate text-foreground">
+                      {column.name}
+                    </h2>
+                  ) : (
+                    <span
+                      className="text-sm font-semibold text-foreground writing-mode-vertical"
+                      title={column.name}
+                    >
+                      {column.name}
+                    </span>
+                  )}
                 </div>
-                <AddTaskButton columnId={column.id} />
-              </>
-            )}
+
+                {!isCollapsed && (
+                  <div className="flex items-center gap-1">
+                    <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-full">
+                      {sortedTasks.length}
+                    </span>
+                    <button
+                      className="p-1 hover:bg-muted rounded transition-colors"
+                      title="Collapse list"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsCollapsed(true);
+                      }}
+                    >
+                      <ChevronsRightLeft
+                        size={16}
+                        className="text-muted-foreground"
+                      />
+                    </button>
+                    <ColumnsMenuButton columnId={column.id} />
+                  </div>
+                )}
+
+                {isCollapsed && (
+                  <button
+                    className="p-1 hover:bg-muted rounded transition-colors"
+                    title="Expand list"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsCollapsed(false);
+                    }}
+                  >
+                    <ChevronsLeftRight
+                      size={16}
+                      className="text-muted-foreground"
+                    />
+                  </button>
+                )}
+              </div>
+
+              {!isCollapsed && (
+                <>
+                  <div className="flex-1 min-h-[120px] max-h-[calc(100vh-400px)] overflow-y-auto thin-scrollbar space-y-2 mb-3">
+                    {sortedTasks.length > 0 ? (
+                      sortedTasks.map((task, index) => (
+                        <Draggable
+                          key={task.id}
+                          draggableId={task.id as string}
+                          index={index}
+                        >
+                          {(provided) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                            >
+                              <TaskCard task={task} />
+                            </div>
+                          )}
+                        </Draggable>
+                      ))
+                    ) : (
+                      <div className="text-center py-8 text-muted-foreground text-sm">
+                        No tasks yet
+                      </div>
+                    )}
+                    {provided.placeholder}
+                  </div>
+                  <div className="flex-shrink-0">
+                    <AddTaskButton columnId={column.id} />
+                  </div>
+                </>
+              )}
+            </div>
           </Card>
         </div>
       )}

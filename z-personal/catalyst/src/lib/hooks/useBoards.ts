@@ -121,7 +121,6 @@ export type Task = {
   dueDate?: string;
   columnId: string;
   createdAt: string;
-  position: number;
   updatedAt: string;
 
   createdBy: {

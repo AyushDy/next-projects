@@ -1,3 +1,4 @@
+import AuthContextProvider from "@/components/context/AuthContextProvider";
 import Header from "@/components/Header";
 
 export default function RootLayout({
@@ -7,8 +8,10 @@ export default function RootLayout({
 }>) {
   return (
     <>
-      <Header />
-      {children}
+      <AuthContextProvider>
+        <Header />
+        {children}
+      </AuthContextProvider>
     </>
   );
 }

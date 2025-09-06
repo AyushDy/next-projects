@@ -17,7 +17,7 @@ export function Spinner({ size = "md", className, ...props }: SpinnerProps) {
     <div
       role="status"
       className={cn(
-        "animate-spin rounded-full border-muted-foreground/20 border-t-foreground",
+        "animate-spin rounded-full border-gray-500/20 border-t-gray-500",
         sizes[size],
         className
       )}
