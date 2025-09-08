@@ -6,6 +6,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { DeleteTeamButton } from "./DeleteTeamButton";
 
 export function TeamsMenuButton({ teamId }: { teamId: string | undefined }) {
   return (
@@ -24,6 +25,7 @@ export function TeamsMenuButton({ teamId }: { teamId: string | undefined }) {
             Rename Team
           </Button>
         </div>
+        {teamId && <DeleteTeamButton teamId={teamId} />}
       </DropdownMenuContent>
     </DropdownMenu>
   );

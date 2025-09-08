@@ -52,11 +52,11 @@ export function AddBoardButton({ slug }: { slug: string }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-green-600 hover:bg-green-700 text-white">
+        <Button className="bg-green-600 hover:bg-green-700 text-white rounded-xs">
           New Board
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] rounded-xs">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>Create board</DialogTitle>
@@ -72,6 +72,7 @@ export function AddBoardButton({ slug }: { slug: string }) {
                 name="name"
                 placeholder="Enter board name"
                 required
+                className="rounded-xs"
               />
             </div>
             <div className="grid gap-3">
@@ -80,16 +81,17 @@ export function AddBoardButton({ slug }: { slug: string }) {
                 id="description-1"
                 name="description"
                 placeholder="Enter board description"
+                className="rounded-xs"
               />
             </div>
           </div>
           <DialogFooter className="mt-4">
             <DialogClose asChild>
-              <Button variant="outline" type="button">
+              <Button variant="outline" type="button" className="rounded-xs">
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit" disabled={createBoard.isPending}>
+            <Button type="submit" disabled={createBoard.isPending} className="rounded-xs">
               {createBoard.isPending ? "Creating..." : "Create board"}
             </Button>
           </DialogFooter>

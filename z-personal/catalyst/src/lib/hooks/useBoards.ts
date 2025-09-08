@@ -6,7 +6,11 @@ import {
   GET_PROJECT_BOARDS_BY_SLUG,
   CREATE_BOARD,
   DELETE_BOARD,
+  GET_BOARD_BY_ID,
+  ADD_TEAM_TO_BOARD,
+  UPDATE_BOARD,
 } from "@/lib/grapgql/query";
+import { toast } from "sonner";
 
 export function useBoards(slug: string) {
   return useQuery({
@@ -18,6 +22,20 @@ export function useBoards(slug: string) {
         getProjectBoardsBySlug: BoardWithRelations[];
       };
       return data.getProjectBoardsBySlug;
+    },
+  });
+}
+
+export function useBoardById(boardId: string) {
+  return useQuery({
+    queryKey: ["board", boardId],
+    queryFn: async () => {
+      const data = (await gqlClient.request(GET_BOARD_BY_ID, {
+        boardId,
+      })) as {
+        getBoardById: BoardWithRelations;
+      };
+      return data.getBoardById;
     },
   });
 }
@@ -72,6 +90,71 @@ export function useCreateBoard(slug: string) {
   });
 }
 
+export function useAddTeamToBoard(boardId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      teamId,
+      boardId,
+    }: {
+      teamId: string;
+      boardId: string;
+    }) => {
+      const res = (await gqlClient.request(ADD_TEAM_TO_BOARD, {
+        teamId,
+        boardId,
+      })) as { addTeamToBoard: boolean };
+
+      if (!res.addTeamToBoard) {
+        throw new Error("Failed to add team to board");
+      }
+
+      return res;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["board", boardId] });
+      queryClient.invalidateQueries({ queryKey: ["boards"] });
+      toast.success("Team added to board");
+    },
+    onError: (error) => {
+      console.error("Error adding team to board:", error);
+      toast.error("Failed to add team to board. Please try again.");
+    }
+  });
+}
+
+export function useUpdateBoard(boardId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (boardData: {
+      name: string;
+      description?: string;
+    }) => {
+      const res = (await gqlClient.request(UPDATE_BOARD, {
+        boardId,
+        name: boardData.name,
+        description: boardData.description || undefined,
+      })) as { updateBoard: boolean };
+
+      if (!res.updateBoard) {
+        throw new Error("Failed to update board");
+      }
+      return res;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["board", boardId] });
+      queryClient.invalidateQueries({ queryKey: ["boards"] });
+      toast.success("Board updated successfully");
+    },
+    onError: (error) => {
+      console.error("Error updating board:", error);
+      toast.error("Failed to update board. Please try again.");
+    }
+  });
+}
+
 export type BoardWithRelations = {
   id: string;
   name: string;
@@ -80,6 +163,7 @@ export type BoardWithRelations = {
   isArchived: boolean;
   createdAt: string;
   updatedAt: string;
+  createdById: string;
 
   columns: Column[];
 

@@ -32,7 +32,7 @@ export function DeleteBoardButton({ boardId, slug }: { boardId: string, slug: st
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant={"destructive"}> <Trash className="h-4 w-4" /></Button>
+        <Button variant={"destructive"} className="rounded-xs"> <Trash className="h-4 w-4" /></Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -42,9 +42,9 @@ export function DeleteBoardButton({ boardId, slug }: { boardId: string, slug: st
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel className="rounded-xs">Cancel</AlertDialogCancel>
           <AlertDialogAction
-            className="hover:bg-red-500 text-background hover:text-white"
+            className="bg-red-500 text-background rounded-xs hover:bg-red-600"
             onClick={handleDelete}
           >
             Delete

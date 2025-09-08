@@ -1,7 +1,7 @@
-import { CREATE_PROJECT } from "@/lib/grapgql/query";
+import { CREATE_PROJECT, IS_SLUG_UNIQUE } from "@/lib/grapgql/query";
 import gqlClient from "@/lib/services/gql";
 import { projectSchema } from "@/lib/zod";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -16,6 +16,7 @@ export type useProjectType = {
   setVisibility: (visibility: "PUBLIC" | "PRIVATE") => void;
   createProject: () => Promise<void>;
   isPending: boolean;
+  isSlugUnique: boolean;
 };
 
 export function useProjectForm() {
@@ -26,7 +27,18 @@ export function useProjectForm() {
   const [isPending, startTransition] = useTransition();
   const [createBoard, setCreateBoard] = useState<boolean>(true);
   const [createTeam, setCreateTeam] = useState<boolean>(false);
+  const [isSlugUnique, setIsSlugUnique] = useState<boolean | null>(null);
   const router = useRouter();
+
+  useEffect(()=>{
+    const timerId = setTimeout(async()=>{
+      if(!slug.trim()) return;
+      const res = (await gqlClient.request(IS_SLUG_UNIQUE, { slug: slug.trim() })) as { isUniqueProjectSlug: boolean };
+      setIsSlugUnique(res.isUniqueProjectSlug);
+    }, 400);
+
+    return () => clearTimeout(timerId);
+  },[slug])
 
   async function createProject() {
     if (!name.trim()) {
@@ -64,7 +76,6 @@ export function useProjectForm() {
           toast.error("Failed to create project");
         } else {
           toast.success("Project created successfully!");
-          // Redirect to the new project
           router.push(`/${slug.trim()}`);
         }
       } catch (error) {
@@ -89,5 +100,6 @@ export function useProjectForm() {
     setCreateBoard,
     createTeam,
     setCreateTeam,
+    isSlugUnique,
   };
 }

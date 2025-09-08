@@ -4,6 +4,7 @@ import {
   DELETE_PROJECT,
   GET_PROJECT_BY_SLUG,
   GET_USER_PROJECTS,
+  UPDATE_PROJECT,
 } from "@/lib/grapgql/query";
 import { Project } from "@prisma/client";
 
@@ -35,6 +36,32 @@ export function useUserProjects() {
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
+  });
+}
+
+export function useUpdateProject(slug: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (updateData: {
+      name?: string;
+      description?: string;
+      visibility?: "PUBLIC" | "PRIVATE";
+    }) => {
+      const res = (await gqlClient.request(UPDATE_PROJECT, {
+        slug,
+        ...updateData,
+      })) as { updateProject: boolean };
+
+      if (!res.updateProject) {
+        throw new Error("Failed to update project");
+      }
+      return res;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["project", slug] });
+      queryClient.invalidateQueries({ queryKey: ["userProjects"] });
+    },
   });
 }
 

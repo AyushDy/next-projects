@@ -13,24 +13,24 @@ import { useEffect, useState } from "react";
 export default function Page() {
   const { data: user, isPending: isPendingUser } = useCurrentUser();
   const { data: teams, isPending: isPendingTeams } = useCurrentUserTeams();
-  const [currentTeam, setCurrentTeam] = useState<Team | null>(null);
+  const [currentTeamId, setCurrentTeamId] = useState<string | null>(null);
 
   useEffect(() => {
     if (teams && teams.length > 0) {
-      if (currentTeam) {
+      if (currentTeamId) {
         const updatedCurrentTeam = teams.find(
-          (team) => team.id === currentTeam.id
+          (team) => team.id === currentTeamId
         );
         if (updatedCurrentTeam) {
-          setCurrentTeam(updatedCurrentTeam);
+          setCurrentTeamId(updatedCurrentTeam.id);
         } else {
-          setCurrentTeam(teams[0]);
+          setCurrentTeamId(teams[0].id);
         }
       } else {
-        setCurrentTeam(teams[0]);
+        setCurrentTeamId(teams[0].id);
       }
     }
-  }, [teams, currentTeam?.id]);
+  }, [teams, currentTeamId]);
 
   if (isPendingUser || isPendingTeams) {
     return (
@@ -51,18 +51,18 @@ export default function Page() {
       </div>
 
       <div className="flex gap-10">
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col max-h-90 overflow-y-auto thin-scrollbar">
           {teams?.map((team) => (
             <TeamListItem
               key={team.id}
               team={team}
-              setTeam={setCurrentTeam}
-              isActive={currentTeam?.id === team.id}
+              setTeamId={setCurrentTeamId}
+              isActive={currentTeamId === team.id}
             />
           ))}
         </div>
         <div>
-          <TeamMemberList currentTeam={currentTeam} />
+          {currentTeamId && <TeamMemberList currentTeamId={currentTeamId} />}
         </div>
       </div>
     </div>

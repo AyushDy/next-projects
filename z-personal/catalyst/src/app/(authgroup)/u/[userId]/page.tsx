@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import SwitchAccount from "./_comps/SwitchAccount";
 import UpdateProfile from "./_comps/UpdateProfileForm";
+import UpdateProfileImage from "@/components/forms/UpdateProfileImage";
 
 export default async function UserPage({
   params,
@@ -20,7 +21,7 @@ export default async function UserPage({
         <SwitchAccount />
 
         <h1 className="font-extrabold text-3xl">About</h1>
-
+        <UpdateProfileImage />
         <UpdateProfile />
       </div>
     </div>

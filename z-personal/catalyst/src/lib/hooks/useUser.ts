@@ -2,8 +2,9 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import gqlClient from "@/lib/services/gql";
-import {  GET_CURRENT_USER,  UPDATE_USER } from "../grapgql/query";
+import { GET_CURRENT_USER, UPDATE_USER } from "../grapgql/query";
 import { User } from "@prisma/client";
+import { uploadProfileImage } from "@/lib/actions";
 
 export function useCurrentUser() {
   return useQuery({
@@ -40,4 +41,19 @@ export function useUpdateUser() {
   });
 }
 
+export function useUpdateProfileImage() {
+  const queryClient = useQueryClient();
 
+  return useMutation({
+    mutationFn: async (file: File) => {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const result = await uploadProfileImage(formData);
+      return result;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+    },
+  });
+}

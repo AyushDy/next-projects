@@ -45,17 +45,10 @@ export async function getTeamsForProject(_: any, args: { slug: string }) {
       where: { projectId: project.id },
       include: {
         team: {
-          include: {
-            teamLead: {
-              select: { id: true, name: true, image: true },
-            },
-            members: {
-              include : {
-                user:{
-                  select: { id: true, name: true, email: true, image: true },
-                }
-              }
-            }
+          select: {
+            id: true,
+            name: true,
+            image: true,
           },
         },
       },
@@ -65,6 +58,30 @@ export async function getTeamsForProject(_: any, args: { slug: string }) {
   } catch (error) {
     console.error("Error fetching teams for project:", error);
     return [];
+  }
+}
+
+export async function getTeamById(_: any, args: { teamId: string }) {
+  try {
+    const team = await prisma.team.findUnique({
+      where: { id: args.teamId },
+      include: {
+        members: {
+          include: {
+            user: {
+              select: { id: true, name: true, email: true, image: true },
+            },
+          },
+        },
+        teamLead: {
+          select: { id: true, name: true, email: true, image: true },
+        },
+      },
+    });
+    return team;
+  } catch (error) {
+    console.error("Error fetching team by ID:", error);
+    return null;
   }
 }
 
@@ -130,6 +147,36 @@ export async function addTeamToProject(_:any, args: { teamId: string; projectSlu
     return true;
   } catch (error) {
     console.error("Error adding team to project:", error);
+    return false;
+  }
+}
+
+
+export async function deleteTeam(_: any, args: { teamId: string} ){
+  try {
+    const session = await auth();
+    if(!session || !session.user) {
+      throw new Error("Unauthorized");
+    }
+
+    const team = await prisma.team.findUnique({
+      where: { id: args.teamId },
+    });
+
+    if (!team) {
+      throw new Error("Team not found");
+    }
+
+    if (team.teamLeadId !== session.user.id) {
+      throw new Error("Not authorized");
+    }
+
+    await prisma.team.delete({
+      where: { id: args.teamId },
+    });
+    return true;
+  } catch (error) {
+    console.error("Error deleting team:", error);
     return false;
   }
 }

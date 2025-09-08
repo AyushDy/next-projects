@@ -1,11 +1,11 @@
 "use client";
 
-import { useTeams } from "@/lib/hooks/useTeams";
 import { Spinner } from "./ui/LoadingSpinner";
 import { useEffect, useState } from "react";
 import TeamListItem from "./cards/TeamListItem";
 import TeamMemberList from "./cards/TeamMemberList";
 import { AddTeamToProjectButton } from "./buttons/AddTeamToProjectButton";
+import { useGetTeamsByProject } from "@/lib/hooks/useTeams";
 
 export type Team = {
   id: string;
@@ -29,25 +29,8 @@ export type Team = {
 };
 
 export default function ClientTeamsPage({ slug }: { slug: string }) {
-  const { data: teams, isLoading } = useTeams(slug);
-  const [currentTeam, setCurrentTeam] = useState<null | Team>(null);
-
-  useEffect(() => {
-    if (teams && teams.length > 0) {
-      if (currentTeam) {
-        const updatedCurrentTeam = teams.find(
-          (team) => team.id === currentTeam.id
-        );
-        if (updatedCurrentTeam) {
-          setCurrentTeam(updatedCurrentTeam); 
-        } else {
-          setCurrentTeam(teams[0]); 
-        }
-      } else {
-        setCurrentTeam(teams[0]);
-      }
-    }
-  }, [teams, currentTeam?.id]);
+  const { data: teams, isLoading } = useGetTeamsByProject(slug);
+  const [currentTeamId, setCurrentTeamId] = useState<string | null>(null);
 
   if (isLoading) {
     return (
@@ -64,23 +47,27 @@ export default function ClientTeamsPage({ slug }: { slug: string }) {
 
   return (
     <div className="flex flex-col w-full">
-      <div className="flex gap-2 justify-between items-center mb-4">
-        <h1>Teams in {slug}</h1>
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 justify-between items-start sm:items-center mb-4 sm:mb-6">
+        <h1 className="text-lg sm:text-xl font-semibold">Teams in {slug}</h1>
         <AddTeamToProjectButton projectSlug={slug} />
       </div>
 
-      <div className="flex gap-10">
-        <div className="flex flex-col gap-4 w-fit">
-          {teams.map((team) => (
+      <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-10 w-full">
+        <div className="flex flex-col w-full lg:w-auto lg:min-w-[300px] max-h-48 sm:max-h-60 lg:max-h-80 overflow-y-auto">
+          {teams.map((team: Team) => (
             <TeamListItem
               key={team.id}
               team={team}
-              setTeam={setCurrentTeam}
-              isActive={currentTeam?.id === team.id}
+              setTeamId={setCurrentTeamId}
+              isActive={currentTeamId === team.id}
             />
           ))}
         </div>
-        <TeamMemberList currentTeam={currentTeam} />
+        {currentTeamId && (
+          <div className="flex-1 w-full">
+            <TeamMemberList currentTeamId={currentTeamId} />
+          </div>
+        )}
       </div>
     </div>
   );

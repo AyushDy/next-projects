@@ -67,7 +67,7 @@ export function AddMembersButton({ team }: { team: Team | null }) {
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
-          className="ml-auto bg-primary text-background rounded-xs transition-colors"
+          className="ml-auto bg-background text-foreground dark:bg-foreground dark:text-background border-border dark:border-background rounded-xs transition-colors hover:bg-muted dark:hover:bg-muted-foreground"
           title="Add Member"
         >
           <UserPlus className="h-4 w-4" />
@@ -119,7 +119,7 @@ export function AddMembersButton({ team }: { team: Team | null }) {
                       ? true
                       : false)
                   }
-                  className="rounded-md px-3 py-1 text-xs bg-primary hover:bg-primary/90 text-primary-foreground opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="rounded-md px-3 py-1 text-xs bg-background text-foreground dark:bg-foreground dark:text-background border border-border dark:border-background opacity-0 group-hover:opacity-100 transition-opacity hover:bg-muted dark:hover:bg-muted-foreground"
                 >
                   {addMemberMutation.isPending ? (
                     <Spinner size="sm" />
@@ -127,7 +127,7 @@ export function AddMembersButton({ team }: { team: Team | null }) {
                     team?.members.find(
                       (member) => member.id === foundUser.id
                     ) ? (
-                    <Check className="w-3 h-3 text-primary-foreground" />
+                    <Check className="w-3 h-3" />
                   ) : (
                     <UserPlus className="w-3 h-3" />
                   )}

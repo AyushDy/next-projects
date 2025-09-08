@@ -58,7 +58,7 @@ export default function Kanban({ boardId }: { boardId: string }) {
     <div className="h-full w-full p-6 bg-background">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-foreground">Kanban Board</h1>
-        <div className="flex items-center gap-3 px-3 py-2 bg-card rounded-lg border shadow-sm">
+        <div className="flex items-center gap-3 px-3 py-2 bg-card rounded-xs border shadow-sm">
           {isSyncing ? (
             <>
               <CircleSpinner size="sm" />

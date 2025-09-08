@@ -89,10 +89,15 @@ export async function updateUser(
   }
 }
 
-export const uploadImageToCloudinary = async (file: File) => {
+export const updateProfileImage = async (_: any, args: { file: File }) => {
   try {
-    const formData = new FormData();
-    formData.append("file", file);
+    const { file } = args;
+
+    const session = await auth();
+
+    if (!session || !session.user?.id) {
+      throw new Error("Not authenticated");
+    }
 
     if (!file) {
       throw new Error("No file provided");
@@ -109,9 +114,14 @@ export const uploadImageToCloudinary = async (file: File) => {
         })
         .end(buffer);
     });
+    await prisma.user.update({
+      where: { id: session.user.id },
+      data: { image: (result as any).secure_url },
+    });
+    return true;
   } catch (error) {
     console.error("Error uploading image to Cloudinary:", error);
-    throw new Error("Image upload failed");
+    return false;
   }
 };
 
@@ -147,22 +157,12 @@ export async function getCurrentUserTeams() {
     }
 
     const teams = await prisma.team.findMany({
-      where: {
-        OR: [
-          { teamLeadId: session.user.id },
-          { members: { some: { id: session.user.id } } },
-        ],
-      },
+      where: { members: { some: { user: { id: session.user.id } } } },
       include: {
         teamLead: true,
         members: {
           include: {
             user: true,
-          },
-        },
-        projectLinks: {
-          include: {
-            project: true,
           },
         },
       },

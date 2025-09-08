@@ -32,9 +32,9 @@ export function DeleteProjectButton({ slug }: { slug: string }) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant={"destructive"}> <Trash className="h-4 w-4" /></Button>
+        <Button variant={"destructive"} className="rounded-xs"> <Trash className="h-4 w-4" /></Button>
       </AlertDialogTrigger>
-      <AlertDialogContent>
+      <AlertDialogContent className="rounded-xs">
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
@@ -42,9 +42,9 @@ export function DeleteProjectButton({ slug }: { slug: string }) {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel className="rounded-xs">Cancel</AlertDialogCancel>
           <AlertDialogAction
-            className="hover:bg-red-500 text-background hover:text-white"
+            className="hover:bg-red-500 text-background hover:text-white rounded-xs"
             onClick={handleDelete}
           >
             Delete

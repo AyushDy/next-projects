@@ -57,6 +57,7 @@ model User {
   createdTasks  Task[]
   assignedTasks TaskAssignee[]
   comments      Comment[]
+  createdBoards Board[]
 }
 
 model Account {
@@ -176,10 +177,12 @@ model Board {
   isDefault   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  createdById String   @db.ObjectId
 
   project Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
   columns BoardColumn[]
   teams   BoardTeam[]
+  creator User          @relation(fields: [createdById], references: [id], onDelete: Cascade)
 }
 
 model BoardColumn {

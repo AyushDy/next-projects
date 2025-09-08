@@ -15,12 +15,14 @@ import { Spinner } from "../ui/LoadingSpinner";
 import { LogoutButton } from "./LogoutButton";
 import Link from "next/link";
 import { memo } from "react";
-import { AuthContextType, useAuthContext } from "../context/AuthContextProvider";
+import { useAuthContext } from "../context/AuthContextProvider";
+import { useCurrentUser } from "@/lib/hooks/useUser";
 
 export const ProfileButton = memo(function ProfileButton() {
-  const authContext = useAuthContext() as AuthContextType;
+  const { data : user, isPending} = useCurrentUser();
+  const {status} = useAuthContext();
 
-  if (authContext?.status === "loading") {
+  if (isPending) {
     return (
       <div className="flex items-center justify-center h-full p-1">
         <Spinner size="md" />
@@ -28,7 +30,7 @@ export const ProfileButton = memo(function ProfileButton() {
     );
   }
 
-  if (authContext?.status === "unauthenticated") {
+  if (status === "unauthenticated") {
     return (
       <Link
         href={"/auth"}
@@ -45,26 +47,26 @@ export const ProfileButton = memo(function ProfileButton() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="p-0 border-none rounded-xs">
-          <ProfileIcon user={authContext?.session?.user as User} />
+          <ProfileIcon user={user as User} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 rounded-xs" align="start">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <Link href={`/u/${authContext?.session?.user.id}`} className="w-full">
+            <Link href={`/u/${user?.id}`} className="w-full">
               Profile
             </Link>
           </DropdownMenuItem>
 
           <DropdownMenuItem>
-            <Link href={`/u/${authContext?.session?.user.id}/settings`} className="w-full">
+            <Link href={`/u/${user?.id}/settings`} className="w-full">
               Settings
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuItem>
-          <Link href={`/u/${authContext?.session?.user.id}/teams`} className="w-full">
+          <Link href={`/u/${user?.id}/teams`} className="w-full">
             Teams
           </Link>
         </DropdownMenuItem>

@@ -208,6 +208,9 @@ export const GET_PROJECT_BOARDS_BY_SLUG = gql`
       }
       isArchived
       isDefault
+      createdById
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -215,6 +218,22 @@ export const GET_PROJECT_BOARDS_BY_SLUG = gql`
 export const DELETE_PROJECT = gql`
   mutation DeleteProject($slug: String!) {
     deleteProject(slug: $slug)
+  }
+`;
+
+export const UPDATE_PROJECT = gql`
+  mutation UpdateProject(
+    $slug: String!
+    $name: String
+    $description: String
+    $visibility: ProjectVisibility
+  ) {
+    updateProject(
+      slug: $slug
+      name: $name
+      description: $description
+      visibility: $visibility
+    )
   }
 `;
 
@@ -301,6 +320,16 @@ export const GET_TEAMS_BY_PROJECT = gql`
       id
       name
       image
+    }
+  }
+`;
+
+export const GET_TEAM_BY_ID = gql`
+  query GetTeamById($teamId: String!) {
+    getTeamById(teamId: $teamId) {
+      id
+      name
+      image
       description
       teamLead {
         id
@@ -317,8 +346,6 @@ export const GET_TEAMS_BY_PROJECT = gql`
           image
         }
       }
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -373,5 +400,50 @@ export const ADD_MEMBER_TO_TEAM = gql`
 export const ADD_TEAM_TO_PROJECT = gql`
   mutation AddTeamToProject($teamId: String!, $projectSlug: String!) {
     addTeamToProject(teamId: $teamId, projectSlug: $projectSlug)
+  }
+`;
+
+export const GET_BOARD_BY_ID = gql`
+  query GetBoardById($boardId: String!) {
+    getBoardById(boardId: $boardId) {
+      id
+      name
+      description
+      columns {
+        id
+        name
+      }
+      teams {
+        id
+        team {
+          id
+          name
+          image
+        }
+      }
+      isDefault
+      isArchived
+      createdById
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const ADD_TEAM_TO_BOARD = gql`
+  mutation AddTeamToBoard($teamId: String!, $boardId: String!) {
+    addTeamToBoard(teamId: $teamId, boardId: $boardId)
+  }
+`;
+
+export const UPDATE_BOARD = gql`
+  mutation UpdateBoard($boardId: String!, $name: String, $description: String) {
+    updateBoard(boardId: $boardId, name: $name, description: $description)
+  }
+`;
+
+export const DELETE_TEAM = gql`
+  mutation DeleteTeam($teamId: String!) {
+    deleteTeam(teamId: $teamId)
   }
 `;

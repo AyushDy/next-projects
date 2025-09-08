@@ -28,7 +28,9 @@ export function AddTeamButton() {
     const description = formData.get("description") as string;
     const image = formData.get("image") as string;
     try {
-      await (await createTeamMutation).mutateAsync({
+      await (
+        await createTeamMutation
+      ).mutateAsync({
         name,
         description,
         image,

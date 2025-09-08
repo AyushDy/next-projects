@@ -4,7 +4,7 @@ export default function SkeletonBoards() {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       {Array.from({ length: 3 }).map((_, i) => (
-        <Card key={i} className="animate-pulse">
+        <Card key={i} className="animate-pulse rounded-xs">
           <CardContent className="p-6">
             <div className="space-y-3">
               <div className="h-4 bg-gray-200 rounded w-3/4"></div>

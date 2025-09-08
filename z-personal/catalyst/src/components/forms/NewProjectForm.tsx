@@ -29,6 +29,7 @@ export function NewProjectForm() {
     setCreateTeam,
     createProject,
     isPending,
+    isSlugUnique,
   } = useProjectForm();
 
   return (
@@ -73,9 +74,12 @@ export function NewProjectForm() {
               onChange={(e) => setSlug(e.target.value)}
               required
             />
+            {slug.trim() && (isSlugUnique === false
+              ? <p className="text-xs text-red-500"> This project slug is already taken.</p>
+              : <p className="text-xs text-green-500"> This project slug is available.</p>)}
             <p className="text-xs text-muted-foreground">
-              Use lowercase letters, numbers, and
-              hyphens. This will be used as the URL path for the project.
+              Use lowercase letters, numbers, and hyphens. This will be used as
+              the URL path for the project.
             </p>
           </div>
 

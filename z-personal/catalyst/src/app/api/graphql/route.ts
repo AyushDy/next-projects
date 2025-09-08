@@ -9,8 +9,15 @@ import {
   getProjectBySlug,
   getUserProjects,
   isUniqueProjectSlug,
+  updateProject,
 } from "./resolvers/Project";
-import { createBoard, deleteBoard } from "./resolvers/Boards";
+import {
+  addTeamToBoard,
+  createBoard,
+  deleteBoard,
+  getBoardById,
+  updateBoard,
+} from "./resolvers/Boards";
 import {
   addBoardColumn,
   deleteColumn,
@@ -24,9 +31,23 @@ import {
   moveTask,
   updateTask,
 } from "./resolvers/tasks";
-import { addMemberToTeam, addTeamToProject, createTeam, getTeamsForProject } from "./resolvers/teams";
+import {
+  addMemberToTeam,
+  addTeamToProject,
+  createTeam,
+  deleteTeam,
+  getTeamById,
+  getTeamsForProject,
+} from "./resolvers/teams";
 import { createComment, getCommentsByTaskId } from "./resolvers/comments";
-import { createUser, getCurrentUser, getCurrentUserTeams, getUserByEmail, updateUser, uploadImageToCloudinary } from "./resolvers/user";
+import {
+  createUser,
+  getCurrentUser,
+  getCurrentUserTeams,
+  getUserByEmail,
+  updateProfileImage,
+  updateUser,
+} from "./resolvers/user";
 
 const typeDefs = baseTypeDefs;
 const resolvers = {
@@ -42,12 +63,15 @@ const resolvers = {
     getCommentsByTaskId,
     getUserByEmail,
     getCurrentUserTeams,
+    getTeamById,
+    getBoardById,
   },
   Mutation: {
     createUser,
-    uploadImageToCloudinary,
+    updateProfileImage,
     updateUser,
     createProject,
+    updateProject,
     createBoard,
     createTask,
     deleteBoard,
@@ -62,6 +86,9 @@ const resolvers = {
     createTeam,
     addMemberToTeam,
     addTeamToProject,
+    addTeamToBoard,
+    updateBoard,
+    deleteTeam,
   },
 };
 

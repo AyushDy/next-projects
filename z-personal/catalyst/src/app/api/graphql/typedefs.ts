@@ -13,10 +13,11 @@ export const typeDefs = gql`
     getCommentsByTaskId(taskId: String!): [Comment!]
     getUserByEmail(email: String!): User
     getCurrentUserTeams: [Team]!
+    getTeamById(teamId: String!): Team
+    getBoardById(boardId: String!): Board!
   }
 
   type Mutation {
-    uploadImageToCloudinary(file: Upload!): String!
     createUser(
       name: String!
       email: String!
@@ -24,12 +25,8 @@ export const typeDefs = gql`
       image: String
       bio: String
     ): Boolean
-    updateUser(
-      name: String
-      email: String
-      bio: String
-      image: String
-    ): Boolean
+    updateUser(name: String, email: String, bio: String, image: String): Boolean
+    updateProfileImage(file: Upload!): Boolean
     login(email: String!, password: String!): Boolean
     createProject(
       name: String!
@@ -54,6 +51,12 @@ export const typeDefs = gql`
     ): Boolean
     deleteBoard(boardId: String!): Boolean
     deleteProject(slug: String!): Boolean
+    updateProject(
+      slug: String!
+      name: String
+      description: String
+      visibility: ProjectVisibility
+    ): Boolean
     syncBoardColumns(
       newTasks: [TaskInput]!
       updatedTasks: [UpdatedTaskInput]!
@@ -68,6 +71,9 @@ export const typeDefs = gql`
     createTeam(name: String!, description: String, image: String): Boolean
     addMemberToTeam(teamId: String!, userId: String!): Boolean
     addTeamToProject(teamId: String!, projectSlug: String!): Boolean
+    addTeamToBoard(teamId: String!, boardId: String!): Boolean
+    updateBoard(boardId: String!, name: String, description: String): Boolean
+    deleteTeam(teamId: String!): Boolean
   }
 
   scalar Upload
@@ -207,6 +213,7 @@ export const typeDefs = gql`
     teams: [BoardTeam!]
     isArchived: Boolean
     isDefault: Boolean
+    createdById: String!
     createdAt: String
     updatedAt: String
   }

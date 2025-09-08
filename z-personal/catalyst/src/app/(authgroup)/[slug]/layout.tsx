@@ -4,6 +4,8 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { Spinner } from "@/components/ui/LoadingSpinner";
 import { useProject } from "@/lib/hooks/useProject";
 import { use, useState } from "react";
+import { Menu, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export type TabTypes = "boards" | "teams" | "members" | "settings" | "overview";
 
@@ -27,6 +29,7 @@ export default function Layout({
   const { slug } = use(params);
   const [tab, setTab] = useState<TabTypes>("boards");
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { data: project, isLoading } = useProject(slug);
 
   const renderActiveTab = () => {
@@ -48,10 +51,21 @@ export default function Layout({
 
   return (
     <main className="flex h-full">
+      <div className="md:hidden fixed top-16 left-2 z-50">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="p-2 bg-background border shadow-md"
+        >
+          {isMobileMenuOpen ? <X size={16} /> : <Menu size={16} />}
+        </Button>
+      </div>
+
       <div
         className={`${
           isCollapsed ? "w-16" : "w-64"
-        } h-full fixed left-0 top-12 bg-background border-r transition-all duration-300`}
+        } h-full fixed left-0 top-12 bg-background border-r transition-all duration-300 hidden md:block`}
       >
         <div className="flex items-center justify-between px-4 pt-4 h-16">
           {!isCollapsed && (
@@ -67,10 +81,36 @@ export default function Layout({
           setIsCollapsed={setIsCollapsed}
         />
       </div>
+
+      {isMobileMenuOpen && (
+        <>
+          <div
+            className="md:hidden fixed inset-0 bg-black/50 z-40"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+          <div className="md:hidden w-64 h-full fixed left-0 top-12 bg-background border-r z-50 transition-transform duration-300">
+            <div className="flex items-center justify-between px-4 pt-4 h-16">
+              <h2 className="text-lg font-semibold text-primary truncate">
+                {isLoading ? <Spinner /> : project?.name}
+              </h2>
+            </div>
+            <AppSidebar
+              tab={tab}
+              setTab={(newTab) => {
+                setTab(newTab);
+                setIsMobileMenuOpen(false);
+              }}
+              isCollapsed={false}
+              setIsCollapsed={setIsCollapsed}
+            />
+          </div>
+        </>
+      )}
+
       <div
         className={`${
-          isCollapsed ? "ml-16" : "ml-64"
-        } flex-1 p-4 lg:p-20 transition-all duration-300 min-w-0 overflow-hidden`}
+          isCollapsed ? "md:ml-16" : "md:ml-64"
+        } flex-1 p-4 lg:p-20 transition-all duration-300 min-w-0 overflow-hidden w-full`}
       >
         <div key={tab} className="h-full">
           {renderActiveTab()}

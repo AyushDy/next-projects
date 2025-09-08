@@ -1,7 +1,6 @@
 import { auth } from "@/auth";
 import prisma from "@/lib/services/prisma";
-import { boardSchema, projectSchema } from "@/lib/zod";
-import { Project } from "@prisma/client";
+import { projectSchema } from "@/lib/zod";
 import { nanoid } from "nanoid";
 
 function slugify(text: string) {
@@ -49,7 +48,6 @@ export async function createProject(
 
     const userId = session.user.id;
 
-
     const result = await prisma.$transaction(async (tx) => {
       const project = await tx.project.create({
         data: {
@@ -74,6 +72,7 @@ export async function createProject(
             description: `Board for project ${name}`,
             isDefault: true,
             projectId: project.id,
+            createdById: session.user.id,
             columns: {
               create: [
                 {
@@ -192,11 +191,30 @@ export async function getProjectBySlug(_: any, args: { slug: string }) {
 
 export async function getProjectBoardsBySlug(_: any, args: { slug: string }) {
   try {
+    const session = await auth();
+    if (!session?.user.id) {
+      throw new Error("Unauthorized");
+    }
     if (!args.slug) {
       throw new Error("Slug is required");
     }
+    const project = await prisma.project.findUnique({
+      where: { slug: args.slug },
+      include: {
+        members: {
+          include: {
+            user: {
+              select: { id: true },
+            },
+          },
+        },
+      },
+    });
+    if (!project) {
+      throw new Error("Project not found");
+    }
     const boards = await prisma.board.findMany({
-      where: { project: { slug: args.slug } },
+      where: { projectId: project.id },
       include: {
         project: true,
         columns: true,
@@ -204,6 +222,13 @@ export async function getProjectBoardsBySlug(_: any, args: { slug: string }) {
           include: {
             team: {
               include: {
+                members: {
+                  include: {
+                    user: {
+                      select: { id: true },
+                    },
+                  },
+                },
                 teamLead: true,
               },
             },
@@ -211,7 +236,15 @@ export async function getProjectBoardsBySlug(_: any, args: { slug: string }) {
         },
       },
     });
-    return boards;
+    if (project.ownerId === session.user.id) {
+      return boards;
+    }
+    const accessableBoards = boards.filter((board) =>
+      board.teams.some((bt) =>
+        bt.team.members.some((m) => m.userId === session.user.id)
+      )
+    );
+    return accessableBoards;
   } catch (error) {
     console.error("Error fetching boards:", error);
     return [];
@@ -247,6 +280,50 @@ export async function deleteProject(_: any, args: { slug: string }) {
     return true;
   } catch (error) {
     console.error("Error deleting project:", error);
+    return false;
+  }
+}
+
+export async function updateProject(
+  _: any,
+  args: {
+    slug: string;
+    name?: string;
+    description?: string;
+    visibility?: "PUBLIC" | "PRIVATE";
+  }
+) {
+  try {
+    const session = await auth();
+    if (!session?.user.id) {
+      throw new Error("Unauthorized");
+    }
+
+    const { slug, name, description, visibility } = args;
+
+    const project = await prisma.project.findFirst({
+      where: {
+        AND: [{ slug }, { ownerId: session.user.id }],
+      },
+    });
+
+    if (!project) {
+      throw new Error("Project not found or unauthorized");
+    }
+
+    const updateData: any = {};
+    if (name !== undefined) updateData.name = name;
+    if (description !== undefined) updateData.description = description;
+    if (visibility !== undefined) updateData.visibility = visibility;
+
+    await prisma.project.update({
+      where: { slug },
+      data: updateData,
+    });
+
+    return true;
+  } catch (error) {
+    console.error("Error updating project:", error);
     return false;
   }
 }

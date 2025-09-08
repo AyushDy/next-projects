@@ -24,7 +24,7 @@ export default function ClientBoardsPage({ slug }: { slug: string }) {
     return (
       <div className="space-y-6">
         <Header slug={slug} />
-        <Card className="border-red-200">
+        <Card className="border-red-200 rounded-xs">
           <CardContent className="flex flex-col items-center justify-center py-12">
             <p className="text-red-600">Failed to load boards</p>
             <p className="text-sm text-muted-foreground">
@@ -46,7 +46,7 @@ export default function ClientBoardsPage({ slug }: { slug: string }) {
       </div>
 
       {boards.length === 0 && (
-        <Card className="border-dashed">
+        <Card className="border-dashed rounded-xs">
           <CardContent className="flex flex-col items-center justify-center py-12">
             <CalendarDays className="h-12 w-12 text-muted-foreground mb-4" />
             <h3 className="text-lg font-medium mb-2">No boards yet</h3>
@@ -66,9 +66,10 @@ function Header({ slug }: { slug: string }) {
     <>
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Boards</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Accessible Boards</h1>
           <p className="text-muted-foreground">
-            Manage and organize your project boards
+            Manage and organize your project boards. Only boards you have access to
+            are displayed here.
           </p>
         </div>
         <AddBoardButton slug={slug} />
