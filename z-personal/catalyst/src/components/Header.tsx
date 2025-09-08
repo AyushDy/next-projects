@@ -15,7 +15,6 @@ const Header = memo(function Header() {
 
   return (
     <header className="w-full">
-      {/* Main Header */}
       <div className="flex items-center gap-2 py-1 pt-2 px-2 sm:px-5 md:px-15 lg:px-25 w-full transition-all duration-300">
         <Link href="/" className="flex items-center flex-shrink-0">
           <Image
@@ -27,19 +26,16 @@ const Header = memo(function Header() {
           />
         </Link>
 
-        {/* Desktop Search - Hidden on mobile */}
-        <div className="hidden md:flex flex-1 max-w-md mx-4">
+        <div className="hidden md:flex flex-1 max-w-md mx-4 ml-auto">
           <SearchInput />
         </div>
 
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-2">
+        <div className="hidden md:flex items-center gap-2 ml-auto">
           <NotificationButton />
           <ModeToggle />
           <ProfileButton />
         </div>
 
-        {/* Mobile Menu Button */}
         <div className="md:hidden ml-auto">
           <Button
             variant="ghost"
@@ -52,16 +48,13 @@ const Header = memo(function Header() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <div className="px-4 py-3 space-y-3">
-            {/* Mobile Search */}
             <div className="w-full">
               <SearchInput />
             </div>
 
-            {/* Mobile Navigation */}
             <div className="flex items-center justify-around pt-2 border-t">
               <NotificationButton />
               <ModeToggle />
