@@ -5,11 +5,10 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  useAddTeamToProject,
-  useCurrentUserTeams,
-} from "@/lib/hooks/useTeams";
+import { useAddTeamToProject, useCurrentUserTeams } from "@/lib/hooks/useTeams";
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
+import Link from "next/link";
+import { useAuthContext } from "../context/AuthContextProvider";
 
 export function AddTeamToProjectButton({
   projectSlug,
@@ -18,9 +17,10 @@ export function AddTeamToProjectButton({
 }) {
   const { data: teams } = useCurrentUserTeams();
   const addTeamToProjectMutation = useAddTeamToProject(projectSlug);
+  const { session } = useAuthContext();
 
   async function handleAddTeamToProject(teamId: string) {
-    (await addTeamToProjectMutation).mutateAsync(teamId);
+    addTeamToProjectMutation.mutateAsync(teamId);
   }
 
   return (
@@ -31,16 +31,27 @@ export function AddTeamToProjectButton({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 rounded-xs p-3" align="start">
-        {teams?.map((team) => (
-          <DropdownMenuItem key={team.id}>
-            <Button
-              onClick={() => handleAddTeamToProject(team.id)}
-              className="w-full justify-start h-8 px-2 font-normal rounded-none bg-background hover:bg-accent hover:text-accent-foreground text-primary"
-            >
-              {team.name}
-            </Button>
-          </DropdownMenuItem>
-        ))}
+        {teams?.length ? (
+          teams?.map((team) => (
+            <DropdownMenuItem key={team.id}>
+              <Button
+                onClick={() => handleAddTeamToProject(team.id)}
+                className="w-full justify-start h-8 px-2 font-normal rounded-none bg-background hover:bg-accent hover:text-accent-foreground text-primary"
+              >
+                {team.name}
+              </Button>
+            </DropdownMenuItem>
+          ))
+        ) : (
+          <div>
+            <p className="text-sm text-muted-foreground">No teams available</p>
+            <Link href={`/u/${session?.user.id}/teams`}>
+              <Button className="mt-2 w-full justify-center rounded-xs">
+                Create new Team
+              </Button>
+            </Link>
+          </div>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

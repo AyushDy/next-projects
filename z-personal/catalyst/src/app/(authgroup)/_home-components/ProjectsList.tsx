@@ -1,6 +1,7 @@
 "use client";
 
 import MyProjectsCard from "@/components/cards/MyProjectsCard";
+import { useAuthContext } from "@/components/context/AuthContextProvider";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -11,6 +12,7 @@ import { memo, useMemo } from "react";
 
 const ProjectsList = memo(function ProjectsList() {
   const { data: projects, isLoading, error } = useUserProjects();
+  const { session } = useAuthContext();
 
   const renderedProjects = useMemo(() => {
     if (!projects || projects.length === 0) return null;
@@ -37,11 +39,17 @@ const ProjectsList = memo(function ProjectsList() {
     <>
       <div className="flex justify-between items-center px-4 pt-4">
         <h2 className="text-lg font-semibold">Your Projects</h2>
-        <Link href="/new">
+        {session && session.user.id ? ( <Link href="/new">
           <Button className="ml-auto bg-green-600 text-white hover:bg-green-700 rounded-xs">
             New Project
           </Button>
+        </Link>) : (
+          <Link href="/auth">
+          <Button className="ml-auto bg-green-600 text-white hover:bg-green-700 rounded-xs">
+            Login to create
+          </Button>
         </Link>
+        )}
       </div>
       <Input
         type="text"

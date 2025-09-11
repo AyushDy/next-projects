@@ -50,8 +50,12 @@ export default function TaskDetails({
                 <div className="flex items-center gap-2 sm:gap-3">
                   <ProfileIcon user={task.createdBy} />
                   <div>
-                    <p className="text-xs sm:text-sm text-muted-foreground">Created by</p>
-                    <p className="font-medium text-sm sm:text-base truncate">{task.createdBy.name}</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">
+                      Created by
+                    </p>
+                    <p className="font-medium text-sm sm:text-base truncate">
+                      {task.createdBy.name}
+                    </p>
                   </div>
                 </div>
                 <Button
@@ -86,7 +90,9 @@ export default function TaskDetails({
                   <Button
                     onClick={() => setShowComments(!showComments)}
                     variant="outline"
-                    className={`w-full lg:w-auto ${showComments ? "hidden lg:block" : ""}`}
+                    className={`w-full lg:w-auto ${
+                      showComments ? "hidden lg:block" : ""
+                    }`}
                   >
                     {showComments ? "Hide Comments" : "View Comments"}
                   </Button>
@@ -96,7 +102,9 @@ export default function TaskDetails({
               {showComments && (
                 <div className="flex-1 border-t lg:border-t-0 lg:border-l border-border p-3 sm:p-4 lg:p-6 overflow-y-auto thin-scrollbar bg-muted/20">
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-base sm:text-lg font-semibold">Comments</h2>
+                    <h2 className="text-base sm:text-lg font-semibold">
+                      Comments
+                    </h2>
                     <Button
                       variant="ghost"
                       size="sm"

@@ -38,31 +38,28 @@ export function useGetTeamsByProject(slug: string) {
   });
 }
 
-export function useAddMemberToTeam(slug?: string) {
+export function useAddMemberToTeam(slug: string, teamId: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      teamId,
-      userId,
-    }: {
-      teamId: string;
-      userId: string;
-    }) => {
+    mutationFn: async ({ userId }: { userId: string }) => {
       return gqlClient.request(ADD_MEMBER_TO_TEAM, { teamId, userId });
     },
     onSuccess: async () => {
       await queryClient.refetchQueries({
-        queryKey: ["teams", slug],
-        type: "active",
-      });
-      queryClient.invalidateQueries({ queryKey: ["teams", slug] });
-
-      await queryClient.refetchQueries({
         queryKey: ["currentUserTeams"],
         type: "active",
       });
-      queryClient.invalidateQueries({ queryKey: ["currentUserTeams"] });
+
+      queryClient.invalidateQueries({
+        queryKey: ["teamDetails", teamId],
+      });
+
+      if (slug) {
+        queryClient.invalidateQueries({
+          queryKey: ["teams", slug],
+        });
+      }
 
       toast.success("Member added to team");
     },
@@ -158,7 +155,9 @@ export function useDeleteTeam() {
 
   return useMutation({
     mutationFn: async (teamId: string) => {
-      return gqlClient.request(DELETE_TEAM, { teamId }) as Promise<{ deleteTeam: boolean }>;
+      return gqlClient.request(DELETE_TEAM, { teamId }) as Promise<{
+        deleteTeam: boolean;
+      }>;
     },
     onSuccess: async () => {
       await queryClient.refetchQueries({

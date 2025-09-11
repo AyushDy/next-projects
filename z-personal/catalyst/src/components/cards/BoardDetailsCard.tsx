@@ -65,8 +65,12 @@ export default function BoardDetailsCard({
                     <Label className="text-xs sm:text-sm text-muted-foreground">
                       Board Details
                     </Label>
-                    <p className="font-semibold text-sm sm:text-lg truncate">{board.name}</p>
-                    <p className="text-xs text-muted-foreground">Only the team Leaders can edit this Board</p>
+                    <p className="font-semibold text-sm sm:text-lg truncate">
+                      {board.name}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Only the team Leaders can edit this Board
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
@@ -75,7 +79,7 @@ export default function BoardDetailsCard({
                     size="sm"
                     className="rounded-xs text-xs sm:text-sm"
                     onClick={() => {
-                        updateBoardMutation.mutate({
+                      updateBoardMutation.mutate({
                         name: boardName,
                         description: boardDescription,
                       });
@@ -83,10 +87,13 @@ export default function BoardDetailsCard({
                   >
                     {updateBoardMutation.isPending ? (
                       <>
-                        <Spinner size="sm" /> <span className="hidden sm:inline">Saving...</span>
+                        <Spinner size="sm" />{" "}
+                        <span className="hidden sm:inline">Saving...</span>
                       </>
                     ) : (
-                      <>Save <span className="hidden sm:inline">Changes</span></>
+                      <>
+                        Save <span className="hidden sm:inline">Changes</span>
+                      </>
                     )}
                   </Button>
                   <Button
@@ -104,7 +111,10 @@ export default function BoardDetailsCard({
             <div className="flex flex-col lg:flex-row flex-1 overflow-hidden">
               <div className="flex-shrink-0 w-full lg:max-w-4xl p-3 sm:p-4 lg:p-6 overflow-y-auto thin-scrollbar">
                 <div className="mb-4 sm:mb-6 space-y-2">
-                  <Label htmlFor="board-name" className="text-xs sm:text-sm font-medium">
+                  <Label
+                    htmlFor="board-name"
+                    className="text-xs sm:text-sm font-medium"
+                  >
                     Board Name
                   </Label>
                   <Input
@@ -142,7 +152,9 @@ export default function BoardDetailsCard({
                     <Button
                       onClick={() => setShowTeams(!showTeams)}
                       variant="outline"
-                      className={`rounded-xs w-full sm:w-auto ${showTeams ? "hidden lg:block" : ""}`}
+                      className={`rounded-xs w-full sm:w-auto ${
+                        showTeams ? "hidden lg:block" : ""
+                      }`}
                     >
                       <Users className="h-4 w-4 mr-2" />
                       <span className="hidden sm:inline">Manage </span>Teams

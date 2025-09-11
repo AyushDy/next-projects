@@ -44,14 +44,16 @@ export default function Page() {
   }
 
   return (
-    <div className="p-4 md:p-20">
-      <div className="flex justify-between font-sans mb-12">
-        <h1 className="text-2xl font-bold">{user?.name}'s Teams</h1>
+    <div className="p-4 sm:p-6 md:p-12 lg:p-20">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 sm:gap-0 font-sans mb-6 sm:mb-8 md:mb-12">
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">
+          {user?.name}'s Teams
+        </h1>
         <AddTeamButton />
       </div>
 
-      <div className="flex gap-10">
-        <div className="flex flex-col max-h-90 overflow-y-auto thin-scrollbar">
+      <div className="flex flex-col lg:flex-row gap-6 lg:gap-10">
+        <div className="flex flex-col w-full lg:w-auto lg:min-w-80 max-h-60 sm:max-h-80 lg:max-h-90 overflow-y-auto thin-scrollbar">
           {teams?.map((team) => (
             <TeamListItem
               key={team.id}
@@ -61,7 +63,7 @@ export default function Page() {
             />
           ))}
         </div>
-        <div>
+        <div className="flex-1 w-full lg:w-auto">
           {currentTeamId && <TeamMemberList currentTeamId={currentTeamId} />}
         </div>
       </div>

@@ -18,7 +18,7 @@ export function LoginForm() {
   const [password, setPassword] = useState("");
   const [isPending, startTransition] = useTransition();
 
-  async function handleSubmit(e : React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     startTransition(async () => {
       const result = await signIn("credentials", {
@@ -31,32 +31,39 @@ export function LoginForm() {
   }
 
   return (
-    <Card className="w-full max-w-sm rounded-xs border-none">
+    <Card className="w-full border-none">
       <form onSubmit={handleSubmit}>
-        <CardHeader className="mb-2">
-          <CardTitle>Login to your account</CardTitle>
-          <CardDescription>
+        <CardHeader className="mb-2 px-4 sm:px-6">
+          <CardTitle className="text-lg sm:text-xl lg:text-2xl">
+            Login to your account
+          </CardTitle>
+          <CardDescription className="text-sm sm:text-base">
             Enter your email below to login to your account
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="flex flex-col gap-6">
+        <CardContent className="px-4 sm:px-6">
+          <div className="flex flex-col gap-4 sm:gap-6">
             <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-sm sm:text-base">
+                Email
+              </Label>
               <Input
                 id="email"
                 type="email"
                 value={email}
-                className="rounded-xs"
+                className="rounded-xs h-10 sm:h-11 text-sm sm:text-base"
+                placeholder="Enter your email"
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <div className="grid gap-2 mb-5">
-              <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
+            <div className="grid gap-2 mb-2 sm:mb-5">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password" className="text-sm sm:text-base">
+                  Password
+                </Label>
                 <a
                   href="#"
-                  className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                  className="text-xs sm:text-sm underline-offset-4 hover:underline"
                 >
                   Forgot your password?
                 </a>
@@ -65,14 +72,19 @@ export function LoginForm() {
                 id="password"
                 type="password"
                 value={password}
-                className="rounded-xs"
+                className="rounded-xs h-10 sm:h-11 text-sm sm:text-base"
+                placeholder="Enter your password"
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
           </div>
         </CardContent>
-        <CardFooter className="flex-col gap-2">
-          <Button type="submit" className="w-full rounded-xs" disabled={isPending}>
+        <CardFooter className="flex-col gap-3 px-4 sm:px-6">
+          <Button
+            type="submit"
+            className="w-full rounded-xs h-10 sm:h-11 text-sm sm:text-base font-medium"
+            disabled={isPending}
+          >
             {isPending ? "Logging in..." : "Login"}
           </Button>
           <GoogleLogin />

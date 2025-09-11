@@ -3,12 +3,12 @@ import ColumnsContextProvider from "@/components/context/ColumnsContextProvider"
 import { useColumns } from "@/lib/hooks/useColumns";
 import { use } from "react";
 
-export default function layout({
+export default function Layout({
   children,
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ boardId: string;}>;
+  params: Promise<{ boardId: string }>;
 }) {
   const { boardId } = use(params);
   const { data: columns } = useColumns(boardId);

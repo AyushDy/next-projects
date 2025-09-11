@@ -45,11 +45,12 @@ export function AddTeamButton() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-green-600 hover:bg-green-700 text-white rounded-xs">
-          Create a new Team
+        <Button className="bg-green-600 hover:bg-green-700 text-white rounded-xs text-sm sm:text-base px-3 sm:px-4 py-2 h-auto">
+          <span className="hidden sm:inline">Create a new Team</span>
+          <span className="sm:hidden">New Team</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] rounded-xs">
+      <DialogContent className="w-[95vw] max-w-[425px] rounded-xs mx-auto">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>Create Team</DialogTitle>

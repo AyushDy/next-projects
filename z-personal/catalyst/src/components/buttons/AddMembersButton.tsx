@@ -20,7 +20,10 @@ import { useParams } from "next/navigation";
 export function AddMembersButton({ team }: { team: Team | null }) {
   const params = useParams();
   const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
-  const addMemberMutation = useAddMemberToTeam(slug as string);
+  const addMemberMutation = useAddMemberToTeam(
+    slug as string,
+    team ? team.id : ""
+  );
   const [foundUser, setFoundUser] = useState<User | null>(null);
   const [email, setEmail] = useState<string>("");
   const [isPending, startTransition] = useTransition();
@@ -51,7 +54,6 @@ export function AddMembersButton({ team }: { team: Team | null }) {
     if (foundUser && team) {
       try {
         await addMemberMutation.mutateAsync({
-          teamId: team.id,
           userId: foundUser.id,
         });
         setEmail("");
@@ -95,10 +97,10 @@ export function AddMembersButton({ team }: { team: Team | null }) {
           </div>
         </div>
 
-        <div className="max-h-64 overflow-y-auto roundex-xs">
+        <div className="max-h-64 overflow-y-auto rounded-xs">
           {foundUser ? (
             <div className="p-2">
-              <div className="flex items-center justify-between p-3 rounded-xs hover:bg-accent/50 transition-colors cursor-pointer group">
+              <div className="flex items-center justify-between p-3 rounded-xs hover:bg-accent/50 transition-colors">
                 <div className="flex items-center gap-3 flex-1 min-w-0">
                   <ProfileIcon user={foundUser} />
                   <div className="flex-1 min-w-0">
@@ -115,18 +117,15 @@ export function AddMembersButton({ team }: { team: Team | null }) {
                   onClick={handleAddUser}
                   disabled={
                     addMemberMutation.isPending ||
-                    (team?.members.find((member) => member.id === foundUser.id)
-                      ? true
-                      : false)
+                    team?.members.some(
+                      (member) => member.user.id === foundUser.id
+                    )
                   }
-                  className="rounded-md px-3 py-1 text-xs bg-background text-foreground dark:bg-foreground dark:text-background border border-border dark:border-background opacity-0 group-hover:opacity-100 transition-opacity hover:bg-muted dark:hover:bg-muted-foreground"
+                  className="rounded-md px-3 py-1 text-xs transition-all hover:bg-primary hover:text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {addMemberMutation.isPending ? (
                     <Spinner size="sm" />
-                  ) : addMemberMutation.isSuccess ||
-                    team?.members.find(
-                      (member) => member.id === foundUser.id
-                    ) ? (
+                  ) : addMemberMutation.isSuccess ? (
                     <Check className="w-3 h-3" />
                   ) : (
                     <UserPlus className="w-3 h-3" />
