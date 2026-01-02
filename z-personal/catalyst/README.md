@@ -1,36 +1,111 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Catalyst 🚀  
+**A Modern Project Management & Collaboration Platform**
 
-## Getting Started
+🔗 **Live Demo:** [catalyst-gamma-weld.vercel.app](https://catalyst-gamma-weld.vercel.app/)
 
-First, run the development server:
+Catalyst is a full-stack, production-ready project management platform inspired by tools like Jira and Trello. It is designed to help teams plan, track, and deliver work efficiently using projects, Kanban boards, tasks, and team-based collaboration — all wrapped in a clean, responsive UI.
+
+Built with **Next.js 15**, Catalyst focuses on scalability, role-based access control, and real-world collaboration workflows.
+
+---
+
+## ✨ Key Features
+
+### 🔐 Authentication & User Management
+- Email/password authentication  
+- Google OAuth single sign-on  
+- User profiles with name, bio, and profile image  
+- Secure profile image uploads via Cloudinary  
+
+---
+
+### 📁 Project Management
+- Create and manage multiple projects  
+- Public and private project visibility  
+- Role-based project members (Owner, Member)  
+- Project configuration and settings  
+- Safe project deletion  
+
+---
+
+### 📋 Kanban Boards
+- Multiple boards per project  
+- Customizable columns with ordering  
+- Drag-and-drop task movement  
+- Archive completed boards  
+- Default board selection per project  
+
+---
+
+### ✅ Task Management
+- Create tasks with title and description  
+- Task status workflow:  
+  - TODO  
+  - IN_PROGRESS  
+  - REVIEW  
+  - DONE  
+  - BLOCKED  
+- Priority levels and due dates  
+- Task completion checkboxes  
+- Assign tasks to users or teams  
+- Comment system for task discussions  
+
+---
+
+### 👥 Team Collaboration
+- Create and manage teams  
+- Team roles: Member, Lead, Admin  
+- Assign teams to projects  
+- Team-specific board access  
+- Manage team membership dynamically  
+
+---
+
+### 🎨 UI / UX
+- Dark and Light theme support  
+- Fully responsive layout  
+- Sidebar-based navigation  
+- Notification system  
+- Search functionality  
+- Skeleton loaders and loading states  
+
+---
+
+## 🧱 Tech Stack
+
+| Layer | Technology |
+|-----|-----------|
+| Framework | Next.js 15 (App Router, Turbopack) |
+| Database | MongoDB |
+| ORM | Prisma |
+| API | GraphQL (Apollo Server) |
+| State Management | React Query |
+| Styling | Tailwind CSS + Radix UI |
+| Authentication | NextAuth.js |
+| Media Storage | Cloudinary |
+
+---
+
+## 🏗 Architecture Highlights
+- Modular, scalable folder structure  
+- GraphQL API for efficient data fetching  
+- Role-based access control (RBAC)  
+- Optimized client-server data synchronization  
+- Production-grade authentication and authorization flow  
+
+---
+
+## 🚀 Getting Started
 
 ```bash
+# Clone the repository
+git clone https://github.com/AyushDy/next-projects.git
+
+# Navigate to the project
+cd z-personal/catalyst
+
+# Install dependencies
+npm install
+
+# Run the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
